@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iPhone Store - L'Excellence à votre portée</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="sticky-nav">
+        <div class="nav-content">
+            <a href="#" class="logo">iPhone Give 📱</a>
+            <ul id="nav-links">
+                </ul>
+            <div class="search-container">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="search-bar" placeholder="Rechercher un modèle...">
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>L'Excellence. Réinventée.</h1>
+            <p class="subtitle">Découvrez notre sélection d'iPhones neufs et scellés. La perfection n'a jamais été aussi accessible.</p>
+            <a href="#products" class="cta-button">Explorer la collection</a>
+        </div>
+        <div class="hero-image-container">
+            <img src="images/fon acceuil.png" alt="iPhone 15 Pro" class="hero-image">
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="products" class="category-section">
+            <h2 id="products-title">Tous nos modèles</h2>
+            <div id="product-grid" class="product-grid">
+                </div>
+        </section>
+    </main>
+
+    <footer id="contact">
+        <div class="footer-grid">
+            <div class="footer-column">
+                <h4>À Propos de Nous</h4>
+                <p>iPhone Store est votre destination de confiance pour l'achat d'iPhones neufs, importés directement des USA. Nous nous engageons à fournir des produits authentiques avec une garantie solide et un service client irréprochable.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Nos Produits</h4>
+                <ul id="footer-links">
+                    </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Contactez-nous</h4>
+                <p>Une question ? Envie de passer commande ?</p>
+                <a href="https://wa.me/243845370370" target="_blank" class="whatsapp-btn">
+                    <i class="fab fa-whatsapp"></i> Discuter sur WhatsApp
+                </a>
+                <p class="phone-number">
+                    <i class="fa-solid fa-phone"></i> +243 845 370 370
+                </p>
+            </div>
+        </div>
+        <p class="copyright">&copy; 2024 iPhone Store. Tous droits réservés.</p>
+    </footer>
+
+    <div class="cart-icon" id="cart-icon">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-count" id="cart-count">0</span>
+    </div>
+
+    <div class="modal-overlay" id="product-detail-modal">
+        <div class="modal-content">
+            <button class="close-modal-btn" id="close-detail-modal">&times;</button>
+            <div id="modal-product-content">
+                </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="cart-modal">
+        <div class="modal-content cart-view">
+            <button class="close-modal-btn" id="close-cart-modal">&times;</button>
+            <h2>Votre Panier</h2>
+            <div id="cart-items-container"></div>
+            <div class="cart-summary">
+                <div class="total-price">
+                    <strong>Total:</strong> <span id="cart-total-price">$0</span>
+                </div>
+                <button id="order-whatsapp-btn" class="whatsapp-order-btn">
+                    <i class="fab fa-whatsapp"></i> Finaliser sur WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
