@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="text-white py-5 mb-5" style="background: linear-gradient(rgba(30, 30, 40, 0.4), rgba(30, 30, 40, 0.6)), url('https://images.unsplash.com/photo-1432821596592-e2c18b78144f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') center/cover; background-color: #7451eb;">
+    <div class="container text-center">
+        <h1 class="display-3 fw-bold mb-3">Blog & Ressources</h1>
+        <p class="lead mb-4 opacity-100 fw-medium">Conseils, tutoriels et actualités pour votre développement.</p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+    {% for article in articles %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            {% if article.image %}
+                <img src="{{ article.image.url }}" class="card-img-top" alt="{{ article.titre }}">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ article.titre }}</h5>
+                <p class="card-text">{{ article.contenu|truncatewords:30 }}</p>
+            </div>
+            <div class="card-footer text-muted">
+                Publié le {{ article.date_publication|date:"d M Y" }}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>Aucun article pour le moment.</p>
+    {% endfor %}
+</div>
+{% endblock %}

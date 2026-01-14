@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card mb-3">
+    <div class="row g-0">
+        <div class="col-md-4">
+            {% if mentor.user.photo %}
+                <img src="{{ mentor.user.photo.url }}" class="img-fluid rounded-start" alt="{{ mentor.user.username }}">
+            {% else %}
+                <div class="bg-light d-flex align-items-center justify-content-center h-100">
+                    <span>Pas de photo</span>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">{{ mentor.user.username }}</h5>
+                <p class="card-text fw-bold">{{ mentor.expertise }}</p>
+                <p class="card-text">{{ mentor.bio }}</p>
+                <p class="card-text"><small class="text-muted">Profil vu {{ mentor.views_count }} fois</small></p>
+            </div>
+        </div>
+    </div>
+</div>
+<a href="{% url 'mentors' %}" class="btn btn-secondary">Retour à la liste</a>
+{% endblock %}

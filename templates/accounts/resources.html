@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Bibliothèque de Ressources{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5 bg-light min-vh-100">
+    <div class="container">
+        <!-- Header Section -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold text-primary mb-3">Centre de Ressources</h1>
+            <p class="lead text-muted mx-auto" style="max-width: 600px;">Accédez à tous nos supports pédagogiques, vidéos et documents pour enrichir votre parcours d'apprentissage.</p>
+        </div>
+
+        <!-- Resources Grid -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for res in resources %}
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm transition-hover-up rounded-4 overflow-hidden">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="d-flex align-items-start justify-content-between mb-3">
+                            <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle">
+                                {% if res.lien_video %}
+                                    <i class="bi bi-play-circle-fill fs-3"></i>
+                                {% elif res.fichier %}
+                                    {% if res.fichier.url|lower|slice:"-4:" == ".pdf" %}
+                                        <i class="bi bi-file-earmark-pdf-fill fs-3"></i>
+                                    {% else %}
+                                        <i class="bi bi-file-earmark-text-fill fs-3"></i>
+                                    {% endif %}
+                                {% else %}
+                                    <i class="bi bi-journal-text fs-3"></i>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <h4 class="card-title fw-bold mb-2">{{ res.titre }}</h4>
+                        <p class="card-text text-muted small flex-grow-1" style="min-height: 3em;">
+                            {{ res.description|truncatewords:20|default:"Pas de description disponible." }}
+                        </p>
+
+                        <div class="mt-4 pt-3 border-top">
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'resource_detail' res.id %}" class="btn btn-primary rounded-pill">
+                                    Voir détails
+                                </a>
+                                <div class="d-flex gap-2">
+                                    {% if res.fichier %}
+                                    <a href="{{ res.fichier.url }}" class="btn btn-outline-secondary rounded-pill flex-grow-1" download title="Télécharger">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if res.lien_video %}
+                                    <a href="{{ res.lien_video }}" target="_blank" class="btn btn-outline-danger rounded-pill flex-grow-1" title="Voir vidéo">
+                                        <i class="bi bi-play-btn"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <div class="text-muted mb-4 opacity-50">
+                    <i class="bi bi-folder2-open" style="font-size: 5rem;"></i>
+                </div>
+                <h3>Aucune ressource disponible pour le moment.</h3>
+                <p class="text-muted">Revenez plus tard pour de nouveaux contenus.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

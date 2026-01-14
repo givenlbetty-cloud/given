@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="bg-light min-vh-100 py-4">
+    <div class="container h-100">
+        <div class="row h-100 justify-content-center">
+            <div class="col-lg-10 h-100">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden" style="height: 85vh;">
+                    <div class="row g-0 h-100">
+                        <!-- Sidebar: Users (Hidden on Mobile if in Room) -->
+                         <div class="col-md-4 border-end bg-white h-100 d-none d-md-flex flex-column">
+                            <div class="p-3 border-bottom d-flex align-items-center bg-light">
+                                <a href="{% url 'inbox' %}" class="text-decoration-none text-dark fw-bold">
+                                    <i class="bi bi-arrow-left me-2"></i>Retour
+                                </a>
+                            </div>
+                             <div class="p-4 flex-grow-1 d-flex align-items-center justify-content-center text-center">
+                                 <div>
+                                     <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+                                        {{ other_user.username|make_list|first|upper }}
+                                    </div>
+                                    <h5 class="fw-bold">{{ other_user.get_full_name|default:other_user.username }}</h5>
+                                    <p class="text-muted small">Mentor ATJ</p>
+                                    <div class="d-grid gap-2 mt-4">
+                                        <button class="btn btn-outline-primary rounded-pill btn-sm">Voir le profil</button>
+                                        <button class="btn btn-outline-danger rounded-pill btn-sm">Signaler</button>
+                                    </div>
+                                 </div>
+                             </div>
+                        </div>
+
+                        <!-- Chat Room -->
+                        <div class="col-md-8 h-100 d-flex flex-column bg-white">
+                            <!-- Helper Header for Mobile -->
+                            <div class="p-3 border-bottom d-flex align-items-center justify-content-between bg-white shadow-sm d-md-none z-index-1">
+                                 <a href="{% url 'inbox' %}" class="btn btn-sm btn-light rounded-circle"><i class="bi bi-arrow-left"></i></a>
+                                 <h6 class="mb-0 fw-bold">{{ other_user.username }}</h6>
+                                 <button class="btn btn-sm btn-light rounded-circle"><i class="bi bi-three-dots-vertical"></i></button>
+                            </div>
+
+                            <!-- Messages Area -->
+                            <div class="flex-grow-1 p-4 overflow-auto d-flex flex-column" id="chat-messages" style="background-color: #f0f2f5;">
+                                <div class="text-center my-3">
+                                    <span class="badge bg-white text-muted border shadow-sm px-3 py-2 rounded-pill fw-normal">Début de la conversation</span>
+                                </div>
+                                
+                                {% for message in messages %}
+                                    {% if message.sender == user %}
+                                        <!-- Outgoing Message -->
+                                        <div class="align-self-end mb-3" style="max-width: 75%;">
+                                            <div class="bg-primary text-white p-3 rounded-4 rounded-tr-0 shadow-sm" style="border-top-right-radius: 0 !important;">
+                                                <p class="mb-0">{{ message.content }}</p>
+                                            </div>
+                                            <small class="text-muted d-block text-end mt-1" style="font-size: 0.7rem;">{{ message.timestamp|date:"H:i" }}</small>
+                                        </div>
+                                    {% else %}
+                                        <!-- Incoming Message -->
+                                        <div class="align-self-start mb-3" style="max-width: 75%;">
+                                            <div class="bg-white text-dark p-3 rounded-4 rounded-tl-0 shadow-sm border" style="border-top-left-radius: 0 !important;">
+                                                <p class="mb-0">{{ message.content }}</p>
+                                            </div>
+                                            <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">{{ message.timestamp|date:"H:i" }}</small>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+
+                            <!-- Input Area -->
+                            <div class="p-3 bg-white border-top">
+                                <form method="post" class="d-flex align-items-center gap-2">
+                                    {% csrf_token %}
+                                    <button type="button" class="btn btn-light rounded-circle text-muted"><i class="bi bi-paperclip"></i></button>
+                                    <input type="text" name="content" class="form-control rounded-pill bg-light border-0 py-2" placeholder="Écrivez votre message..." required autocomplete="off">
+                                    <button type="submit" class="btn btn-primary rounded-circle shadow-sm" style="width: 45px; height: 45px;"><i class="bi bi-send-fill"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Scroll to bottom
+    const messageContainer = document.getElementById('chat-messages');
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+</script>
+{% endblock %}

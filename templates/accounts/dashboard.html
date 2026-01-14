@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Tableau de bord</h1>
+<h2>Mes Inscriptions</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Programme</th>
+            <th>Dates</th>
+            <th>Statut Paiement</th>
+            <th>Validation</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ins in inscriptions %}
+        <tr>
+            <td>{{ ins.session.programme.titre }}</td>
+            <td>{{ ins.session.date_debut }} - {{ ins.session.date_fin }}</td>
+            <td>{{ ins.get_statut_paiement_display }}</td>
+            <td>{{ ins.statut_validation|yesno:"Validé,En attente" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">Aucune inscription.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2 class="mt-5">Ma Bibliothèque</h2>
+<div class="row g-4 mb-5">
+    {% for achat in mes_livres %}
+    <div class="col-md-4 col-lg-3">
+        <div class="card h-100 shadow-sm border-0">
+             <div class="overflow-hidden" style="height: 150px;">
+                {% if achat.livre.image %}
+                    <img src="{{ achat.livre.image.url }}" class="card-img-top h-100 object-fit-cover" alt="{{ achat.livre.titre }}">
+                {% else %}
+                    <div class="w-100 h-100 bg-secondary d-flex align-items-center justify-content-center text-white">
+                        <i class="bi bi-book fs-1"></i>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <h6 class="card-title fw-bold text-truncate">{{ achat.livre.titre }}</h6>
+                <p class="card-text small text-muted mb-2">{{ achat.livre.auteur }}</p>
+                <div class="d-grid">
+                    <a href="{% url 'library:lecture' achat.livre.id %}" class="btn btn-sm btn-primary">Lire</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <p class="text-muted">Vous n'avez pas encore ajouté de livres à votre bibliothèque.</p>
+        <a href="{% url 'library:liste' %}" class="btn btn-outline-primary">Explorer la bibliothèque</a>
+    </div>
+    {% endfor %}
+</div>
+
+<a href="{% url 'accounts:resources' %}" class="btn btn-secondary">Accéder aux Ressources Annexes</a>
+{% endblock %}

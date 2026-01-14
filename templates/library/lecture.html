@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-3 h-100" style="min-height: 85vh;">
+    <div class="row h-100">
+        <!-- PDF Reader Column -->
+        <div class="col-md-8 h-100 d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'library:liste' %}">Bibliothèque</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'library:detail' livre.id %}">{{ livre.titre }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Lecture</li>
+                    </ol>
+                </nav>
+                <div class="btn-group">
+                    <button class="btn btn-outline-dark btn-sm" onclick="toggleNightMode()">
+                        <i class="bi bi-moon-stars-fill"></i> Nuit
+                    </button>
+                    <button class="btn btn-outline-dark btn-sm" onclick="toggleFullScreen()">
+                        <i class="bi bi-arrows-fullscreen"></i> Plein écran
+                    </button>
+                    <button class="btn btn-outline-dark btn-sm" onclick="toggleNotes()">
+                         <i class="bi bi-journal-text"></i> Notes
+                    </button>
+                </div>
+            </div>
+            
+            <div id="pdf-wrapper" class="flex-grow-1 bg-secondary rounded overflow-hidden shadow transition-all position-relative" style="height: 800px;">
+                {% if is_pdf %}
+                <!-- PDF Scroll Container -->
+                <div id="pdf-viewer" class="h-100 w-100 overflow-auto d-flex flex-column align-items-center bg-dark pt-4 pb-5">
+                    <!-- Pages will be injected here -->
+                </div>
+                
+                <!-- Floating Page Indicator -->
+                <div class="position-absolute bottom-0 end-0 m-4 bg-dark bg-opacity-75 text-white px-3 py-2 rounded-pill shadow">
+                    Page <span id="page_num">1</span> / <span id="page_count">--</span>
+                </div>
+                {% else %}
+                <!-- Text Viewer -->
+                <div class="h-100 w-100 overflow-auto bg-white p-5">
+                    <div class="container" style="max-width: 800px;">
+                        <h2 class="mb-4">{{ livre.titre }}</h2>
+                        <pre style="white-space: pre-wrap; font-family: 'Georgia', serif; font-size: 1.1rem; line-height: 1.8; color: #333;">{{ content }}</pre>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if is_pdf %}
+            <!-- PDF.js Scripts -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+            <script>
+                // Worker setup
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+                const url = '{{ livre.fichier.url }}';
+                const container = document.getElementById('pdf-viewer');
+                let pdfDoc = null;
+                let scale = 1.2;
+                let lastSavedPage = {{ last_page|default:1 }};
+                let isInitialScroll = true;
+
+                // Intersection Observer to track visible page
+                const observerOptions = {
+                    root: container,
+                    rootMargin: '-40% 0px -40% 0px', // Trigger when page is in middle 20% of viewport
+                    threshold: 0.1
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const pageNum = parseInt(entry.target.dataset.pageNumber);
+                            document.getElementById('page_num').textContent = pageNum;
+                            
+                            // Save progress (debounced could be better, but simple logic here)
+                            if (!isInitialScroll) {
+                                saveProgress(pageNum);
+                            }
+                        }
+                    });
+                }, observerOptions);
+
+                /**
+                 * Main function to render the PDF
+                 */
+                pdfjsLib.getDocument(url).promise.then(async function(pdfDoc_) {
+                    pdfDoc = pdfDoc_;
+                    document.getElementById('page_count').textContent = pdfDoc.numPages;
+
+                    // Render all pages
+                    for (let num = 1; num <= pdfDoc.numPages; num++) {
+                        await renderPageContainer(num);
+                    }
+                    
+                    // After rendering containers, scroll to last saved page
+                    setTimeout(() => {
+                        const savedPageElement = document.querySelector(`.page-container[data-page-number="${lastSavedPage}"]`);
+                        if (savedPageElement) {
+                            savedPageElement.scrollIntoView({ behavior: 'auto', block: 'start' });
+                        }
+                        // Allow saving progress after initial scroll is done
+                        setTimeout(() => { isInitialScroll = false; }, 1000);
+                    }, 500);
+                });
+
+                async function renderPageContainer(num) {
+                    // Create wrapper
+                    const pageDiv = document.createElement('div');
+                    pageDiv.className = 'page-container position-relative bg-white shadow-lg mb-4';
+                    pageDiv.dataset.pageNumber = num;
+                    pageDiv.style.minHeight = '600px'; // placeholder height
+                    container.appendChild(pageDiv);
+
+                    // Observe this page
+                    observer.observe(pageDiv);
+
+                    // Get Page
+                    const page = await pdfDoc.getPage(num);
+                    const viewport = page.getViewport({scale: scale});
+                    
+                    // Set dimensions
+                    pageDiv.style.width = `${viewport.width}px`;
+                    pageDiv.style.height = `${viewport.height}px`;
+
+                    // Create Canvas
+                    const canvas = document.createElement('canvas');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    canvas.className = 'w-100 h-100';
+                    pageDiv.appendChild(canvas);
+
+                    // Render
+                    const ctx = canvas.getContext('2d');
+                    const renderContext = {
+                        canvasContext: ctx,
+                        viewport: viewport
+                    };
+                    page.render(renderContext);
+                }
+
+                function saveProgress(page) {
+                    const formData = new FormData();
+                    formData.append('update_progress', '1');
+                    formData.append('page', page);
+                    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+                    // Use navigator.sendBeacon for better reliability on page unload, 
+                    // or standard fetch. Here fetch is fine.
+                    fetch(window.location.href, {
+                        method: 'POST',
+                        body: formData
+                    }).then(res => {}).catch(err => console.error(err));
+                }
+
+                // Zoom handling (Optional: simple reload with new scale)
+                // For a true responsive zoom, we'd need to re-render all pages or use CSS transform
+            </script>
+            {% endif %}
+        </div>
+
+        <!-- Notes Column -->
+        <div class="col-md-4 h-100 d-flex flex-column">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-white border-bottom-0 pt-3">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-journal-text text-primary me-2"></i>Mes Notes
+                    </h5>
+                </div>
+                
+                <div class="card-body overflow-auto flex-grow-1 bg-light" style="max-height: 500px;">
+                    {% if notes %}
+                        <div class="list-group list-group-flush">
+                            {% for note in notes %}
+                            <div class="list-group-item bg-transparent border-bottom mb-2 rounded">
+                                <div class="d-flex justify-content-between">
+                                    <small class="text-muted">{{ note.date_creation|date:"d/m/Y H:i" }}</small>
+                                    {% if note.page_reference %}
+                                        <span class="badge bg-secondary">Page {{ note.page_reference }}</span>
+                                    {% endif %}
+                                </div>
+                                <p class="mb-0 mt-1">{{ note.contenu|linebreaksbr }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center text-muted py-5">
+                            <i class="bi bi-pencil fs-1 opacity-25"></i>
+                            <p class="mt-2">Aucune note pour ce livre.<br>Commencez à noter vos idées !</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="card-footer bg-white pt-3">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-2">
+                            <textarea name="contenu" class="form-control" rows="3" placeholder="Écrivez votre note ici..." required></textarea>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <input type="number" name="page" class="form-control" placeholder="Page (opt)" style="max-width: 100px;">
+                            <button type="submit" class="btn btn-primary flex-grow-1">Ajouter une note</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Bar / Saver (Floating) -->
+<div class="position-fixed bottom-0 start-50 translate-middle-x mb-4 p-3 bg-white rounded-pill shadow-lg d-flex align-items-center gap-3" style="z-index: 1000;">
+    <span class="fw-bold small text-muted">Progression :</span>
+    <form id="progressForm" class="d-flex align-items-center gap-2 m-0">
+        {% csrf_token %}
+        <input type="hidden" name="update_progress" value="1">
+        <input type="number" name="page" class="form-control form-control-sm text-center border-0 bg-light fw-bold" value="{{ last_page }}" style="width: 60px;" min="1">
+        <button type="button" onclick="saveProgress()" class="btn btn-sm btn-dark rounded-circle w-30px h-30px d-flex align-items-center justify-content-center p-0">
+            <i class="bi bi-check-lg"></i>
+        </button>
+    </form>
+</div>
+
+<style>
+    .w-30px { width: 30px; }
+    .h-30px { height: 30px; }
+</style>
+
+<script>
+    function saveProgress() {
+        const form = document.getElementById('progressForm');
+        const formData = new FormData(form);
+        
+        fetch(window.location.href, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.status === 'ok') {
+                const btn = form.querySelector('button');
+                const originalIcon = btn.innerHTML;
+                btn.classList.replace('btn-dark', 'btn-success');
+                btn.innerHTML = '<i class="bi bi-check-all"></i>';
+                setTimeout(() => {
+                    btn.classList.replace('btn-success', 'btn-dark');
+                    btn.innerHTML = originalIcon;
+                }, 2000);
+            }
+        });
+    }
+
+    function toggleNightMode() {
+        const body = document.body;
+        const pdfContainer = document.getElementById('pdf-container');
+        body.classList.toggle('bg-dark');
+        body.classList.toggle('text-white');
+        
+        // Improve contrast for PDF container if needed
+        if (body.classList.contains('bg-dark')) {
+            pdfContainer.style.filter = 'invert(0.9) hue-rotate(180deg)';
+        } else {
+            pdfContainer.style.filter = 'none';
+        }
+    }
+
+    function toggleFullScreen() {
+        const elem = document.documentElement;
+        if (!document.fullscreenElement) {
+            elem.requestFullscreen().catch(err => {
+                alert(`Error: ${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+    
+    function toggleNotes() {
+        const noteCol = document.querySelector('.col-md-4');
+        const pdfCol = document.querySelector('.col-md-8');
+        
+        if (noteCol.style.display === 'none') {
+            noteCol.style.display = 'flex';
+            pdfCol.className = 'col-md-8 h-100 d-flex flex-column';
+        } else {
+            noteCol.style.display = 'none';
+            pdfCol.className = 'col-12 h-100 d-flex flex-column';
+        }
+    }
+</script>
+{% endblock %}

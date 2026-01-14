@@ -1,0 +1,143 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║          🚀 ENVIRONNEMENT BETA DJANGO - DÉMARRAGE RAPIDE                 ║
+║                  Isolation totale et sécurisée                           ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+📌 ÉTAPE 1: PRÉPARER (1 minute)
+═════════════════════════════════════════════════════════════════════════════
+
+$ cp .env.beta.example .env.beta
+$ nano .env.beta
+
+✏️  À modifier dans .env.beta:
+   • SECRET_KEY - Générer: python3 -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+   • BASIC_AUTH_PASSWORD - Choisir un mot de passe fort (min 8 chars)
+   • ALLOWED_HOSTS - Votre domaine de test
+   • STRIPE_SECRET_KEY - Vérifier que c'est sk_test_ (jamais sk_live_)
+
+
+📌 ÉTAPE 2: VALIDER (1 minute)
+═════════════════════════════════════════════════════════════════════════════
+
+$ python3 validate_security.py
+
+✅ Doit afficher: "✅ ENVIRONNEMENT BETA SÉCURISÉ - PRÊT POUR LE DÉPLOIEMENT!"
+
+
+📌 ÉTAPE 3: DÉPLOYER (2 minutes)
+═════════════════════════════════════════════════════════════════════════════
+
+$ bash deploy_beta.sh
+
+Cela va:
+  ✅ Créer media_beta/ (médias de test)
+  ✅ Créer staticfiles_beta/ (fichiers CSS/JS)
+  ✅ Migrer la BD (db_beta.sqlite3)
+  ✅ Créer un compte admin (admin_beta / beta_admin_password_123)
+
+
+📌 ÉTAPE 4: LANCER (instant)
+═════════════════════════════════════════════════════════════════════════════
+
+$ bash run_beta.sh
+
+Le serveur démarre sur http://localhost:8000
+
+
+📌 ÉTAPE 5: ACCÉDER (instant)
+═════════════════════════════════════════════════════════════════════════════
+
+🌐 Site: http://localhost:8000/
+
+🔐 Basic Auth (demandé au premier accès):
+   Utilisateur: beta_user
+   Mot de passe: [celui de .env.beta BASIC_AUTH_PASSWORD]
+
+🔑 Admin:
+   URL: http://localhost:8000/admin/
+   Utilisateur: admin_beta
+   Mot de passe: beta_admin_password_123
+   ⚠️  Changez ce mot de passe après première connexion!
+
+
+═════════════════════════════════════════════════════════════════════════════
+🔐 CE QUI EST PROTÉGÉ
+═════════════════════════════════════════════════════════════════════════════
+
+✅ Accès protégé par mot de passe (Basic Auth)
+✅ Base de données isolée (db_beta.sqlite3 ≠ db.sqlite3)
+✅ Médias isolés (media_beta/ ≠ media/)
+✅ Configuration séparée (settings_beta.py)
+✅ Services tiers en mode TEST (Stripe clés TEST)
+✅ Email via console (pas d'envoi réel)
+
+Résultat: Zéro risque pour la production ✨
+
+
+═════════════════════════════════════════════════════════════════════════════
+⚠️  EN CAS DE PROBLÈME
+═════════════════════════════════════════════════════════════════════════════
+
+❌ La production a été modifiée:
+   $ bash rollback.sh
+   (Restaure tout en < 30 secondes)
+
+❌ Le serveur ne démarre pas:
+   $ python3 manage.py check --settings=atj_site.settings_beta
+   $ cat logs/gunicorn_error.log
+
+❌ Erreur "Module not found":
+   $ pip install -r requirements.txt
+
+
+═════════════════════════════════════════════════════════════════════════════
+📚 DOCUMENTATION DISPONIBLE
+═════════════════════════════════════════════════════════════════════════════
+
+📖 BETA_QUICKSTART.md
+   Démarrage détaillé avec commandes courantes
+
+📖 DEPLOYMENT_GUIDE_BETA.md
+   Déploiement sur Render, Railway ou VPS
+
+📖 SECURITY_GUIDE_BETA.md
+   Explication complète de la sécurité
+
+📖 BETA_DEPLOYMENT_CHECKLIST.md
+   Checklist avant le lancement
+
+📖 README_BETA.md
+   Vue d'ensemble et guide principal
+
+
+═════════════════════════════════════════════════════════════════════════════
+✅ VÉRIFICATIONS RAPIDES
+═════════════════════════════════════════════════════════════════════════════
+
+Avant de lancer la beta, vérifiez:
+
+[ ] .env.beta créé et rempli
+[ ] python3 validate_security.py = tout OK
+[ ] bash deploy_beta.sh = succès
+[ ] bash run_beta.sh = serveur démarre
+[ ] http://localhost:8000 = accessible
+[ ] Basic Auth = demande identifiants
+[ ] /admin/ = fonctionne
+[ ] db.sqlite3 (production) = intacte
+
+
+═════════════════════════════════════════════════════════════════════════════
+🎯 RÉSUMÉ
+═════════════════════════════════════════════════════════════════════════════
+
+5 minutes pour lancer la beta ⏱️
+Isolation 100% garantie 🔐
+Rollback en < 30 secondes 🔄
+Documentation complète 📚
+
+VOUS ÊTES PRÊT! 🚀
+
+═════════════════════════════════════════════════════════════════════════════

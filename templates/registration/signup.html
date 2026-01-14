@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<div class="min-vh-100 d-flex align-items-center justify-content-center bg-light py-5">
+    <div class="container">
+        <div class="row justify-content-center shadow-lg rounded-4 overflow-hidden bg-white mx-1 mx-lg-0" style="min-height: 600px;">
+            
+            <!-- Right Side: Form (Order 2 on mobile, 1 on desktop) -->
+            <div class="col-lg-6 p-5 d-flex flex-column justify-content-center order-2 order-lg-1">
+                <div class="mb-4 text-center text-lg-start">
+                    <h2 class="fw-bold mb-2 text-dark">Créer un compte</h2>
+                    <p class="text-muted">Rejoignez la communauté ATJ et commencez à apprendre dès aujourd'hui.</p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    
+                    <div class="form-check mb-4 mt-3">
+                        <input type="checkbox" class="form-check-input" id="terms" required>
+                        <label class="form-check-label small text-muted" for="terms">
+                            J'accepte les <a href="#" class="text-dark fw-bold">conditions d'utilisation</a> et la <a href="#" class="text-dark fw-bold">politique de confidentialité</a>.
+                        </label>
+                    </div>
+
+                    <div class="d-grid mb-4">
+                        <button type="submit" class="btn btn-nav-cta btn-lg shadow-sm w-100">S'inscrire gratuitement</button>
+                    </div>
+
+                    <div class="text-center">
+                        <p class="text-muted mb-0">Déjà membre ? <a href="{% url 'login' %}" class="text-primary fw-bold text-decoration-none">Connectez-vous</a></p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Left Side: Image/Value Prop (Order 1 on mobile, 2 on desktop) -->
+            <div class="col-lg-6 d-none d-lg-block bg-dark position-relative p-0 order-1 order-lg-2">
+                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" 
+                     alt="Community" 
+                     class="w-100 h-100 object-fit-cover opacity-25">
+                
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center p-5 text-white z-2">
+                    <div class="mb-4">
+                        <i class="bi bi-check-circle-fill text-success fs-4 me-2"></i>
+                        <span class="fs-5 fw-bold">Accès illimité aux cours</span>
+                    </div>
+                    <div class="mb-4">
+                        <i class="bi bi-check-circle-fill text-success fs-4 me-2"></i>
+                        <span class="fs-5 fw-bold">Mentorat personnalisé</span>
+                    </div>
+                    <div class="mb-4">
+                        <i class="bi bi-check-circle-fill text-success fs-4 me-2"></i>
+                        <span class="fs-5 fw-bold">Certificats reconnus</span>
+                    </div>
+                    <div class="mt-4 pt-4 border-top border-secondary">
+                        <p class="fst-italic opacity-75">"L'ATJ a changé ma vie professionnelle. Je suis passé de débutant à expert en 6 mois."</p>
+                        <small class="fw-bold">— Thomas, Étudiant ATJ</small>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

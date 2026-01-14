@@ -1,0 +1,657 @@
+/* Import Google Fonts - Roboto & Montserrat */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap');
+
+:root {
+    /* EdTech Premium Palette / OpenClassrooms Style */
+    --primary-color: #7451eb; /* Main Purple */
+    --primary-hover: #5a3dc2;
+    --primary-light: #ece7fb; /* Light purple for backgrounds */
+    --primary-gradient: linear-gradient(135deg, #7451eb 0%, #5a3dc2 100%);
+    --primary-gradient-reverse: linear-gradient(135deg, #5a3dc2 0%, #7451eb 100%);
+    
+    --secondary-color: #3e4248; /* Dark Grey for secondary text */
+    --accent-color: #00d2a1; /* Success Green */
+    --accent-gradient: linear-gradient(135deg, #00d2a1 0%, #00a876 100%);
+    
+    --text-dark: #121315;
+    --text-grey: #676d7c;
+    
+    --bg-light: #f5f7fa; /* Very light grey background */
+    --white: #ffffff;
+    
+    --border-color: #e5e5e5;
+    --border-radius: 12px;
+    
+    /* Semantic Colors */
+    --success: #00d2a1;
+    --warning: #ffb800;
+    --danger: #f25c5c;
+    --info: #4da6ff;
+
+    /* Pastels for Badges */
+    --pastel-purple: #ebe5fc;
+    --pastel-blue: #e3f2fd;
+    --pastel-green: #e0f2f1;
+    --pastel-orange: #fff3e0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    padding-top: 76px; /* Sticky nav height */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+}
+
+.display-1, .display-2, .display-3, .display-4, .display-5 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--primary-hover);
+}
+
+/* --- Navigation (OpenClassrooms Style) --- */
+.navbar {
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.08);
+    padding: 0.8rem 0;
+    font-family: 'Roboto', sans-serif;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.navbar-brand {
+    font-weight: 900;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.6rem;
+    letter-spacing: -0.5px;
+}
+
+.nav-link {
+    font-weight: 500;
+    color: var(--text-dark) !important;
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem !important;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--primary-color) !important;
+    background-color: var(--primary-light);
+    transform: translateY(-2px);
+}
+
+/* Buttons */
+.btn {
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 0.7rem 1.5rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease-in-out;
+    border: none;
+    box-shadow: 0 4px 15px rgba(116, 81, 235, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: left 0.3s ease;
+    z-index: -1;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.btn-lg {
+    padding: 0.9rem 2.5rem;
+    font-size: 1.1rem;
+    border-radius: 12px;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: 0 8px 16px rgba(116, 81, 235, 0.3);
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background: var(--primary-gradient-reverse);
+    box-shadow: 0 12px 24px rgba(116, 81, 235, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: var(--accent-gradient);
+    color: white;
+    box-shadow: 0 8px 16px rgba(0, 210, 161, 0.3);
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #00a876 0%, #008060 100%);
+    box-shadow: 0 12px 24px rgba(0, 210, 161, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-gradient);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 8px 16px rgba(116, 81, 235, 0.3);
+}
+
+.btn-outline-secondary {
+    color: var(--text-grey);
+    border: 2px solid var(--border-color);
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.btn-outline-secondary:hover {
+    background: var(--bg-light);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-danger {
+    color: var(--danger);
+    border: 2px solid #f5a5a5;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.btn-outline-danger:hover {
+    background: #fee2e2;
+    color: var(--danger);
+    border-color: var(--danger);
+}
+
+.btn-light {
+    background-color: #f8f9fa;
+    color: var(--text-dark);
+    border: 1px solid #e9ecef;
+    box-shadow: none;
+}
+
+.btn-light:hover {
+    background-color: #e9ecef;
+    color: var(--text-dark);
+}
+
+.btn-secondary {
+    background-color: #edeff1;
+    color: var(--text-dark);
+    border-color: #edeff1;
+}
+
+.btn-secondary:hover {
+    background-color: #dfe1e3;
+    color: var(--text-dark);
+    border-color: #dfe1e3;
+}
+
+/* Navbar specific buttons if used */
+.btn-nav-cta {
+    background: var(--primary-gradient);
+    color: white !important;
+    border-radius: 10px;
+    padding: 0.6rem 1.8rem;
+    box-shadow: 0 6px 16px rgba(116, 81, 235, 0.3);
+}
+
+.btn-nav-cta:hover {
+    box-shadow: 0 10px 24px rgba(116, 81, 235, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-nav-login {
+    color: var(--text-grey);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-nav-login:hover {
+    color: var(--primary-color);
+    background-color: transparent;
+}
+
+/* --- Forms & Inputs --- */
+.form-control, .form-select {
+    border-radius: 10px;
+    border: 2px solid #e5e7eb;
+    padding: 0.8rem 1.2rem;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    background-color: #f9fafb;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 5px rgba(116, 81, 235, 0.1);
+}
+
+.form-label {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.7rem;
+    color: var(--text-dark);
+}
+
+/* --- Cards --- */
+.card {
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background-color: white;
+    overflow: hidden;
+    position: relative;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-gradient);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: 1px solid var(--bg-light);
+    font-weight: 700;
+}
+
+.card-footer {
+    background-color: white;
+    border-top: 1px solid var(--bg-light);
+}
+
+/* --- Tables --- */
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-striped-bg: rgba(0, 0, 0, 0.02);
+}
+.table thead th {
+    border-bottom: 2px solid var(--border-color);
+    color: var(--text-grey);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 1rem;
+}
+.table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+    color: var(--text-dark);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.95rem;
+}
+
+/* --- Pagination --- */
+.pagination .page-item .page-link {
+    color: var(--primary-color);
+    border-radius: 4px;
+    margin: 0 2px;
+    border: none;
+    font-weight: 600;
+}
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+.pagination .page-item.disabled .page-link {
+    color: var(--text-grey);
+    background-color: transparent;
+}
+
+/* --- Alerts --- */
+.alert {
+    border: none;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    font-weight: 500;
+}
+.alert-success {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+.alert-warning {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+.alert-danger {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+.alert-info {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+/* --- Footer --- */
+footer {
+    background-color: white;
+    border-top: 1px solid var(--border-color);
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+footer h5, footer h6 {
+    color: var(--text-dark);
+    font-weight: 700;
+}
+footer a.text-muted:hover {
+    color: var(--primary-color) !important;
+}
+
+/* --- Helpers --- */
+.text-primary { color: var(--primary-color) !important; }
+.bg-primary { background-color: var(--primary-color) !important; }
+.bg-light { background-color: var(--bg-light) !important; }
+
+/* Hero Section override for base template structure */
+.hero-section {
+    padding: 4rem 0;
+}
+.hero-title {
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+/* WhatsApp Widget */
+.whatsapp-widget {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #25d366 0%, #20a852 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.whatsapp-widget:hover {
+    transform: scale(1.15) translateY(-4px);
+    color: white;
+    box-shadow: 0 12px 32px rgba(37, 211, 102, 0.5);
+}
+
+/* --- Dropdowns --- */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+.dropdown-item {
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+.dropdown-item:hover, .dropdown-item:focus {
+    background-color: var(--bg-light);
+    color: var(--primary-color);
+}
+.dropdown-divider {
+    border-top-color: var(--bg-light);
+}
+
+/* --- Accordion --- */
+.accordion-item {
+    border: none;
+    background-color: transparent;
+    margin-bottom: 1rem;
+}
+
+.accordion-button {
+    background-color: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px !important;
+    font-weight: 700;
+    color: var(--text-dark);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+    padding: 1.25rem;
+    transition: all 0.3s ease;
+}
+
+.accordion-button:not(.collapsed) {
+    background: linear-gradient(135deg, rgba(116, 81, 235, 0.05) 0%, rgba(116, 81, 235, 0.02) 100%);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 8px 16px rgba(116, 81, 235, 0.15) !important;
+}
+
+.accordion-button:hover {
+    background: linear-gradient(135deg, rgba(116, 81, 235, 0.08) 0%, rgba(116, 81, 235, 0.03) 100%);
+}
+
+.accordion-button:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 5px rgba(116, 81, 235, 0.1) !important;
+}
+
+.accordion-body {
+    background-color: white;
+    border: 2px solid #e5e7eb;
+    border-top: none;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    padding: 1.5rem;
+}
+
+/* --- List Groups --- */
+.list-group-item {
+    border: none;
+    padding: 1rem 1.25rem;
+    font-weight: 500;
+    border-bottom: 1px solid var(--bg-light);
+}
+.list-group-item:last-child {
+    border-bottom: none;
+}
+.list-group-item-action:hover, .list-group-item-action:focus {
+    color: var(--primary-color);
+    background-color: var(--bg-light);
+}
+.list-group-item.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+/* --- Badges & Tags --- */
+.badge {
+    padding: 0.5em 0.8em;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    border-radius: 4px;
+}
+.badge-category {
+    background-color: var(--pastel-purple);
+    color: var(--primary-color);
+    text-transform: uppercase;
+}
+.badge-new {
+    background-color: var(--pastel-blue);
+    color: #1976d2;
+}
+.badge-hot {
+    background-color: var(--pastel-orange);
+    color: #e65100;
+}
+
+/* --- Utilities --- */
+.shadow-hover-lg {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.shadow-hover-lg:hover {
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+    transform: translateY(-5px);
+}
+.object-fit-cover {
+    object-fit: cover;
+}
+
+/* --- Dark Mode Variables --- */
+[data-theme="dark"] {
+    --text-dark: #f0f0f0;
+    --text-grey: #a0a0a0;
+    --bg-light: #121315; /* Main dark background */
+    --white: #1e1e24;    /* Cards background */
+    --border-color: #2d2d35;
+    --primary-light: #2a2240;
+    
+    /* Bootstrap overrides for dark mode */
+    --bs-body-bg: var(--bg-light);
+    --bs-body-color: var(--text-dark);
+}
+
+/* Specific Dark Mode overrides */
+[data-theme="dark"] .navbar {
+    background-color: #1e1e24 !important;
+    box-shadow: 0 4px 12px 0 rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .card {
+    background-color: var(--white);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .form-control, 
+[data-theme="dark"] .form-select {
+    background-color: #2d2d35;
+    border-color: #40404a;
+    color: var(--text-dark);
+}
+
+[data-theme="dark"] .alert-success {
+    background-color: rgba(6, 95, 70, 0.4);
+    color: #a7f3d0;
+}
+
+[data-theme="dark"] .alert-info {
+    background-color: rgba(30, 64, 175, 0.4);
+    color: #bfdbfe;
+}
+
+[data-theme="dark"] .table {
+    --bs-table-color: var(--text-dark);
+    --bs-table-striped-color: var(--text-dark);
+    --bs-table-active-color: var(--text-dark);
+    --bs-table-hover-color: var(--text-dark);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .card-header,
+[data-theme="dark"] .card-footer {
+    background-color: rgba(0,0,0,0.2);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .list-group-item {
+    background-color: var(--white);
+    color: var(--text-dark);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] footer {
+    background-color: #1e1e24;
+    border-top-color: var(--border-color);
+}
+
+/* Ensure images in dark mode aren't too bright if needed, optional */
+/* [data-theme="dark"] img { opacity: 0.9; transition: opacity 0.3s; } */
+
+/* Fix utilities for dark mode */
+[data-theme="dark"] .text-dark {
+    color: var(--text-dark) !important;
+}
+
+[data-theme="dark"] .text-muted {
+    color: var(--text-grey) !important;
+}
+
+[data-theme="dark"] .bg-white {
+    background-color: var(--white) !important;
+}
+
+[data-theme="dark"] .bg-light {
+    background-color: var(--bg-light) !important; /* already mapped but good to ensure utility class follows */
+}
+
+/* Fix specific button overrides if handled by utility classes */
+[data-theme="dark"] .btn-outline-primary {
+    color: #9d7bf5; /* Lighter purple for better contrast on dark */
+    border-color: #7451eb;
+}
+[data-theme="dark"] .btn-outline-primary:hover {
+    background-color: #7451eb;
+    color: #fff;
+}

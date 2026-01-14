@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ resource.titre }} - Ressource{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'accounts:resources' %}" class="text-decoration-none text-muted">Ressources</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ resource.titre }}</li>
+                </ol>
+            </nav>
+
+            <!-- Main Content Card -->
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-primary text-white p-5 position-relative">
+                    <div class="position-absolute top-0 end-0 p-3 opacity-25">
+                        <i class="bi bi-folder2-open" style="font-size: 8rem;"></i>
+                    </div>
+                    <div class="position-relative z-1">
+                        <h1 class="display-5 fw-bold mb-2">{{ resource.titre }}</h1>
+                        <p class="lead opacity-75 mb-0">Explorez cette ressource pédagogique</p>
+                    </div>
+                </div>
+                
+                <div class="card-body p-5">
+                    <div class="row g-5">
+                        <div class="col-md-8">
+                            <h3 class="mb-4 text-primary border-bottom pb-2">Description</h3>
+                            <div class="lead text-muted mb-5">
+                                {% if resource.description %}
+                                    {{ resource.description|linebreaks }}
+                                {% else %}
+                                    <p>Pas de description détaillée disponible pour cette ressource.</p>
+                                {% endif %}
+                            </div>
+
+                            {% if resource.lien_video %}
+                            <div class="mb-5">
+                                <h3 class="mb-4 text-primary border-bottom pb-2">
+                                    <i class="bi bi-play-circle me-2"></i>Contenu Vidéo
+                                </h3>
+                                <div class="ratio ratio-16x9 shadow rounded-3 overflow-hidden">
+                                    <iframe src="{{ resource.lien_video }}" title="Video source" allowfullscreen></iframe>
+                                </div>
+                                <div class="mt-2 text-end">
+                                    <a href="{{ resource.lien_video }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                        <i class="bi bi-box-arrow-up-right me-1"></i>Ouvrir dans un nouvel onglet
+                                    </a>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card bg-light border-0 rounded-4 p-4 shadow-sm sticky-top" style="top: 100px;">
+                                <h4 class="mb-4 fw-bold">Actions</h4>
+                                
+                                {% if resource.fichier %}
+                                <div class="d-grid gap-3">
+                                    <div class="p-3 bg-white rounded-3 border d-flex align-items-center">
+                                        <i class="bi bi-file-earmark-text text-primary fs-3 me-3"></i>
+                                        <div class="overflow-hidden">
+                                            <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.7rem;">Fichier joint</small>
+                                            <span class="text-truncate d-block">{{ resource.fichier.name|cut:"ressources/" }}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <a href="{{ resource.fichier.url }}" download class="btn btn-primary btn-lg rounded-pill shadow-sm transition-hover-up">
+                                        <i class="bi bi-download me-2"></i>Télécharger
+                                    </a>
+                                    
+                                    {% if resource.fichier.url|lower|slice:"-4:" == ".pdf" %}
+                                    <a href="{{ resource.fichier.url }}" target="_blank" class="btn btn-outline-primary btn-lg rounded-pill shadow-sm transition-hover-up">
+                                        <i class="bi bi-eye me-2"></i>Lire en ligne
+                                    </a>
+                                    {% endif %}
+                                </div>
+                                {% else %}
+                                <div class="alert alert-info border-0 d-flex align-items-center mb-0">
+                                    <i class="bi bi-info-circle-fill me-2"></i>
+                                    <div>Aucun fichier téléchargeable associé.</div>
+                                </div>
+                                {% endif %}
+
+                                <hr class="my-4">
+                                
+                                <div class="d-grid">
+                                    <a href="{% url 'accounts:resources' %}" class="btn btn-link text-decoration-none text-secondary">
+                                        <i class="bi bi-arrow-left me-1"></i>Retour à la liste
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

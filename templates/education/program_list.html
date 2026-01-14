@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Nos Programmes</h1>
+<div class="row">
+    {% for prog in programmes %}
+    <div class="col-md-4">
+        <div class="card mb-4">
+            {% if prog.image %}
+            <img src="{{ prog.image.url }}" class="card-img-top" alt="{{ prog.titre }}">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ prog.titre }}</h5>
+                <p class="card-text">{{ prog.description }}</p>
+                <p class="fw-bold">{{ prog.prix }} €</p>
+                <a href="#" class="btn btn-primary">S'inscrire (via Sessions)</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

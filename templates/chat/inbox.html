@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="bg-light min-vh-100 py-4">
+    <div class="container h-100">
+        <div class="row h-100 justify-content-center">
+            <div class="col-lg-10 h-100">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden h-100" style="min-height: 80vh;">
+                    <div class="row g-0 h-100">
+                        <!-- Sidebar: Thread List -->
+                        <div class="col-md-4 border-end bg-white h-100 d-flex flex-column">
+                            <div class="p-4 border-bottom bg-light">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="fw-bold mb-0">Messages</h5>
+                                    <span class="badge bg-primary rounded-pill">{{ threads.count }}</span>
+                                </div>
+                                <input type="text" class="form-control rounded-pill border-0 shadow-sm" placeholder="Rechercher une conversation...">
+                            </div>
+                            
+                            <div class="list-group list-group-flush overflow-auto flex-grow-1">
+                                {% for thread in threads %}
+                                    {% with other=thread.participants.all|first %} {# Logic handled in view properly usually but simple here #}
+                                    {% if other == user %} 
+                                        {% with other=thread.participants.all.last %}{% endwith %} {# Hacky in template, fixed in view context usually #}
+                                    {% endif %}
+                                    {# Better way: loop participants #}
+                                    {% for p in thread.participants.all %}
+                                        {% if p != user %}
+                                            <a href="{% url 'thread_detail' thread.id %}" class="list-group-item list-group-item-action border-0 p-3 hover-bg-light {% if active_thread == thread %}bg-light{% endif %}">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="position-relative">
+                                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
+                                                            {{ p.username|make_list|first|upper }}
+                                                        </div>
+                                                        <span class="position-absolute bottom-0 end-0 bg-success border border-white rounded-circle p-1"></span>
+                                                    </div>
+                                                    <div class="flex-grow-1 overflow-hidden">
+                                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                                            <h6 class="mb-0 fw-bold text-truncate">{{ p.get_full_name|default:p.username }}</h6>
+                                                            <small class="text-muted" style="font-size: 0.7rem;">{{ thread.updated_at|date:"H:i" }}</small>
+                                                        </div>
+                                                        <p class="mb-0 small text-muted text-truncate">
+                                                            {% if thread.get_last_message %}
+                                                                {% if thread.get_last_message.sender == user %}Vous: {% endif %}
+                                                                {{ thread.get_last_message.content }}
+                                                            {% else %}
+                                                                Nouvelle conversation
+                                                            {% endif %}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% endwith %}
+                                {% empty %}
+                                    <div class="text-center p-5">
+                                        <i class="bi bi-chat-square-dots fs-1 text-muted opacity-25"></i>
+                                        <p class="text-muted mt-3 small">Aucune conversation.</p>
+                                        <a href="{% url 'mentors' %}" class="btn btn-sm btn-primary rounded-pill">Trouver un mentor</a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Main Chat Area: Placeholder for Inbox -->
+                        <div class="col-md-8 bg-white d-none d-md-flex align-items-center justify-content-center flex-column text-center p-5">
+                            <img src="https://cdni.iconscout.com/illustration/premium/thumb/chatting-3485293-2915833.png" alt="Chat" class="img-fluid mb-4" style="max-width: 300px;">
+                            <h3 class="fw-bold">Sélectionnez une conversation</h3>
+                            <p class="text-muted">Échangez avec vos mentors et progressez dans votre carrière.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

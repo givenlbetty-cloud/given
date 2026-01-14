@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0">Contactez-nous</h2>
+            </div>
+            <div class="card-body">
+                <p>Une question ? Une suggestion ? N'hésitez pas à nous écrire.</p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Envoyer le message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="mt-4 text-center">
+            <h4>Autres moyens de contact</h4>
+            <p>
+                Email : <a href="mailto:info@atj.com">info@atj.com</a><br>
+                Téléphone : +33 1 23 45 67 89
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
