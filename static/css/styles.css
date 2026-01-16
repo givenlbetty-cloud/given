@@ -44,6 +44,57 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* Mobile First Optimizations */
+@media (max-width: 767.98px) {
+    body {
+        padding-top: 60px; /* Reduced navbar height on mobile */
+    }
+    
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .display-3, .display-4 {
+        font-size: 2.5rem; /* Smaller prominent headings */
+    }
+
+    .container {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
+    /* Better touch targets for buttons */
+    .btn {
+        padding: 12px 20px; 
+        font-size: 1rem;
+    }
+}
+
+/* Hover Effects and Interactive Images */
+.card-img-top-wrapper {
+    overflow: hidden;
+    position: relative;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.hover-zoom {
+    transition: transform 0.4s ease, box-shadow 0.3s ease;
+}
+
+.card:hover .hover-zoom {
+    transform: scale(1.05);
+}
+
+.shadow-hover {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.shadow-hover:hover {
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
+    transform: translateY(-5px);
+}
+
+/* Typography & Whitespace */
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;

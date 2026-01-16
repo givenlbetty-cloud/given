@@ -48,18 +48,18 @@
                              <button class="btn btn-light rounded-pill disabled">C'est vous !</button>
                             {% endif %}
                         {% else %}
-                            <a href="{% url 'login' %}?next={% url 'mentors' %}" class="btn btn-outline-primary rounded-pill">
+                            <a href="{% url 'login' %}?next={% url 'mentoring:liste' %}" class="btn btn-outline-primary rounded-pill">
                                 Connectez-vous pour discuter
                             </a>
                         {% endif %}
-                        <a href="{% url 'mentor_detail' mentor.id %}" class="btn btn-link text-decoration-none text-muted small">Voir le profil complet</a>
+                        <a href="{% url 'mentoring:detail' mentor.id %}" class="btn btn-link text-decoration-none text-muted small">Voir le profil complet</a>
                     </div>
                 </div>
             </div>
             {% empty %}
             <div class="col-12 text-center py-5">
                 <p class="text-muted fs-5">Aucun mentor trouvé pour cette recherche.</p>
-                <a href="{% url 'mentors' %}" class="btn btn-link">Voir tous les mentors</a>
+                <a href="{% url 'mentoring:liste' %}" class="btn btn-link">Voir tous les mentors</a>
             </div>
             {% endfor %}
         </div>

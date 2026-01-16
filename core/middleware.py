@@ -19,7 +19,7 @@ class BasicAuthMiddleware(MiddlewareMixin):
     """
 
     def __init__(self, get_response):
-        self.get_response = get_response
+        super().__init__(get_response)
         self.enable_basic_auth = os.getenv('ENABLE_BASIC_AUTH', 'False') == 'True'
         self.username = os.getenv('BASIC_AUTH_USERNAME', 'beta_user')
         self.password = os.getenv('BASIC_AUTH_PASSWORD', 'change_me')

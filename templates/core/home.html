@@ -12,10 +12,10 @@
                 <p class="hero-subtitle lead">Rejoignez une communauté d'élite. Développez des compétences concrètes grâce à nos formations et mentors experts.</p>
                 
                 <div class="d-flex flex-wrap gap-3">
-                    <a href="{% url 'programmes' %}" class="btn btn-nav-cta btn-lg shadow-sm">
+                    <a href="{% url 'formations:liste' %}" class="btn btn-nav-cta btn-lg shadow-sm">
                         Découvrir les cours
                     </a>
-                    <a href="{% url 'mentors' %}" class="btn btn-nav-login btn-lg border border-2">
+                    <a href="{% url 'mentoring:liste' %}" class="btn btn-nav-login btn-lg border border-2">
                         Trouver un mentor
                     </a>
                 </div>
@@ -62,7 +62,7 @@
                 <span class="text-primary fw-bold text-uppercase small ls-1">Le Blog</span>
                 <h2 class="fw-bold mt-2 h1">Derniers conseils carrière</h2>
             </div>
-            <a href="{% url 'blog_index' %}" class="fw-bold text-decoration-none">Voir tout <i class="bi bi-arrow-right"></i></a>
+            <a href="{% url 'blog:index' %}" class="fw-bold text-decoration-none">Voir tout <i class="bi bi-arrow-right"></i></a>
         </div>
 
         <div class="row g-4">

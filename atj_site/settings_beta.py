@@ -37,15 +37,18 @@ DEBUG = os.getenv('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 # CSRF & CORS pour domaine beta uniquement
-CSRF_TRUSTED_ORIGINS = os.getenv(
-    'CSRF_TRUSTED_ORIGINS',
-    'https://beta.monprojet.com,http://localhost:8000,http://127.0.0.1:8000'
-).split(',')
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip() for origin in os.getenv(
+        'CSRF_TRUSTED_ORIGINS',
+        'https://beta.monprojet.com,http://localhost:8000,http://127.0.0.1:8000,https://localhost:8000,https://*.app.github.dev,https://*.github.dev'
+    ).split(',')
+]
 
 print(f"""
 ╔══════════════════════════════════════════╗
 ║  🚀 DJANGO BETA ENVIRONMENT              ║
 ║  DEBUG={DEBUG}, HOSTS={ALLOWED_HOSTS[0]}
+║  Trusted Origins: {', '.join(CSRF_TRUSTED_ORIGINS[:2])}...
 ║  Database: db_beta.sqlite3              ║
 ║  Médias: media_beta/                    ║
 ╚══════════════════════════════════════════╝
@@ -188,7 +191,7 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # ═══════════════════════════════════════════════════════════════════════
 
 AUTH_USER_MODEL = "accounts.CustomUser"
-LOGIN_REDIRECT_URL = "dashboard"
+LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 
 # ═══════════════════════════════════════════════════════════════════════

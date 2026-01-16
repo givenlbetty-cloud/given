@@ -30,8 +30,11 @@
                             {% endfor %}
                         {% endif %}
 
-                        <form method="post" novalidate>
+                        <form method="post" autocomplete="off" novalidate>
                             {% csrf_token %}
+                            <!-- Fake fields to stop browser autofill -->
+                            <input style="display:none" type="text" name="fakeusernameremembered"/>
+                            <input style="display:none" type="password" name="fakepasswordremembered"/>
                             
                             <!-- Username/Email Field -->
                             <div class="mb-4">
@@ -40,7 +43,7 @@
                                     <span class="input-group-text border-0 bg-light" style="border-radius: 10px 0 0 10px;">
                                         <i class="bi bi-person text-primary"></i>
                                     </span>
-                                    <input type="text" class="form-control border-0 bg-light" id="id_username" name="username" placeholder="Entrez votre nom d'utilisateur" required style="border-radius: 0 10px 10px 0;">
+                                    <input type="text" class="form-control border-0 bg-light" id="id_username" name="username" placeholder="Entrez votre nom d'utilisateur" autocomplete="off" required style="border-radius: 0 10px 10px 0;">
                                 </div>
                                 {% if form.username.errors %}
                                     <small class="text-danger d-block mt-2">
@@ -56,7 +59,7 @@
                                     <span class="input-group-text border-0 bg-light" style="border-radius: 10px 0 0 10px;">
                                         <i class="bi bi-lock text-primary"></i>
                                     </span>
-                                    <input type="password" class="form-control border-0 bg-light" id="id_password" name="password" placeholder="Entrez votre mot de passe" required style="border-radius: 0 10px 10px 0;">
+                                    <input type="password" class="form-control border-0 bg-light" id="id_password" name="password" placeholder="Entrez votre mot de passe" autocomplete="new-password" required style="border-radius: 0 10px 10px 0;">
                                 </div>
                                 {% if form.password.errors %}
                                     <small class="text-danger d-block mt-2">

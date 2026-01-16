@@ -80,3 +80,4 @@ docs/_build/
 server.log
 logs/
 *.log
+db.sqlite3.backup.*

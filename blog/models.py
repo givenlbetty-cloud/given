@@ -1,6 +1,8 @@
 from django.db import models
+from django.conf import settings
 
 class Article(models.Model):
+    auteur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='articles', null=True, blank=True)
     titre = models.CharField(max_length=200)
     contenu = models.TextField()
     date_publication = models.DateTimeField(auto_now_add=True)

@@ -35,7 +35,7 @@
                                     {% if livre.is_free %}
                                         Gratuit
                                     {% else %}
-                                        {{ livre.prix }} €
+                                        Gratuit (Offre spéciale)
                                     {% endif %}
                                 </h3>
                             </div>
@@ -50,7 +50,7 @@
                                     </a>
                                 {% else %}
                                     <a href="{% url 'library:acheter' livre.id %}" class="btn btn-success btn-sm rounded-pill fw-bold">
-                                        <i class="bi bi-cart-plus me-1"></i>Acheter
+                                        <i class="bi bi-plus-circle me-1"></i>Ajouter à ma bibliothèque
                                     </a>
                                 {% endif %}
                             </div>

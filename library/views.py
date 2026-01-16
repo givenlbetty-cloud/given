@@ -69,17 +69,9 @@ def detail_livre(request, livre_id):
 def lire_livre(request, livre_id):
     livre = get_object_or_404(Livre, id=livre_id)
     
-    # Vérification des droits d'accès
-    achat = None
-    if not livre.is_free():
-        try:
-            achat = AchatLivre.objects.get(user=request.user, livre=livre)
-        except AchatLivre.DoesNotExist:
-             messages.error(request, "Vous devez acheter ce livre pour le lire.")
-             return redirect('library:detail', livre_id=livre.id)
-    else:
-        # Si le livre est gratuit, on crée ou récupère l'objet achat pour le suivi
-        achat, created = AchatLivre.objects.get_or_create(user=request.user, livre=livre)
+    # MODIFICATION : Tous les livres sont gratuits et accessibles
+    # On crée ou récupère l'objet achat pour le suivi de lecture uniquement
+    achat, created = AchatLivre.objects.get_or_create(user=request.user, livre=livre)
 
     # Gestion des notes
     if request.method == 'POST':
@@ -133,16 +125,18 @@ def lire_livre(request, livre_id):
 def acheter_livre(request, livre_id):
     livre = get_object_or_404(Livre, id=livre_id)
     
-    if livre.is_free():
-        # Pour les livres gratuits, on les ajoute directement
-        obj, created = AchatLivre.objects.get_or_create(user=request.user, livre=livre)
-        if created:
-            messages.success(request, f"'{livre.titre}' a été ajouté à votre bibliothèque.")
-        else:
-            messages.info(request, "Ce livre est déjà dans votre bibliothèque.")
-        return redirect('library:detail', livre_id=livre.id)
+    # MODIFICATION : Tous les livres sont considérés comme gratuits
+    # Ajout direct à la bibliothèque
+    obj, created = AchatLivre.objects.get_or_create(user=request.user, livre=livre)
+    if created:
+        messages.success(request, f"'{livre.titre}' a été ajouté à votre bibliothèque gratuitement.")
+    else:
+        messages.info(request, "Ce livre est déjà dans votre bibliothèque.")
+    return redirect('library:detail', livre_id=livre.id)
     
-    if AchatLivre.objects.filter(user=request.user, livre=livre).exists():
+    # Le code ci-dessous est désactivé car tout devint gratuit
+    """
+    if livre.is_free():
          messages.info(request, "Vous avez déjà acheté ce livre.")
          return redirect('library:detail', livre_id=livre.id)
     
@@ -153,6 +147,7 @@ def acheter_livre(request, livre_id):
         return redirect('library:detail', livre_id=livre.id)
         
     return render(request, 'library/paiement.html', {'livre': livre})
+    """
 
 
 @login_required

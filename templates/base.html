@@ -26,13 +26,13 @@
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'programmes' %}">Formations</a>
+                        <a class="nav-link" href="{% url 'formations:liste' %}">Formations</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'mentors' %}">Mentors</a>
+                        <a class="nav-link" href="{% url 'mentoring:liste' %}">Mentors</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'blog_index' %}">Ressources</a>
+                        <a class="nav-link" href="{% url 'blog:index' %}">Ressources</a>
                     </li>
                 </ul>
                 <div class="d-flex align-items-center gap-2">
@@ -46,8 +46,22 @@
                     </a>
                     
                     {% if user.is_authenticated %}
+                        {% if user.is_superuser %} <!-- Seul le superAdmin voit ce bouton pour basculer -->
+                             <a class="btn btn-dark btn-sm me-3 fw-bold" href="/admin/" title="Basculer vers l'interface administrateur">
+                                <i class="bi bi-speedometer2 me-1"></i> Interface Admin
+                            </a>
+                        {% endif %}
                         <a class="nav-link fw-bold text-dark" href="{% url 'accounts:dashboard' %}">
                             <i class="bi bi-grid me-1"></i> Mon Espace
+                        </a>
+                        <!-- Bouton Espace Mentor (Visible uniquement pour les mentors) -->
+                        {% if user.role == 'mentor' or user.is_superuser %}
+                        <a class="nav-link fw-bold text-primary" href="{% url 'mentoring:dashboard' %}">
+                            <i class="bi bi-briefcase-fill me-1"></i> Espace Mentor
+                        </a>
+                        {% endif %}
+                        <a class="nav-link fw-bold text-dark" href="{% url 'accounts:profile' %}">
+                            <i class="bi bi-person-circle me-1"></i> Profil
                         </a>
                         <form method="post" action="{% url 'logout' %}">
                             {% csrf_token %}
@@ -86,8 +100,8 @@
                 <div class="col-md-2 mb-4">
                     <h6 class="fw-bold text-dark mb-3">Plateforme</h6>
                     <ul class="list-unstyled small">
-                        <li class="mb-2"><a href="{% url 'programmes' %}" class="text-decoration-none text-muted">Programmes</a></li>
-                        <li class="mb-2"><a href="{% url 'mentors' %}" class="text-decoration-none text-muted">Mentors</a></li>
+                        <li class="mb-2"><a href="{% url 'formations:liste' %}" class="text-decoration-none text-muted">Programmes</a></li>
+                        <li class="mb-2"><a href="{% url 'mentoring:liste' %}" class="text-decoration-none text-muted">Mentors</a></li>
                         <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Tarifs</a></li>
                     </ul>
                 </div>

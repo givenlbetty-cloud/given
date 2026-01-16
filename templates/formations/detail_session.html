@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Formation : {{ session.programme.titre }} - ATJ{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="mb-4">{{ session.programme.titre }}</h1>
+            <div class="alert alert-success">
+                <i class="bi bi-check-circle-fill me-2"></i> Vous avez accès complet à cette formation.
+            </div>
+            
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Progression</h5>
+                    <div class="progress mb-3" style="height: 10px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ inscription.progression }}%" aria-valuenow="{{ inscription.progression }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="text-muted">{{ inscription.progression }}% complété</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-bottom-0 py-3">
+                    <h4 class="mb-0">Contenu du cours</h4>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item py-3 d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-play-circle-fill text-primary me-2 lead"></i>
+                            Introduction au programme
+                        </div>
+                        <span class="badge bg-light text-dark">15 min</span>
+                    </li>
+                    <li class="list-group-item py-3 d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-file-text-fill text-secondary me-2 lead"></i>
+                            Module 1 : Les bases
+                        </div>
+                        <button class="btn btn-sm btn-outline-primary">Démarrer</button>
+                    </li>
+                    <!-- More mock content -->
+                    <li class="list-group-item py-3 d-flex justify-content-between align-items-center text-muted">
+                        <div>
+                            <i class="bi bi-lock-fill me-2 lead"></i>
+                            Module 2 : Avancé (Verrouillé)
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
+                <div class="card-body">
+                    <h5>Informations de session</h5>
+                    <ul class="list-unstyled mt-3">
+                        <li class="mb-2"><i class="bi bi-calendar me-2 text-primary"></i> Début : {{ session.date_debut|date:"d M Y" }}</li>
+                        <li class="mb-2"><i class="bi bi-calendar-check me-2 text-primary"></i> Fin : {{ session.date_fin|date:"d M Y" }}</li>
+                        <li class="mb-2"><i class="bi bi-person-video3 me-2 text-primary"></i> Mentor assigné</li>
+                    </ul>
+                    <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary w-100 mt-3">Retour au Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

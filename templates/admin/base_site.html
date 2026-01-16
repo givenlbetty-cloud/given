@@ -1,0 +1,18 @@
+{% extends "admin/base_site.html" %}
+
+{% block usertools %}
+<div id="user-tools" style="display: flex; align-items: center; gap: 15px;">
+    {% if site_url %}
+        <a href="{{ site_url }}" style="background: #7451eb; padding: 5px 10px; border-radius: 4px; color: white; text-decoration: none; font-weight: bold;">
+            <i class="bi bi-house-door-fill"></i> Retour Interface Utilisateur
+        </a>
+    {% endif %}
+    <span style="color: #ccc;">|</span>
+    {{ block.super }}
+</div>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+{% endblock %}

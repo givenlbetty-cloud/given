@@ -111,7 +111,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # Auth
 AUTH_USER_MODEL = "accounts.CustomUser"
-LOGIN_REDIRECT_URL = "dashboard"
+LOGIN_REDIRECT_URL = "accounts:dashboard"
 LOGOUT_REDIRECT_URL = "home"
 
 # Crispy

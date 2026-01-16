@@ -1,18 +1,33 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, TemplateView, DetailView
 from django.urls import reverse_lazy
+from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import CustomUserCreationForm
+from .models import CustomUser
 from formations.models import Inscription
 from blog.models import Ressource
 from library.models import AchatLivre
 
 class SignUpView(CreateView):
     form_class = CustomUserCreationForm
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('home')
     template_name = 'registration/signup.html'
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect(self.success_url)
+
+class ProfileView(LoginRequiredMixin, DetailView):
+    model = CustomUser
+    template_name = 'accounts/profile.html'
+    context_object_name = 'profile_user'
+
+    def get_object(self):
+        return self.request.user
 
 class ResourcesView(LoginRequiredMixin, TemplateView):
     template_name = 'accounts/resources.html'
@@ -39,17 +54,21 @@ def simuler_paiement(request, inscription_id):
     
     inscription = get_object_or_404(Inscription, id=inscription_id, user=request.user)
     
-    if inscription.statut_paiement != 'paid':
-        inscription.statut_paiement = 'paid'
-        inscription.save()
-        
-        # Email Notification Logic
-        subject = f"Confirmation de paiement - {inscription.session.programme.titre}"
-        message = f"Bonjour {request.user.username},\n\nVotre paiement pour la session de {inscription.session.programme.titre} a été validé avec succès.\n\nL'équipe ATJ."
-        try:
-            send_mail(subject, message, 'no-reply@atj.com', [request.user.email])
-            messages.success(request, f"Paiement validé ! Un email de confirmation a été envoyé à {request.user.email}")
-        except Exception as e:
-            messages.warning(request, f"Paiement validé, mais échec de l'envoi d'email: {e}")
+    if request.method == 'POST':
+        if inscription.statut_paiement != 'paid':
+            inscription.statut_paiement = 'paid'
+            inscription.save()
             
-    return redirect('accounts:dashboard')
+            # Email Notification Logic
+            subject = f"Confirmation de paiement - {inscription.session.programme.titre}"
+            message = f"Bonjour {request.user.username},\n\nVotre paiement pour la session de {inscription.session.programme.titre} a été validé avec succès.\n\nL'équipe ATJ."
+            try:
+                send_mail(subject, message, 'no-reply@atj.com', [request.user.email])
+                messages.success(request, f"Paiement validé ! Un email de confirmation a été envoyé à {request.user.email}")
+            except Exception as e:
+                messages.warning(request, f"Paiement validé, mais échec de l'envoi d'email: {e}")
+                
+        return redirect('accounts:dashboard')
+
+    # Affichage de la page de paiement (GET)
+    return render(request, 'accounts/paiement_simulation.html', {'inscription': inscription})

@@ -3,24 +3,26 @@
 
 {% block content %}
 <!-- Hero Section Modern -->
-<div class="position-relative text-white py-5 mb-5" style="background: linear-gradient(135deg, #7451eb 0%, #5a3dc2 100%); overflow: hidden;">
-    <div class="position-absolute top-0 start-0 w-100 h-100 opacity-10">
-        <svg class="w-100 h-100" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="100" cy="100" r="80" stroke="white" stroke-width="2"></circle>
-            <circle cx="1100" cy="500" r="100" stroke="white" stroke-width="2"></circle>
-            <path d="M 300 0 Q 600 150 900 0" stroke="white" stroke-width="2" stroke-linecap="round"></path>
-        </svg>
-    </div>
-    <div class="container position-relative z-1">
+<div class="position-relative py-5 mb-5" style="background-image: url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=2228&q=80'); background-size: cover; background-position: center; overflow: hidden; min-height: 450px;">
+    <!-- Overlay plus sombre pour contraste maximal -->
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.6));"></div>
+    
+    <div class="container position-relative z-1 d-flex flex-column justify-content-center h-100" style="min-height: 350px;">
         <div class="text-center">
-            <h1 class="display-4 fw-bold mb-3">📚 Bibliothèque Numérique ATJ</h1>
-            <p class="lead mb-5 fs-5">Accédez à des milliers de ressources pour accélérer votre apprentissage et votre carrière.</p>
+            <!-- Titre avec ombre portée forte -->
+            <h1 class="display-3 fw-bold mb-3 text-white" style="text-shadow: 2px 2px 10px rgba(0,0,0,0.9); letter-spacing: 1px;">
+                📚 Bibliothèque Numérique ATJ
+            </h1>
+            
+            <p class="lead mb-5 fs-4 text-white opacity-90 fw-semibold" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.8);">
+                Explorez, apprenez et grandissez avec notre collection premium.
+            </p>
             
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6">
-                    <form class="d-flex bg-white p-1 rounded-pill shadow-lg" method="get">
-                        <input class="form-control border-0 rounded-pill px-4 py-2" type="search" name="q" placeholder="Rechercher un titre, un auteur..." value="{{ query|default:'' }}" aria-label="Search">
-                        <button class="btn btn-dark rounded-pill px-4 fw-bold" type="submit"><i class="bi bi-search me-1"></i>Chercher</button>
+                    <form class="d-flex bg-white p-2 rounded-pill shadow-lg" method="get">
+                        <input class="form-control border-0 rounded-pill px-4 py-3 fs-5" type="search" name="q" placeholder="Quel livre recherchez-vous ?" value="{{ query|default:'' }}" aria-label="Search">
+                        <button class="btn btn-primary rounded-pill px-5 fw-bold fs-6 text-uppercase shadow-sm" type="submit">Rechercher</button>
                         {% if current_category %}
                         <input type="hidden" name="categorie" value="{{ current_category }}">
                         {% endif %}
@@ -70,11 +72,7 @@
                     
                     <!-- Price Badge -->
                     <div class="position-absolute top-0 end-0 m-3">
-                        {% if livre.is_free %}
-                            <span class="badge bg-success shadow-sm fw-bold" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Gratuit</span>
-                        {% else %}
-                            <span class="badge bg-white text-dark shadow-sm fw-bold" style="font-size: 0.75rem; padding: 0.5rem 1rem;">{{ livre.prix }}€</span>
-                        {% endif %}
+                        <span class="badge bg-success shadow-sm fw-bold" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Gratuit</span>
                     </div>
 
                     <!-- Category Badge (Bottom) -->
