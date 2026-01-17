@@ -56,7 +56,8 @@
                 // Worker setup
                 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-                const url = '{{ livre.fichier.url }}';
+                // Utiliser l'URL de téléchargement qui gère les erreurs de chemin de fichier
+                const url = '{% url "library:download" livre.id %}';
                 const container = document.getElementById('pdf-viewer');
                 let pdfDoc = null;
                 let scale = 1.2;

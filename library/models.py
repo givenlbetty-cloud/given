@@ -28,54 +28,43 @@ class Livre(models.Model):
     date_creation = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        # Auto-generate cover from PDF if no image is provided
+        # 1. Sauvegarde initiale pour s'assurer que le fichier est sur le disque si possible
+        # Attention à la récursion si on rappelle save()
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+
+        # 2. Génération de la couverture si absente
         if self.fichier and not self.image and convert_from_bytes:
             try:
+                images = None
+                # Si le fichier est un PDF
                 if self.fichier.name.lower().endswith('.pdf'):
-                    images = None
-                    
-                    # 1. Try from path (existing file on disk) -> More reliable for large files
+                    # Option A: Essayer depuis le chemin disque (maintenant qu'on a fait super().save())
                     try:
-                        # Check path existence safely (might throw error if not saved yet)
-                        path = self.fichier.path 
-                        if path and os.path.exists(path) and convert_from_path:
-                             images = convert_from_path(path, first_page=1, last_page=1)
-                    except Exception:
-                        pass
-                    
-                    # 2. Try from content (uploaded file in memory) -> For new uploads
+                        if self.fichier.path and os.path.exists(self.fichier.path) and convert_from_path:
+                            images = convert_from_path(self.fichier.path, first_page=1, last_page=1)
+                    except Exception as e:
+                        print(f"Cover gen check path failed: {e}")
+
+                    # Option B: Essayer depuis le contenu (si le fichier n'est pas accessible via path)
                     if not images:
-                        content = None
                         try:
-                            # Handle different file states (open/closed/memory)
-                            if hasattr(self.fichier, 'closed') and not self.fichier.closed:
-                                if hasattr(self.fichier, 'seek'):
-                                    self.fichier.seek(0)
-                                content = self.fichier.read()
-                                if hasattr(self.fichier, 'seek'):
-                                    self.fichier.seek(0)
-                            else:
-                                with self.fichier.open('rb') as f:
-                                    content = f.read()
-                        except Exception:
-                            # Last resort: try reading file path directly if open() failed
-                            try:
-                                if self.fichier.path and os.path.exists(self.fichier.path):
-                                    with open(self.fichier.path, 'rb') as f:
-                                        content = f.read()
-                            except:
-                                pass
-                        
-                        if content:
-                            images = convert_from_bytes(content, first_page=1, last_page=1)
+                            self.fichier.open('rb')
+                            content = self.fichier.read()
+                            if content:
+                                images = convert_from_bytes(content, first_page=1, last_page=1)
+                        except Exception as e:
+                            print(f"Cover gen check content failed: {e}")
+                        finally:
+                            self.fichier.close()
 
                     if images:
                         cover = images[0]
-                        buffer = BytesIO()
-                        # Convert to RGB to avoid issues with CMYK PDFs considering we save as JPEG
+                        # Conversion RGB pour compatibilité JPEG
                         if cover.mode != 'RGB':
                             cover = cover.convert('RGB')
                         
+                        buffer = BytesIO()
                         cover.save(buffer, format="JPEG", quality=85)
                         val = buffer.getvalue()
                         
@@ -83,11 +72,15 @@ class Livre(models.Model):
                         base, _ = os.path.splitext(fname)
                         cover_name = f"{base}_cover.jpg"
                         
+                        # Sauvegarde de l'image
+                        # save=False pour éviter une boucle infinie de super().save()
+                        # Mais il faut sauvegarder le champ.
                         self.image.save(cover_name, ContentFile(val), save=False)
+                        
+                        # On force l'update SQL uniquement pour le champ image pour éviter récursion complète
+                        Livre.objects.filter(pk=self.pk).update(image=self.image)
             except Exception as e:
                 print(f"Error generating cover for {self.titre}: {e}")
-        
-        super().save(*args, **kwargs)
 
     def is_free(self):
         # Modification : Toutes les ressources sont gratuites pour les membres
