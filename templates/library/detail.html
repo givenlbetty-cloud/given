@@ -41,24 +41,30 @@
                             </div>
                             
                             <div class="d-grid gap-2">
-                                {% if achat or livre.is_free %}
+                                {% if user.is_authenticated %}
                                     <a href="{% url 'library:lecture' livre.id %}" class="btn btn-primary btn-sm rounded-pill fw-bold" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
                                         <i class="bi bi-book-half me-1"></i>Lire
                                     </a>
                                     <a href="{% url 'library:download' livre.id %}" class="btn btn-outline-primary btn-sm rounded-pill fw-bold">
                                         <i class="bi bi-download me-1"></i>Télécharger
                                     </a>
+                                    
+                                    <a href="{% url 'library:toggle_favori' livre.id %}" class="btn btn-light w-100 mt-2 btn-sm rounded-pill fw-bold text-danger">
+                                        <i class="bi bi-heart{% if is_favori %}-fill{% endif %} me-1"></i>
+                                        {% if is_favori %}Retirer{% else %}Favoris{% endif %}
+                                    </a>
                                 {% else %}
-                                    <a href="{% url 'library:acheter' livre.id %}" class="btn btn-success btn-sm rounded-pill fw-bold">
-                                        <i class="bi bi-plus-circle me-1"></i>Ajouter à ma bibliothèque
+                                    <div class="alert alert-info py-2 small mb-2">
+                                        <i class="bi bi-info-circle me-1"></i>Connectez-vous pour accéder au contenu.
+                                    </div>
+                                    <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary btn-sm rounded-pill fw-bold">
+                                        <i class="bi bi-box-arrow-in-right me-1"></i>Se connecter
+                                    </a>
+                                    <a href="{% url 'signup' %}" class="btn btn-outline-secondary btn-sm rounded-pill fw-bold mt-2">
+                                        Créer un compte
                                     </a>
                                 {% endif %}
                             </div>
-                            
-                            <a href="{% url 'library:toggle_favori' livre.id %}" class="btn btn-light w-100 mt-2 btn-sm rounded-pill fw-bold text-danger">
-                                <i class="bi bi-heart{% if is_favori %}-fill{% endif %} me-1"></i>
-                                {% if is_favori %}Retirer{% else %}Favoris{% endif %}
-                            </a>
                         </div>
                     </div>
                 </div>

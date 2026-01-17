@@ -22,7 +22,10 @@ def payment_required(view_func):
              return redirect('programmes') 
         
         # Vérification 2 : Le paiement est-il validé ?
-        if inscription.statut_paiement != 'paid':
+        # On vérifie soit le statut sur l'inscription, soit l'existence d'un objet Paiement valide
+        has_payment = inscription.statut_paiement == 'paid' or inscription.paiements.filter(valide=True).exists()
+        
+        if not has_payment:
             messages.error(request, "⛔ Ce contenu est réservé aux membres inscrits. Veuillez finaliser votre paiement.")
             return redirect('accounts:simuler_paiement', inscription_id=inscription.id)
             

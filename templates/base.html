@@ -46,14 +46,11 @@
                     </a>
                     
                     {% if user.is_authenticated %}
-                        {% if user.is_superuser %} <!-- Seul le superAdmin voit ce bouton pour basculer -->
-                             <a class="btn btn-dark btn-sm me-3 fw-bold" href="/admin/" title="Basculer vers l'interface administrateur">
-                                <i class="bi bi-speedometer2 me-1"></i> Interface Admin
-                            </a>
-                        {% endif %}
+                        {% if user.role != 'mentor' %}
                         <a class="nav-link fw-bold text-dark" href="{% url 'accounts:dashboard' %}">
                             <i class="bi bi-grid me-1"></i> Mon Espace
                         </a>
+                        {% endif %}
                         <!-- Bouton Espace Mentor (Visible uniquement pour les mentors) -->
                         {% if user.role == 'mentor' or user.is_superuser %}
                         <a class="nav-link fw-bold text-primary" href="{% url 'mentoring:dashboard' %}">

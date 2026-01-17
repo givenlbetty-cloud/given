@@ -14,7 +14,10 @@ if [ ! -f ".env.beta" ]; then
     exit 1
 fi
 
-export $(cat .env.beta | xargs)
+# Utilisation de set -a pour exporter automatiquement les variables définies
+set -a
+source .env.beta
+set +a
 
 echo ""
 echo "╔════════════════════════════════════════════════════════════╗"

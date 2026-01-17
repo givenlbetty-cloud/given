@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: atj-beta
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn atj_site.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: atj-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: WEB_CONCURRENCY
+        value: "4"
+
+databases:
+  - name: atj-db
+    databaseName: atj
+    user: atj_user

@@ -32,3 +32,14 @@ class Inscription(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.session}"
+
+class Paiement(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='paiements')
+    inscription = models.ForeignKey(Inscription, on_delete=models.CASCADE, related_name='paiements')
+    montant = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    date_paiement = models.DateTimeField(auto_now_add=True)
+    valide = models.BooleanField(default=True)
+    transaction_id = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return f"Paiement {self.id} - {self.user.username} - {self.inscription.session.programme.titre}"

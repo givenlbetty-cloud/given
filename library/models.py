@@ -69,7 +69,8 @@ class Livre(models.Model):
         super().save(*args, **kwargs)
 
     def is_free(self):
-        return self.prix == 0
+        # Modification : Toutes les ressources sont gratuites pour les membres
+        return True
 
     def __str__(self):
         return self.titre

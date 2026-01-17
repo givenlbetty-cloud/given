@@ -1,13 +1,16 @@
+import dj_database_url
 from pathlib import Path
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-change-me-in-production"
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-change-me-in-production")
 
-DEBUG = True
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
 CSRF_TRUSTED_ORIGINS = [
     'https://localhost:8000',
@@ -16,6 +19,8 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.app.github.dev',
     'https://*.github.dev',
 ]
+if 'RENDER_EXTERNAL_HOSTNAME' in os.environ:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{os.environ.get('RENDER_EXTERNAL_HOSTNAME')}")
 
 INSTALLED_APPS = [
     'chat',
@@ -71,10 +76,10 @@ TEMPLATES = [
 WSGI_APPLICATION = "atj_site.wsgi.application"
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [

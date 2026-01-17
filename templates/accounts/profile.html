@@ -3,56 +3,109 @@
 {% block title %}Mon Profil - ATJ{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-4 py-md-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm border-0">
-                <div class="card-body text-center p-5">
-                    {% if profile_user.photo %}
-                        <img src="{{ profile_user.photo.url }}" class="rounded-circle mb-3" width="150" height="150" alt="{{ profile_user.username }}" style="object-fit: cover;">
-                    {% else %}
-                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 150px; height: 150px; color: white; font-size: 3rem;">
-                            {{ profile_user.username|first|upper }}
-                        </div>
-                    {% endif %}
+        <!-- Mobile-First: col-12 ensures full width on mobile, col-lg-8 centers it nicely on desktop -->
+        <div class="col-12 col-lg-8">
+            <div class="card shadow-sm border-0 overflow-hidden">
+                <!-- Header Background for aesthetic -->
+                <div class="bg-primary" style="height: 100px;"></div>
+                
+                <div class="card-body text-center px-4 pb-5 position-relative">
+                    <!-- Profile Image (Negative margin to pull it up) -->
+                    <div class="position-relative d-inline-block mt-n5 mb-3">
+                        {% if profile_user.photo %}
+                            <img src="{{ profile_user.photo.url }}" class="rounded-circle border border-4 border-white shadow-sm" width="140" height="140" alt="{{ profile_user.username }}" style="object-fit: cover; background-color: #fff;">
+                        {% else %}
+                            <div class="rounded-circle border border-4 border-white shadow-sm bg-secondary d-flex align-items-center justify-content-center mx-auto" style="width: 140px; height: 140px; color: white; font-size: 3rem; background-color: #6c757d;">
+                                {{ profile_user.username|first|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
                     
-                    <h2 class="mb-1">{{ profile_user.username }}</h2>
-                    <p class="text-muted mb-4">{{ profile_user.email }}</p>
+                    <h2 class="h3 fw-bold mb-1">{{ profile_user.username }}</h2>
+                    <p class="text-muted mb-3">{{ profile_user.email }}</p>
                     
-                    <div class="d-flex justify-content-center gap-2 mb-4">
+                    <div class="d-flex justify-content-center flex-wrap gap-2 mb-4">
                         <span class="badge bg-primary rounded-pill px-3 py-2">
                             {% if profile_user.role == 'student' %}Étudiant{% endif %}
                             {% if profile_user.role == 'mentor' %}Mentor{% endif %}
                             {% if profile_user.role == 'admin' %}Admin{% endif %}
                         </span>
+                        {% if user.is_staff or user.is_superuser %}
+                            <a href="/admin/" class="badge bg-dark text-decoration-none rounded-pill px-3 py-2">
+                                <i class="bi bi-shield-lock-fill me-1"></i>Admin
+                            </a>
+                        {% endif %}
                     </div>
 
-                    <div class="list-group list-group-flush text-start mb-4">
-                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                            <span><i class="bi bi-calendar-event me-2"></i> Date d'inscription</span>
-                            <span class="text-muted">{{ profile_user.date_joined|date:"d M Y" }}</span>
+                    <!-- Stats Row (Mobile friendly grid) -->
+                    <div class="row g-3 mb-4 text-start">
+                        <div class="col-12 col-sm-6">
+                            <div class="p-3 border rounded bg-light h-100">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-journal-bookmark-fill text-primary fs-4 me-2"></i>
+                                    <span class="fw-bold">Bibliothèque</span>
+                                </div>
+                                <div class="d-flex justify-content-between small text-muted mb-1">
+                                    <span>Progression Lecture</span>
+                                    <span>{{ book_progress }}%</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ book_progress }}%" aria-valuenow="{{ book_progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="mt-2 small text-muted">
+                                    <strong>{{ completed_books }}</strong> livres terminés sur <strong>{{ total_books }}</strong>
+                                </div>
+                            </div>
                         </div>
-                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                            <span><i class="bi bi-person-badge me-2"></i> Statut</span>
-                            <span class="text-success fw-bold">Actif</span>
+                        
+                        <div class="col-12 col-sm-6">
+                            <div class="p-3 border rounded bg-light h-100">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-mortarboard-fill text-info fs-4 me-2"></i>
+                                    <span class="fw-bold">Formations</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-end">
+                                    <div>
+                                        <div class="fs-4 fw-bold text-dark">{{ active_inscriptions }}</div>
+                                        <div class="small text-muted">Inscriptions actives</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="small fw-bold text-muted">Total</div>
+                                        <div>{{ total_inscriptions }}</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    {% if user.is_staff or user.is_superuser %}
-                        <div class="alert alert-warning d-flex align-items-center justify-content-center gap-2 mt-4" role="alert">
-                            <i class="bi bi-shield-lock-fill"></i>
-                            <div>Zone d'administration détectée</div>
+                    <div class="list-group list-group-flush text-start mb-4 rounded border-0">
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 border-bottom">
+                            <span class="text-muted"><i class="bi bi-calendar-event me-2"></i>Membre depuis</span>
+                            <span class="fw-medium">{{ profile_user.date_joined|date:"d M Y" }}</span>
                         </div>
-                        <a href="/admin/" class="btn btn-dark w-100">
-                            <i class="bi bi-speedometer2 me-2"></i>Accès Administration Django
+                         <!-- Phone/Address if needed, hidden if empty to save space on mobile -->
+                        {% if profile_user.telephone %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 border-bottom">
+                            <span class="text-muted"><i class="bi bi-telephone me-2"></i>Téléphone</span>
+                            <span class="fw-medium">{{ profile_user.telephone }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Action Buttons: Stacked on mobile, auto on desktop -->
+                    <div class="d-grid gap-2 d-md-block">
+                        <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-primary px-4">
+                            <i class="bi bi-speedometer2 me-2"></i>Tableau de Bord
                         </a>
-                    {% endif %}
-                    
-                    <hr class="my-4">
-                    
-                    <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary">
-                        <i class="bi bi-arrow-left me-2"></i>Retour au Tableau de Bord
-                    </a>
+                        <!-- Optional Modify button for future implementation -->
+                        <!-- 
+                        <a href="#" class="btn btn-primary px-4">
+                            <i class="bi bi-pencil-square me-2"></i>Modifier
+                        </a> 
+                        -->
+                    </div>
                 </div>
             </div>
         </div>

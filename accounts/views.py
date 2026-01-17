@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import CustomUserCreationForm
 from .models import CustomUser
-from formations.models import Inscription
+from formations.models import Inscription, Paiement
 from blog.models import Ressource
 from library.models import AchatLivre
 
@@ -28,6 +28,29 @@ class ProfileView(LoginRequiredMixin, DetailView):
 
     def get_object(self):
         return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        
+        # Inscriptions stats
+        context['total_inscriptions'] = user.inscriptions.count()
+        context['active_inscriptions'] = user.inscriptions.filter(statut_validation=True).count()
+        
+        # Library stats
+        # We access the related manager using the default name since related_name was not specified in the model
+        books = user.achatlivre_set.all()
+        context['total_books'] = books.count()
+        context['completed_books'] = books.filter(est_termine=True).count()
+        
+        # Progression calculation (example logic)
+        if context['total_books'] > 0:
+            context['book_progress'] = int((context['completed_books'] / context['total_books']) * 100)
+        else:
+            context['book_progress'] = 0
+            
+        return context
+
 
 class ResourcesView(LoginRequiredMixin, TemplateView):
     template_name = 'accounts/resources.html'
@@ -56,6 +79,16 @@ def simuler_paiement(request, inscription_id):
     
     if request.method == 'POST':
         if inscription.statut_paiement != 'paid':
+            # Création de l'enregistrement de paiement
+            Paiement.objects.create(
+                user=request.user,
+                inscription=inscription,
+                montant=0.00, # Montant simulé ou à récupérer depuis le modèle Programme
+                valide=True,
+                transaction_id=f"SIM-{inscription.id}-{request.user.id}"
+            )
+            
+            # Mise à jour de l'inscription
             inscription.statut_paiement = 'paid'
             inscription.save()
             

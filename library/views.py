@@ -38,19 +38,24 @@ def liste_livres(request):
         'owned_books': owned_books
     })
 
-@login_required
 def detail_livre(request, livre_id):
     livre = get_object_or_404(Livre, id=livre_id)
-    try:
-        achat = AchatLivre.objects.get(user=request.user, livre=livre)
-    except AchatLivre.DoesNotExist:
-        achat = None
-        
-    is_favori = Favori.objects.filter(user=request.user, livre=livre).exists()
+    
+    achat = None
+    is_favori = False
+    
+    if request.user.is_authenticated:
+        try:
+            achat = AchatLivre.objects.get(user=request.user, livre=livre)
+        except AchatLivre.DoesNotExist:
+            achat = None
+        is_favori = Favori.objects.filter(user=request.user, livre=livre).exists()
         
     avis_list = livre.avis.all().order_by('-date_creation')
     
     if request.method == 'POST' and 'submit_avis' in request.POST:
+        if not request.user.is_authenticated:
+             return redirect('login')
         note = request.POST.get('note')
         commentaire = request.POST.get('commentaire')
         if note and commentaire:
@@ -166,10 +171,8 @@ def toggle_favori(request, livre_id):
 def telecharger_livre(request, livre_id):
     livre = get_object_or_404(Livre, id=livre_id)
     
-    # Check permissions
-    if not livre.is_free() and not AchatLivre.objects.filter(user=request.user, livre=livre).exists():
-        messages.error(request, "Vous devez acheter ce livre pour le télécharger.")
-        return redirect('library:detail', livre_id=livre.id)
+    # Auto-add to library on download if not present
+    AchatLivre.objects.get_or_create(user=request.user, livre=livre)
     
     if livre.fichier:
         response = FileResponse(livre.fichier.open(), as_attachment=True)

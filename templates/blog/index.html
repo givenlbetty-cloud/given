@@ -1,33 +1,147 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    .post-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: 1px solid rgba(0,0,0,0.03);
+    }
+    .post-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 1rem 3rem rgba(0,0,0,.075) !important;
+    }
+    .post-content {
+        position: relative;
+    }
+    .post-content.truncated {
+        max-height: 120px;
+        overflow: hidden;
+    }
+    .post-content.truncated::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: linear-gradient(transparent, #ffffff);
+    }
+    .read-more-btn {
+        border: none;
+        background: none;
+        color: #7451eb;
+        font-weight: 600;
+        padding: 0;
+        margin-top: 5px;
+        cursor: pointer;
+    }
+    .read-more-btn:hover {
+        text-decoration: underline;
+    }
+    .author-avatar {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+</style>
+
 <!-- Hero Section -->
 <div class="text-white py-5 mb-5" style="background: linear-gradient(rgba(30, 30, 40, 0.4), rgba(30, 30, 40, 0.6)), url('https://images.unsplash.com/photo-1432821596592-e2c18b78144f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') center/cover; background-color: #7451eb;">
     <div class="container text-center">
-        <h1 class="display-3 fw-bold mb-3">Blog & Ressources</h1>
-        <p class="lead mb-4 opacity-100 fw-medium">Conseils, tutoriels et actualités pour votre développement.</p>
+        <h1 class="display-3 fw-bold mb-3">Fil d'actualité</h1>
+        <p class="lead mb-4 opacity-100 fw-medium">Découvrez les derniers articles et ressources de nos mentors.</p>
     </div>
 </div>
 
 <div class="container mb-5">
-    <div class="row">
-    {% for article in articles %}
-    <div class="col-md-4 mb-4">
-        <div class="card">
-            {% if article.image %}
-                <img src="{{ article.image.url }}" class="card-img-top" alt="{{ article.titre }}">
-            {% endif %}
-            <div class="card-body">
-                <h5 class="card-title">{{ article.titre }}</h5>
-                <p class="card-text">{{ article.contenu|truncatewords:30 }}</p>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            {% for article in articles %}
+            <div class="card mb-4 border-0 shadow-sm rounded-4 post-card">
+                <!-- Header: Auteur et Date -->
+                <div class="card-header bg-white border-0 pt-4 px-4 pb-0 d-flex align-items-center mb-2">
+                    {% if article.auteur.photo %}
+                        <img src="{{ article.auteur.photo.url }}" class="author-avatar shadow-sm me-3" alt="{{ article.auteur.username }}">
+                    {% else %}
+                        <div class="author-avatar bg-light d-flex align-items-center justify-content-center me-3 text-primary fw-bold" style="font-size: 1.2rem;">
+                            {{ article.auteur.username|make_list|first|upper|default:"A" }}
+                        </div>
+                    {% endif %}
+                    <div>
+                        <h6 class="mb-0 fw-bold text-dark">{{ article.auteur.get_full_name|default:article.auteur.username|default:"Académie Tremplin" }}</h6>
+                        <small class="text-muted">{{ article.date_publication|timesince }}</small>
+                    </div>
+                </div>
+
+                <!-- Body: Titre et Contenu -->
+                <div class="card-body px-4">
+                    <h4 class="fw-bold mb-3">{{ article.titre }}</h4>
+                    
+                    <div class="post-content-wrapper">
+                        <div class="post-content" id="content-{{ article.id }}">
+                            {{ article.contenu|linebreaks }}
+                        </div>
+                        <button class="read-more-btn d-none" onclick="toggleReadMore('{{ article.id }}')" id="btn-{{ article.id }}">
+                            Voir plus
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Image (Optimized) -->
+                {% if article.image %}
+                    <div class="px-3 pb-3">
+                         <img src="{{ article.image.url }}" class="img-fluid w-100 rounded-4 shadow-sm" style="max-height: 350px; object-fit: cover;" alt="{{ article.titre }}">
+                    </div>
+                {% endif %}
+
+                <!-- Footer: Actions (Like/Comment placeholder) -->
+                <div class="card-footer bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
+                     <button class="btn btn-light rounded-pill btn-sm px-3 text-muted">
+                        <i class="bi bi-heart me-1"></i> J'aime
+                     </button>
+                     <button class="btn btn-light rounded-pill btn-sm px-3 text-muted">
+                        <i class="bi bi-share me-1"></i> Partager
+                     </button>
+                </div>
             </div>
-            <div class="card-footer text-muted">
-                Publié le {{ article.date_publication|date:"d M Y" }}
+            {% empty %}
+            <div class="text-center py-5">
+                <i class="bi bi-newspaper fs-1 text-muted mb-3 d-block"></i>
+                <p class="text-muted">Aucun article publié pour le moment.</p>
             </div>
+            {% endfor %}
         </div>
     </div>
-    {% empty %}
-    <p>Aucun article pour le moment.</p>
-    {% endfor %}
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const contents = document.querySelectorAll('.post-content');
+        const MAX_HEIGHT = 150; // Hauteur maximale en pixels avant troncature
+
+        contents.forEach(content => {
+            if (content.scrollHeight > MAX_HEIGHT) {
+                content.classList.add('truncated');
+                const btnId = 'btn-' + content.id.split('-')[1];
+                const btn = document.getElementById(btnId);
+                if (btn) btn.classList.remove('d-none');
+            }
+        });
+    });
+
+    function toggleReadMore(id) {
+        const content = document.getElementById('content-' + id);
+        const btn = document.getElementById('btn-' + id);
+        
+        if (content.classList.contains('truncated')) {
+            content.classList.remove('truncated');
+            btn.textContent = 'Voir moins';
+        } else {
+            content.classList.add('truncated');
+            btn.textContent = 'Voir plus';
+            // Scroll back to top of post if needed, mostly user friendly to stay put though
+        }
+    }
+</script>
 {% endblock %}
