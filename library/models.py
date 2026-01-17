@@ -4,9 +4,11 @@ import os
 from io import BytesIO
 from django.core.files.base import ContentFile
 try:
-    from pdf2image import convert_from_bytes
+    from pdf2image import convert_from_bytes, convert_from_path
 except ImportError:
     convert_from_bytes = None
+    convert_from_path = None
+
 
 class Livre(models.Model):
     titre = models.CharField(max_length=200)
@@ -30,39 +32,58 @@ class Livre(models.Model):
         if self.fichier and not self.image and convert_from_bytes:
             try:
                 if self.fichier.name.lower().endswith('.pdf'):
-                    content = None
-                    if hasattr(self.fichier, 'read'):
-                        try:
-                            # Try reading if it's an open file/stream
-                            self.fichier.seek(0)
-                            content = self.fichier.read()
-                            # Reset for storage
-                            self.fichier.seek(0)
-                        except:
-                            # If it's closed or path-based
-                            pass
+                    images = None
                     
-                    if content is None:
+                    # 1. Try from path (existing file on disk) -> More reliable for large files
+                    try:
+                        # Check path existence safely (might throw error if not saved yet)
+                        path = self.fichier.path 
+                        if path and os.path.exists(path) and convert_from_path:
+                             images = convert_from_path(path, first_page=1, last_page=1)
+                    except Exception:
+                        pass
+                    
+                    # 2. Try from content (uploaded file in memory) -> For new uploads
+                    if not images:
+                        content = None
                         try:
-                            # Try opening from path if available
-                            with open(self.fichier.path, 'rb') as f:
-                                content = f.read()
-                        except:
-                            pass
+                            # Handle different file states (open/closed/memory)
+                            if hasattr(self.fichier, 'closed') and not self.fichier.closed:
+                                if hasattr(self.fichier, 'seek'):
+                                    self.fichier.seek(0)
+                                content = self.fichier.read()
+                                if hasattr(self.fichier, 'seek'):
+                                    self.fichier.seek(0)
+                            else:
+                                with self.fichier.open('rb') as f:
+                                    content = f.read()
+                        except Exception:
+                            # Last resort: try reading file path directly if open() failed
+                            try:
+                                if self.fichier.path and os.path.exists(self.fichier.path):
+                                    with open(self.fichier.path, 'rb') as f:
+                                        content = f.read()
+                            except:
+                                pass
+                        
+                        if content:
+                            images = convert_from_bytes(content, first_page=1, last_page=1)
 
-                    if content:
-                        images = convert_from_bytes(content, first_page=1, last_page=1)
-                        if images:
-                            cover = images[0]
-                            buffer = BytesIO()
-                            cover.save(buffer, format="JPEG", quality=85)
-                            val = buffer.getvalue()
-                            
-                            fname = os.path.basename(self.fichier.name)
-                            base, _ = os.path.splitext(fname)
-                            cover_name = f"{base}_cover.jpg"
-                            
-                            self.image.save(cover_name, ContentFile(val), save=False)
+                    if images:
+                        cover = images[0]
+                        buffer = BytesIO()
+                        # Convert to RGB to avoid issues with CMYK PDFs considering we save as JPEG
+                        if cover.mode != 'RGB':
+                            cover = cover.convert('RGB')
+                        
+                        cover.save(buffer, format="JPEG", quality=85)
+                        val = buffer.getvalue()
+                        
+                        fname = os.path.basename(self.fichier.name)
+                        base, _ = os.path.splitext(fname)
+                        cover_name = f"{base}_cover.jpg"
+                        
+                        self.image.save(cover_name, ContentFile(val), save=False)
             except Exception as e:
                 print(f"Error generating cover for {self.titre}: {e}")
         
