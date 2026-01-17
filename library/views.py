@@ -5,6 +5,9 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import FileResponse, Http404, JsonResponse
 from .models import Livre, AchatLivre, Note, Avis, Favori
+import os
+import re
+from django.conf import settings
 
 def liste_livres(request):
     categorie = request.GET.get('categorie')
@@ -175,7 +178,39 @@ def telecharger_livre(request, livre_id):
     AchatLivre.objects.get_or_create(user=request.user, livre=livre)
     
     if livre.fichier:
-        response = FileResponse(livre.fichier.open(), as_attachment=True)
-        return response
+        try:
+            # Tenter d'ouvrir le fichier tel quel
+            file_handle = livre.fichier.open()
+            response = FileResponse(file_handle, as_attachment=True)
+            return response
+        except FileNotFoundError:
+            # Gestion de l'erreur "Fichier introuvable" (fréquent en Beta avec données pré-peuplées)
+            # Cas 1: Le nom de fichier en DB a un suffixe aléatoire (ex: _AnVow4T) mais le fichier disque n'en a pas
+            original_path = livre.fichier.path
+            directory, filename = os.path.split(original_path)
+            
+            # Regex pour détecter le suffixe Django (ex: _AnVow4T.pdf)
+            # On cherche _[a-zA-Z0-9]{7} avant l'extension
+            clean_filename = re.sub(r'_[a-zA-Z0-9]{7}(\.[a-zA-Z0-9]+)$', r'\1', filename)
+            
+            if clean_filename != filename:
+                clean_path = os.path.join(directory, clean_filename)
+                if os.path.exists(clean_path):
+                    return FileResponse(open(clean_path, 'rb'), as_attachment=True, filename=clean_filename)
+            
+            # Cas 2: Mauvais dossier racine (media vs media_beta)
+            # Si le chemin contient 'media' mais le fichier est dans 'media_beta' ou vice-versa
+            # Ceci est une tentative de récupération spécifique à l'environnement de test
+            alternatives = []
+            if '/media/' in original_path and os.path.exists(original_path.replace('/media/', '/media_beta/')):
+                 alternatives.append(original_path.replace('/media/', '/media_beta/'))
+            if '/media_beta/' in original_path and os.path.exists(original_path.replace('/media_beta/', '/media/')):
+                 alternatives.append(original_path.replace('/media_beta/', '/media/'))
+            
+            for alt_path in alternatives:
+                return FileResponse(open(alt_path, 'rb'), as_attachment=True, filename=filename)
+
+            # Si aucune solution n'est trouvée
+            raise Http404(f"Le fichier '{filename}' est introuvable sur le serveur.")
     else:
-        raise Http404("Fichier introuvable")
+        raise Http404("Aucun fichier associé à ce livre.")
