@@ -76,9 +76,13 @@
                             const pageNum = parseInt(entry.target.dataset.pageNumber);
                             document.getElementById('page_num').textContent = pageNum;
                             
+                            // Also update the manual input at the bottom
+                            const manualInput = document.querySelector('input[name="page"]');
+                            if(manualInput) manualInput.value = pageNum;
+
                             // Save progress (debounced could be better, but simple logic here)
                             if (!isInitialScroll) {
-                                saveProgress(pageNum);
+                                savePdfProgress(pageNum, pdfDoc.numPages);
                             }
                         }
                     });
@@ -90,6 +94,12 @@
                 pdfjsLib.getDocument(url).promise.then(async function(pdfDoc_) {
                     pdfDoc = pdfDoc_;
                     document.getElementById('page_count').textContent = pdfDoc.numPages;
+                    
+                    // Update manual form total pages if it exists
+                    const manualTotalInput = document.getElementById('manual_total_pages');
+                    if(manualTotalInput) {
+                        manualTotalInput.value = pdfDoc.numPages;
+                    }
 
                     // Render all pages
                     for (let num = 1; num <= pdfDoc.numPages; num++) {
@@ -142,18 +152,24 @@
                     page.render(renderContext);
                 }
 
-                function saveProgress(page) {
+                function savePdfProgress(page, total) {
                     const formData = new FormData();
                     formData.append('update_progress', '1');
                     formData.append('page', page);
+                    if (total) {
+                        formData.append('total_pages', total);
+                    }
                     formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
 
-                    // Use navigator.sendBeacon for better reliability on page unload, 
-                    // or standard fetch. Here fetch is fine.
                     fetch(window.location.href, {
                         method: 'POST',
                         body: formData
-                    }).then(res => {}).catch(err => console.error(err));
+                    }).then(res => res.json()).then(data => {
+                        if (data.completed) {
+                           // Optional visual feedback for completion
+                           console.log("Lecture terminée !");
+                        }
+                    }).catch(err => console.error(err));
                 }
 
                 // Zoom handling (Optional: simple reload with new scale)
@@ -217,8 +233,9 @@
     <form id="progressForm" class="d-flex align-items-center gap-2 m-0">
         {% csrf_token %}
         <input type="hidden" name="update_progress" value="1">
+        <input type="hidden" name="total_pages" id="manual_total_pages" value="">
         <input type="number" name="page" class="form-control form-control-sm text-center border-0 bg-light fw-bold" value="{{ last_page }}" style="width: 60px;" min="1">
-        <button type="button" onclick="saveProgress()" class="btn btn-sm btn-dark rounded-circle w-30px h-30px d-flex align-items-center justify-content-center p-0">
+        <button type="button" onclick="saveManualProgress()" class="btn btn-sm btn-dark rounded-circle w-30px h-30px d-flex align-items-center justify-content-center p-0">
             <i class="bi bi-check-lg"></i>
         </button>
     </form>
@@ -230,7 +247,7 @@
 </style>
 
 <script>
-    function saveProgress() {
+    function saveManualProgress() {
         const form = document.getElementById('progressForm');
         const formData = new FormData(form);
         

@@ -85,10 +85,28 @@ def lire_livre(request, livre_id):
     if request.method == 'POST':
         if 'update_progress' in request.POST:
             page = request.POST.get('page')
+            total_pages = request.POST.get('total_pages')
+            
             if achat and page:
-                achat.derniere_page_lue = int(page)
-                achat.save()
-                return JsonResponse({'status': 'ok'})
+                try:
+                    current_page = int(page)
+                    achat.derniere_page_lue = current_page
+                    
+                    # Si on connait le total de pages, on vérifie la fin
+                    if total_pages:
+                        total = int(total_pages)
+                        # On considère fini si on est à la dernière page (ou plus pour être sûr)
+                        if current_page >= total:
+                            achat.est_termine = True
+                    
+                    achat.save()
+                    return JsonResponse({
+                        'status': 'ok', 
+                        'page': current_page,
+                        'completed': achat.est_termine
+                    })
+                except ValueError:
+                    return JsonResponse({'status': 'error', 'message': 'Invalid page number'}, status=400)
                 
         contenu = request.POST.get('contenu')
         page = request.POST.get('page')
