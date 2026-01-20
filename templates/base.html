@@ -200,16 +200,25 @@
             </a>
 
             {% if user.is_authenticated %}
-                <!-- Chat -->
-                <a href="{% url 'inbox' %}" class="nav-link p-2 {% if 'chat' in request.path %}text-primary{% else %}text-secondary{% endif %}">
-                    <div class="d-flex flex-column align-items-center">
-                        <i class="bi bi-chat-dots{% if 'chat' in request.path %}-fill{% endif %} fs-4 mb-1"></i>
-                        <span class="small fw-medium" style="font-size: 0.65rem;">Chat</span>
-                    </div>
-                </a>
+                <!-- Mon Espace (Replacement for Chat on Mobile) -->
+                {% if user.role == 'mentor' or user.is_superuser %}
+                     <a href="{% url 'mentoring:dashboard' %}" class="nav-link p-2 {% if 'mentoring' in request.path %}text-primary{% else %}text-secondary{% endif %}">
+                        <div class="d-flex flex-column align-items-center">
+                            <i class="bi bi-briefcase{% if 'mentoring' in request.path %}-fill{% endif %} fs-4 mb-1"></i>
+                            <span class="small fw-medium" style="font-size: 0.65rem;">Mentorat</span>
+                        </div>
+                    </a>
+                {% else %}
+                     <a href="{% url 'accounts:dashboard' %}" class="nav-link p-2 {% if 'accounts/dashboard' in request.path %}text-primary{% else %}text-secondary{% endif %}">
+                        <div class="d-flex flex-column align-items-center">
+                            <i class="bi bi-grid{% if 'accounts/dashboard' in request.path %}-fill{% endif %} fs-4 mb-1"></i>
+                            <span class="small fw-medium" style="font-size: 0.65rem;">Espace</span>
+                        </div>
+                    </a>
+                {% endif %}
 
                 <!-- Profile -->
-                <a href="{% url 'accounts:profile' %}" class="nav-link p-2 {% if 'accounts' in request.path %}text-primary{% else %}text-secondary{% endif %}">
+                <a href="{% url 'accounts:profile' %}" class="nav-link p-2 {% if 'accounts/profile' in request.path %}text-primary{% else %}text-secondary{% endif %}">
                     <div class="d-flex flex-column align-items-center">
                         <i class="bi bi-person-circle fs-4 mb-1"></i>
                         <span class="small fw-medium" style="font-size: 0.65rem;">Profil</span>

@@ -3,11 +3,31 @@ from django.views.generic import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .models import Article, Ressource
+from .models import Article, Ressource, Event
+from itertools import chain
+from operator import attrgetter
 
 def blog_index(request):
-    articles = Article.objects.order_by('-date_publication')
-    return render(request, 'blog/index.html', {'articles': articles})
+    articles = Article.objects.all()
+    events = Event.objects.all()
+    
+    # Annotate types to distinguish in template
+    for a in articles:
+        a.type_content = 'article'
+        a.date_display = a.date_publication
+        
+    for e in events:
+        e.type_content = 'event'
+        e.date_display = e.date
+        
+    # Combine and sort by newest first
+    feed_items = sorted(
+        chain(articles, events),
+        key=attrgetter('date_display'),
+        reverse=True
+    )
+    
+    return render(request, 'blog/index.html', {'feed_items': feed_items})
 
 def resource_detail(request, resource_id):
     resource = get_object_or_404(Ressource, id=resource_id)
