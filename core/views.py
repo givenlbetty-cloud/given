@@ -7,14 +7,20 @@ from blog.models import Article, Event
 from .forms import ContactForm
 
 class HomeView(TemplateView):
-    template_name = 'core/home.html'
+    template_name = 'core/home_new.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Get 3 latest articles
-        context['articles'] = Article.objects.order_by('-date_publication')[:3]
-        # Get upcoming events
-        context['events'] = Event.objects.filter(date__gte=timezone.now()).order_by('date')[:3]
+        
+        # Données statiques pour les 5 piliers (pour le prototype UI)
+        # On pourrait aussi les récupérer dynamiquement si Programme a un champ catégorie
+        context['piliers'] = [
+            ('art_oratoire', 'Art Oratoire', 'bi-mic-fill', '#800020', 'offline'),
+            ('leadership', 'Leadership', 'bi-lightning-charge-fill', '#2c3e50', 'offline'),
+            ('informatique', 'Informatique', 'bi-laptop', '#2980b9', 'online'),
+            ('langues', 'Langues', 'bi-translate', '#e67e22', 'online'),
+            ('affaires', 'Affaires', 'bi-briefcase-fill', '#27ae60', 'hybrid'),
+        ]
         return context
 
 class ContactView(FormView):
