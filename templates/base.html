@@ -170,5 +170,73 @@
             setTheme(newTheme);
         });
     </script>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="navbar fixed-bottom d-md-none border-top shadow-lg safe-area-pb" style="background-color: var(--bs-body-bg); z-index: 1040;">
+        <div class="container-fluid justify-content-around text-center px-0">
+            
+            <!-- Home -->
+            <a href="{% url 'home' %}" class="nav-link p-2 {% if request.resolver_match.url_name == 'home' %}text-primary{% else %}text-secondary{% endif %}">
+                <div class="d-flex flex-column align-items-center">
+                    <i class="bi bi-house{% if request.resolver_match.url_name == 'home' %}-fill{% endif %} fs-4 mb-1"></i>
+                    <span class="small fw-medium" style="font-size: 0.65rem;">Accueil</span>
+                </div>
+            </a>
+
+            <!-- Formations -->
+            <a href="{% url 'formations:liste' %}" class="nav-link p-2 {% if 'formations' in request.path %}text-primary{% else %}text-secondary{% endif %}">
+                <div class="d-flex flex-column align-items-center">
+                    <i class="bi bi-mortarboard{% if 'formations' in request.path %}-fill{% endif %} fs-4 mb-1"></i>
+                    <span class="small fw-medium" style="font-size: 0.65rem;">Formation</span>
+                </div>
+            </a>
+
+            <!-- Library -->
+            <a href="{% url 'library:liste' %}" class="nav-link p-2 {% if 'library' in request.path %}text-primary{% else %}text-secondary{% endif %}">
+                <div class="d-flex flex-column align-items-center">
+                    <i class="bi bi-book{% if 'library' in request.path %}-half{% endif %} fs-4 mb-1"></i>
+                    <span class="small fw-medium" style="font-size: 0.65rem;">Biblio</span>
+                </div>
+            </a>
+
+            {% if user.is_authenticated %}
+                <!-- Chat -->
+                <a href="{% url 'inbox' %}" class="nav-link p-2 {% if 'chat' in request.path %}text-primary{% else %}text-secondary{% endif %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <i class="bi bi-chat-dots{% if 'chat' in request.path %}-fill{% endif %} fs-4 mb-1"></i>
+                        <span class="small fw-medium" style="font-size: 0.65rem;">Chat</span>
+                    </div>
+                </a>
+
+                <!-- Profile -->
+                <a href="{% url 'accounts:profile' %}" class="nav-link p-2 {% if 'accounts' in request.path %}text-primary{% else %}text-secondary{% endif %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <i class="bi bi-person-circle fs-4 mb-1"></i>
+                        <span class="small fw-medium" style="font-size: 0.65rem;">Profil</span>
+                    </div>
+                </a>
+            {% else %}
+                 <!-- Login -->
+                 <a href="{% url 'login' %}" class="nav-link p-2 {% if 'login' in request.path %}text-primary{% else %}text-secondary{% endif %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <i class="bi bi-box-arrow-in-right fs-4 mb-1"></i>
+                        <span class="small fw-medium" style="font-size: 0.65rem;">Connexion</span>
+                    </div>
+                </a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Handle Bottom Padding for Mobile Nav -->
+    <style>
+        @media (max-width: 767.98px) {
+            body {
+                padding-bottom: 80px; /* Espace pour la barre fixe */
+            }
+            .fixed-bottom {
+                padding-bottom: env(safe-area-inset-bottom); /* iOS Safe Area */
+            }
+        }
+    </style>
 </body>
 </html>
