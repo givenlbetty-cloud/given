@@ -6,61 +6,89 @@
 <div class="container py-5">
     <div class="row">
         <div class="col-lg-8">
-            <h1 class="mb-4">{{ session.programme.titre }}</h1>
-            <div class="alert alert-success">
-                <i class="bi bi-check-circle-fill me-2"></i> Vous avez accès complet à cette formation.
+            <h1 class="display-5 fw-bold mb-4">{{ session.programme.titre }}</h1>
+            
+            <div class="card shadow-sm border-0 mb-4 bg-primary-subtle">
+                <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div>
+                        <h5 class="fw-bold text-primary mb-1">Continuer l'apprentissage</h5>
+                        <p class="mb-0 text-muted small">Reprenez là où vous vous êtes arrêté.</p>
+                    </div>
+                    <a href="{% url 'formations:course_content_default' session.id %}" class="btn btn-primary btn-lg shadow-sm text-nowrap">
+                        <i class="bi bi-play-fill me-2"></i> Accéder au Cours
+                    </a>
+                </div>
             </div>
             
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-body">
-                    <h5 class="card-title">Progression</h5>
-                    <div class="progress mb-3" style="height: 10px;">
+                    <h5 class="card-title">Votre Progression</h5>
+                    <div class="progress mb-2" style="height: 10px;">
                         <div class="progress-bar bg-success" role="progressbar" style="width: {{ inscription.progression }}%" aria-valuenow="{{ inscription.progression }}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
-                    <p class="text-muted">{{ inscription.progression }}% complété</p>
+                    <p class="text-muted small mb-0">{{ inscription.progression }}% complété</p>
                 </div>
             </div>
 
             <div class="card shadow-sm border-0">
-                <div class="card-header bg-white border-bottom-0 py-3">
-                    <h4 class="mb-0">Contenu du cours</h4>
+                <div class="card-header bg-white border-bottom py-3">
+                    <h4 class="h5 mb-0 fw-bold">Programme de la formation</h4>
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item py-3 d-flex justify-content-between align-items-center">
-                        <div>
-                            <i class="bi bi-play-circle-fill text-primary me-2 lead"></i>
-                            Introduction au programme
+                <div class="accordion accordion-flush" id="syllabusAccordion">
+                    {% for chapitre in chapitres %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{ chapitre.id }}">
+                            <button class="accordion-button {% if forloop.first %}{% else %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ chapitre.id }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ chapitre.id }}">
+                                <span class="fw-semibold">{{ chapitre.titre }}</span>
+                                <span class="badge bg-light text-secondary ms-2 rounded-pill border">{{ chapitre.lecons.count }} leçons</span>
+                            </button>
+                        </h2>
+                        <div id="collapse{{ chapitre.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ chapitre.id }}" data-bs-parent="#syllabusAccordion">
+                            <div class="accordion-body p-0">
+                                <ul class="list-group list-group-flush mb-0 ps-0">
+                                    {% for lecon in chapitre.lecons.all %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-4 py-3">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-play-btn text-primary me-3 fs-5"></i>
+                                            <div>
+                                                <span class="d-block">{{ lecon.titre }}</span>
+                                                {% if lecon.duree_minutes %}
+                                                <small class="text-muted">{{ lecon.duree_minutes }} min</small>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <a href="{% url 'formations:course_content' session.id lecon.id %}" class="btn btn-sm btn-outline-secondary">Voir</a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </div>
-                        <span class="badge bg-light text-dark">15 min</span>
-                    </li>
-                    <li class="list-group-item py-3 d-flex justify-content-between align-items-center">
-                        <div>
-                            <i class="bi bi-file-text-fill text-secondary me-2 lead"></i>
-                            Module 1 : Les bases
+                    </div>
+                    {% empty %}
+                        <div class="p-4 text-center text-muted">
+                            <i class="bi bi-exclamation-circle mb-2 fs-4 d-block"></i>
+                            Aucun contenu disponible pour le moment.
                         </div>
-                        <button class="btn btn-sm btn-outline-primary">Démarrer</button>
-                    </li>
-                    <!-- More mock content -->
-                    <li class="list-group-item py-3 d-flex justify-content-between align-items-center text-muted">
-                        <div>
-                            <i class="bi bi-lock-fill me-2 lead"></i>
-                            Module 2 : Avancé (Verrouillé)
-                        </div>
-                    </li>
-                </ul>
+                    {% endfor %}
+                </div>
             </div>
         </div>
-        
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
+
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <!-- Sidebar Info -->
+            <div class="card shadow-sm border-0 mb-4 position-sticky" style="top: 90px;">
+                {% if session.programme.image %}
+                <img src="{{ session.programme.image.url }}" class="card-img-top" alt="{{ session.programme.titre }}">
+                {% endif %}
                 <div class="card-body">
-                    <h5>Informations de session</h5>
-                    <ul class="list-unstyled mt-3">
-                        <li class="mb-2"><i class="bi bi-calendar me-2 text-primary"></i> Début : {{ session.date_debut|date:"d M Y" }}</li>
-                        <li class="mb-2"><i class="bi bi-calendar-check me-2 text-primary"></i> Fin : {{ session.date_fin|date:"d M Y" }}</li>
-                        <li class="mb-2"><i class="bi bi-person-video3 me-2 text-primary"></i> Mentor assigné</li>
-                    </ul>
-                    <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary w-100 mt-3">Retour au Dashboard</a>
+                    <h5 class="fw-bold">À propos</h5>
+                    <p class="text-secondary small">{{ session.programme.description|truncatewords:20 }}</p>
+                    <hr>
+                    <div class="d-grid">
+                         <a href="{% url 'formations:course_content_default' session.id %}" class="btn btn-primary">
+                            Commencer
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

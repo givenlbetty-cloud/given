@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ current_lecon.titre }} - {{ session.programme.titre }}{% endblock %}
+
+{% block content %}
+<!-- Use a specialized layout for the player -->
+<div class="container-fluid py-4 course-player-container">
+    <div class="row g-4 h-100">
+        
+        <!-- Sidebar Navigation (Desktop: Col-3, Mobile: Offcanvas) -->
+        <div class="col-lg-3 d-none d-lg-block">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold text-primary">{{ session.programme.titre }}</h5>
+                    <div class="progress mt-2" style="height: 5px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ inscription.progression }}%" aria-valuenow="{{ inscription.progression }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <small class="text-muted">{{ inscription.progression }}% complété</small>
+                </div>
+                <div class="card-body p-0 overflow-auto" style="max-height: 80vh;">
+                    {% include 'formations/includes/course_sidebar.html' %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Sidebar Toggle -->
+        <div class="d-lg-none col-12 mb-2">
+            <button class="btn btn-outline-primary w-100" type="button" data-bs-toggle="offcanvas" data-bs-target="#courseSidebar" aria-controls="courseSidebar">
+                <i class="bi bi-list-task me-2"></i> Table des matières
+            </button>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="col-lg-9 col-12">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4 p-md-5">
+                    
+                    <!-- Breadcrumb / Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item"><a href="{% url 'accounts:dashboard' %}" class="text-decoration-none">Dashboard</a></li>
+                                <li class="breadcrumb-item text-muted">{{ current_lecon.chapitre.titre }}</li>
+                                <li class="breadcrumb-item active" aria-current="page">{{ current_lecon.titre }}</li>
+                            </ol>
+                        </nav>
+                    </div>
+
+                    <h1 class="h3 fw-bold mb-4">{{ current_lecon.titre }}</h1>
+
+                    <!-- Video Section -->
+                    {% if current_lecon.video_url %}
+                    <div class="ratio ratio-16x9 mb-4 rounded overflow-hidden shadow">
+                        <!-- Simple Embed Logic -->
+                        <iframe src="{{ current_lecon.video_url }}" title="{{ current_lecon.titre }}" allowfullscreen></iframe>
+                    </div>
+                    {% endif %}
+
+                    <!-- Text Content -->
+                    <div class="course-content typography mb-5">
+                        {{ current_lecon.contenu|safe|linebreaks }}
+                    </div>
+
+                    <hr class="my-5">
+
+                    <!-- Navigation Controls -->
+                    <div class="d-flex justify-content-between">
+                        {% if prev_lecon %}
+                        <a href="{% url 'formations:course_content' session.id prev_lecon.id %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i> Précédent
+                        </a>
+                        {% else %}
+                        <button class="btn btn-outline-secondary" disabled>Précédent</button>
+                        {% endif %}
+
+                        {% if next_lecon %}
+                        <a href="{% url 'formations:course_content' session.id next_lecon.id %}" class="btn btn-primary px-4">
+                            Suivant <i class="bi bi-arrow-right ms-2"></i>
+                        </a>
+                        {% else %}
+                        <a href="{% url 'accounts:dashboard' %}" class="btn btn-success px-4">
+                            Terminer le cours <i class="bi bi-check-circle ms-2"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mobile Offcanvas Sidebar -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="courseSidebar" aria-labelledby="courseSidebarLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="courseSidebarLabel">Contenu du cours</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        {% include 'formations/includes/course_sidebar.html' %}
+    </div>
+</div>
+
+<style>
+    /* Custom Typography for Course Content to make it readable */
+    .course-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #2c3e50;
+    }
+    .course-content h2, .course-content h3 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        color: #1a1a1a;
+    }
+    .course-player-container {
+        margin-top: 40px; 
+        margin-bottom: 40px; 
+        min-height: 80vh;
+    }
+    /* Active lesson indicator styles */
+    .active-lesson {
+        font-weight: 500;
+    }
+</style>
+{% endblock %}

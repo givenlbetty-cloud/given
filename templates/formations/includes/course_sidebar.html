@@ -1,0 +1,33 @@
+<div class="accordion accordion-flush" id="courseAccordion">
+    {% for chapitre in chapitres %}
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="heading{{ chapitre.id }}">
+            <button class="accordion-button {% if current_lecon.chapitre.id != chapitre.id %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ chapitre.id }}" aria-expanded="{% if current_lecon.chapitre.id == chapitre.id %}true{% else %}false{% endif %}" aria-controls="collapse{{ chapitre.id }}">
+                <span class="fw-semibold">{{ chapitre.titre }}</span>
+            </button>
+        </h2>
+        <div id="collapse{{ chapitre.id }}" class="accordion-collapse collapse {% if current_lecon.chapitre.id == chapitre.id %}show{% endif %}" aria-labelledby="heading{{ chapitre.id }}" data-bs-parent="#courseAccordion">
+            <div class="accordion-body p-0">
+                <div class="list-group list-group-flush">
+                    {% for lecon in chapitre.lecons.all %}
+                    <a href="{% url 'formations:course_content' session.id lecon.id %}" 
+                       class="list-group-item list-group-item-action border-0 py-3 ps-4 {% if lecon.id == current_lecon.id %}active-lesson bg-primary-subtle text-primary border-start border-4 border-primary{% else %}text-secondary{% endif %}">
+                        <div class="d-flex align-items-center">
+                            {% if lecon.id == current_lecon.id %}
+                                <i class="bi bi-play-circle-fill me-2"></i>
+                            {% else %}
+                                <i class="bi bi-circle me-2 fs-6"></i>
+                            {% endif %}
+                            <small>{{ lecon.titre }}</small>
+                            {% if lecon.duree_minutes %}
+                            <span class="ms-auto badge bg-light text-muted fw-normal">{{ lecon.duree_minutes }}m</span>
+                            {% endif %}
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

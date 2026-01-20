@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Paiement - {{ formation.titre }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h2 class="h4 mb-0"><i class="fas fa-lock me-2"></i>Paiement Sécurisé</h2>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row mb-4">
+                        <div class="col-md-7">
+                            <h5 class="card-title text-primary mb-3">Récapitulatif de votre commande</h5>
+                            
+                            <div class="card mb-3 border-0 bg-light">
+                                <div class="row g-0">
+                                    <div class="col-md-3 d-flex align-items-center justify-content-center p-2">
+                                        {% if formation.image %}
+                                            <img src="{{ formation.image.url }}" class="img-fluid rounded" alt="{{ formation.titre }}">
+                                        {% else %}
+                                            <div class="bg-white rounded p-3 text-center w-100 h-100 d-flex align-items-center justify-content-center">
+                                                <i class="fas fa-graduation-cap fa-2x text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="card-body py-2">
+                                            <h6 class="card-title fw-bold mb-1">{{ formation.titre }}</h6>
+                                            <p class="card-text small text-muted mb-1">{{ formation.description|truncatechars:80 }}</p>
+                                            <span class="badge bg-info text-dark">{{ formation.get_type_formation_display }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <div>
+                                        <h6 class="my-0">Prix de la formation</h6>
+                                        <small class="text-muted">Accès illimité à vie</small>
+                                    </div>
+                                    <span class="text-primary fw-bold fs-5">{{ formation.prix }} €</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0 bg-light text-muted">
+                                    <div class="text-success">
+                                        <h6 class="my-0">Code promo</h6>
+                                        <small>BETA-LAUNCH</small>
+                                    </div>
+                                    <span class="text-success">-0 €</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0 border-top border-2 mt-2">
+                                    <span class="fs-5 fw-bold">Total à payer</span>
+                                    <strong class="fs-4 text-primary">{{ formation.prix }} €</strong>
+                                </li>
+                            </ul>
+                            
+                            <div class="alert alert-info small">
+                                <i class="fas fa-info-circle me-1"></i>
+                                En validant votre paiement, vous acceptez nos conditions générales de vente.
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-5 border-start ps-md-4">
+                            <h5 class="mb-4">Moyen de paiement</h5>
+                            
+                            <form action="{% url 'formations:process_payment' session_id=session.id %}" method="POST" id="payment-form">
+                                {% csrf_token %}
+                                
+                                <div class="mb-4">
+                                    <div class="form-check p-3 border rounded mb-2 selected-payment bg-light border-primary">
+                                        <input id="credit" name="paymentMethod" type="radio" class="form-check-input" checked required>
+                                        <label class="form-check-label w-100 cursor-pointer" for="credit">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="fw-bold">Carte Bancaire</span>
+                                                <div>
+                                                    <i class="fab fa-cc-visa text-primary fa-lg me-1"></i>
+                                                    <i class="fab fa-cc-mastercard text-warning fa-lg"></i>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="form-check p-3 border rounded text-muted">
+                                        <input id="mobile" name="paymentMethod" type="radio" class="form-check-input" disabled>
+                                        <label class="form-check-label" for="mobile">
+                                            Mobile Money (Indisponible)
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="row gy-3">
+                                    <div class="col-12">
+                                        <label for="cc-name" class="form-label">Nom sur la carte</label>
+                                        <input type="text" class="form-control" id="cc-name" placeholder="John Doe" required>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="cc-number" class="form-label">Numéro de carte</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="far fa-credit-card"></i></span>
+                                            <input type="text" class="form-control" id="cc-number" placeholder="0000 0000 0000 0000" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <label for="cc-expiration" class="form-label">Expiration</label>
+                                        <input type="text" class="form-control" id="cc-expiration" placeholder="MM/AA" required>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <label for="cc-cvv" class="form-label">CVC/CVV</label>
+                                        <input type="text" class="form-control" id="cc-cvv" placeholder="123" required>
+                                    </div>
+                                </div>
+
+                                <hr class="my-4">
+
+                                <button class="w-100 btn btn-success btn-lg shadow-sm" type="submit">
+                                    <i class="fas fa-lock me-2"></i>Payer {{ formation.prix }} €
+                                </button>
+                                <p class="text-center mt-3 small text-muted">
+                                    <i class="fas fa-shield-alt text-success"></i> Transaction chiffrée SSL 256-bit
+                                </p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
