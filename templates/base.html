@@ -25,7 +25,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                    <li class="nav-item">
+                    <li class="nav-item d-none d-md-block">
                         <a class="nav-link" href="{% url 'formations:liste' %}">Formations</a>
                     </li>
                     <li class="nav-item">
@@ -41,13 +41,13 @@
                         <i class="bi bi-moon-stars-fill"></i>
                     </button>
 
-                    <a class="btn btn-outline-primary btn-sm me-3" href="{% url 'library:liste' %}">
+                    <a class="btn btn-outline-primary btn-sm me-3 d-none d-md-block" href="{% url 'library:liste' %}">
                         <i class="bi bi-book"></i> Bibliothèque
                     </a>
                     
                     {% if user.is_authenticated %}
                         {% if user.role != 'mentor' %}
-                        <a class="nav-link fw-bold text-dark" href="{% url 'accounts:dashboard' %}">
+                        <a class="nav-link fw-bold text-dark d-none d-md-block" href="{% url 'accounts:dashboard' %}">
                             <i class="bi bi-grid me-1"></i> Mon Espace
                         </a>
                         {% endif %}
@@ -57,16 +57,16 @@
                             <i class="bi bi-briefcase-fill me-1"></i> Espace Mentor
                         </a>
                         {% endif %}
-                        <a class="nav-link fw-bold text-dark" href="{% url 'accounts:profile' %}">
+                        <a class="nav-link fw-bold text-dark d-none d-md-block" href="{% url 'accounts:profile' %}">
                             <i class="bi bi-person-circle me-1"></i> Profil
                         </a>
                         <form method="post" action="{% url 'logout' %}">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-nav-login btn-sm">Déconnexion</button>
+                            <button type="submit" class="btn btn-nav-login btn-sm d-none d-md-block">Déconnexion</button>
                         </form>
                     {% else %}
-                        <a href="{% url 'login' %}" class="btn btn-nav-login">Se connecter</a>
-                        <a href="{% url 'accounts:signup' %}" class="btn btn-nav-cta">S'inscrire gratuitement</a>
+                        <a href="{% url 'login' %}" class="btn btn-nav-login d-none d-md-block">Se connecter</a>
+                        <a href="{% url 'accounts:signup' %}" class="btn btn-nav-cta d-none d-md-block">S'inscrire gratuitement</a>
                     {% endif %}
                 </div>
             </div>

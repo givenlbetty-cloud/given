@@ -37,7 +37,19 @@
                                 <i class="bi bi-mortarboard fs-1 opacity-25"></i>
                             </div>
                         {% endif %}
-                        <span class="badge badge-category position-absolute top-0 start-0 m-3 shadow-md">Certifiant</span>
+                        <div class="position-absolute top-0 start-0 m-3">
+                            {% if prog.type_formation == 'online' %}
+                                <span class="badge bg-info text-dark shadow-md mb-1"><i class="bi bi-laptop me-1"></i>En Ligne</span>
+                            {% elif prog.type_formation == 'presencial' %}
+                                <span class="badge bg-warning text-dark shadow-md mb-1"><i class="bi bi-building me-1"></i>Présentiel</span>
+                            {% else %}
+                                <span class="badge bg-primary shadow-md mb-1"><i class="bi bi-display me-1"></i>Hybride</span>
+                            {% endif %}
+                            
+                            {% if prog.est_gratuit %}
+                                <span class="badge bg-success shadow-md d-block">Gratuit</span>
+                            {% endif %}
+                        </div>
                     </div>
                     
                     <div class="card-body p-4 d-flex flex-column">
@@ -57,22 +69,40 @@
                         <div class="mt-auto">
                             <h6 class="fw-bold text-dark small text-uppercase mb-3"><i class="bi bi-calendar-event me-2 text-primary"></i>Prochaines Sessions</h6>
                             <ul class="list-unstyled mb-0">
-                                {% for session in prog.sessions.all|slice:":2" %}
-                                    <li class="d-flex justify-content-between align-items-center mb-2 p-2 rounded bg-light border border-light">
-                                        <div>
-                                            <span class="d-block fw-bold small text-dark">{{ session.date_debut|date:"d M" }} - {{ session.date_fin|date:"d M" }}</span>
-                                            <span class="small text-muted">{{ session.places_disponibles }} places restantes</span>
-                                        </div>
-                                         <form action="{% url 'inscrire_session' session.id %}" method="POST">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill fw-bold">
-                                                S'inscrire
-                                            </button>
-                                         </form>
+                                {% if prog.sessions.exists %}
+                                    {% for session in prog.sessions.all|slice:":2" %}
+                                        <li class="d-flex justify-content-between align-items-center mb-2 p-2 rounded bg-light border border-light">
+                                            <div>
+                                                {% if session.est_permanente %}
+                                                    <span class="d-block fw-bold small text-success"><i class="bi bi-infinity me-1"></i>Accès immédiat</span>
+                                                    <span class="small text-muted">Formation en ligne</span>
+                                                {% else %}
+                                                    <span class="d-block fw-bold small text-dark">{{ session.date_debut|date:"d M" }} - {{ session.date_fin|date:"d M" }}</span>
+                                                    {% if session.places_disponibles > 0 %}
+                                                        <span class="small text-muted">{{ session.places_disponibles }} places restantes</span>
+                                                    {% else %}
+                                                        <span class="small text-danger">Complet</span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                            {% if session.est_permanente or session.places_disponibles > 0 %}
+                                            <form action="{% url 'formations:inscrire_session' session.id %}" method="POST">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill fw-bold">
+                                                    Rejoindre
+                                                </button>
+                                            </form>
+                                            {% else %}
+                                                <button disabled class="btn btn-sm btn-secondary rounded-pill fw-bold">Complet</button>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li class="p-3 bg-light rounded text-center text-muted small">
+                                        <i class="bi bi-hourglass-split mb-1 d-block fs-5"></i>
+                                        Bientôt disponible / Dates à venir
                                     </li>
-                                {% empty %}
-                                    <li class="small text-muted fst-italic">Bientôt disponible.</li>
-                                {% endfor %}
+                                {% endif %}
                             </ul>
                             
                             {% if prog.sessions.count > 2 %}

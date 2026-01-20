@@ -6,10 +6,12 @@ from .decorators import payment_required
 
 def liste_programmes(request):
     query = request.GET.get('q')
+    # Filter only published programs for the public list
+    programmes = Programme.objects.filter(est_publie=True)
+    
     if query:
-        programmes = Programme.objects.filter(titre__icontains=query)
-    else:
-        programmes = Programme.objects.all()
+        programmes = programmes.filter(titre__icontains=query)
+        
     return render(request, 'formations/liste.html', {'programmes': programmes, 'query': query})
 
 @login_required
