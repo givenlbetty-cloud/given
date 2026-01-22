@@ -6,16 +6,16 @@
 {% block content %}
 <!-- 1. HERO SECTION : Épurée & Impactante -->
 <section class="d-flex align-items-center justify-content-center text-white text-center position-relative overflow-hidden" 
-    style="min-height: 85vh; background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url('{{ site_settings.hero_image.url|default:'https://images.unsplash.com/photo-1524178232363-1fb2b075b655' }}') center/cover no-repeat;">
+    style="min-height: 85vh; background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('{{ site_settings.hero_image.url|default:'https://images.unsplash.com/photo-1524178232363-1fb2b075b655' }}') center/cover no-repeat;">
     
     <!-- Abstract Background Pattern removed for cleaner image view -->
     
     <div class="container position-relative z-2">
-        <h1 class="display-3 fw-bold mb-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+        <h1 class="display-3 fw-bold mb-4" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
             {{ site_settings.hero_title|default:"Révélez votre Potentiel avec" }}<br>
-            <span class="text-warning">L'Excellence</span>
+            <span class="text-warning" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.9);">L'Excellence</span>
         </h1>
-        <p class="lead mb-5 mx-auto" style="max-width: 700px; font-size: 1.25rem; opacity: 0.9;">
+        <p class="lead mb-5 mx-auto text-light fw-medium" style="max-width: 700px; font-size: 1.35rem; opacity: 1; text-shadow: 1px 1px 4px rgba(0,0,0,0.8);">
             L'Académie Tremplin de la Jeunesse forme les leaders de demain à travers 5 piliers fondamentaux.
             Excellence, Ethique et Innovation.
         </p>
