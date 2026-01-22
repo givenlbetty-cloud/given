@@ -62,6 +62,27 @@
                         {{ current_lecon.contenu|safe|linebreaks }}
                     </div>
 
+                    <!-- Ressources Section -->
+                    {% if current_lecon.ressources.all %}
+                    <div class="card bg-light border-0 mb-5">
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-3"><i class="bi bi-paperclip me-2"></i>Ressources à télécharger</h5>
+                            <div class="list-group">
+                                {% for ressource in current_lecon.ressources.all %}
+                                <a href="{{ ressource.fichier.url }}" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center">
+                                    <i class="bi bi-file-earmark-text text-primary fs-4 me-3"></i>
+                                    <div>
+                                        <div class="fw-bold">{{ ressource.titre }}</div>
+                                        <small class="text-muted">Document disponible</small>
+                                    </div>
+                                    <i class="bi bi-download ms-auto text-muted"></i>
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
                     <hr class="my-5">
 
                     <!-- Navigation Controls -->

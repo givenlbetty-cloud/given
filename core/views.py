@@ -5,6 +5,15 @@ from django.core.mail import send_mail
 from django.utils import timezone
 from blog.models import Article, Event
 from .forms import ContactForm
+from .models import TeamMember
+
+class TeamView(TemplateView):
+    template_name = 'core/team.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['team_members'] = TeamMember.objects.all()
+        return context
 
 class HomeView(TemplateView):
     template_name = 'core/home_new.html'

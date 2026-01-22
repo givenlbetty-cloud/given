@@ -55,6 +55,15 @@ class Lecon(models.Model):
     def __str__(self):
         return self.titre
 
+class Ressource(models.Model):
+    lecon = models.ForeignKey(Lecon, on_delete=models.CASCADE, related_name='ressources')
+    titre = models.CharField(max_length=200)
+    fichier = models.FileField(upload_to='ressources_cours/')
+    date_ajout = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.titre
+
 class Session(models.Model):
     programme = models.ForeignKey(Programme, on_delete=models.CASCADE, related_name='sessions')
     date_debut = models.DateField(null=True, blank=True)
