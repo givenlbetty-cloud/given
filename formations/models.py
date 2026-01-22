@@ -45,6 +45,7 @@ class Lecon(models.Model):
     titre = models.CharField(max_length=200)
     contenu = models.TextField(help_text="Contenu HTML, Texte ou Embed Vidéo")
     video_url = models.URLField(blank=True, null=True, help_text="Lien YouTube/Vimeo")
+    video_file = models.FileField(upload_to='cours_videos/', blank=True, null=True, help_text="Vidéo locale (MP4, WebM). Prioritaire sur le lien URL.")
     duree_minutes = models.IntegerField(default=10)
     ordre = models.IntegerField(default=0)
     est_gratuit = models.BooleanField(default=False, help_text="Accessible sans paiement (teaser)")

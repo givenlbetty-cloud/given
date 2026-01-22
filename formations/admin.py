@@ -36,8 +36,8 @@ class LeconAdmin(admin.ModelAdmin):
             'fields': ('chapitre', 'titre', 'ordre', 'est_gratuit')
         }),
         ('Contenu Multimédia', {
-            'fields': ('video_url', 'contenu', 'duree_minutes'),
-            'description': "Ajoutez ici l'URL de votre vidéo (YouTube/Vimeo) et le résumé détaillé."
+            'fields': ('video_file', 'video_url', 'contenu', 'duree_minutes'),
+            'description': "Chargez une vidéo locale OU mettez un lien YouTube. La vidéo locale est prioritaire."
         }),
     )
 
