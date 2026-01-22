@@ -68,6 +68,11 @@
                         <a class="nav-link fw-bold text-dark d-none d-md-block" href="{% url 'accounts:profile' %}">
                             <i class="bi bi-person-circle me-1"></i> Profil
                         </a>
+                        <!-- Desktop Logout -->
+                        <form method="post" action="{% url 'logout' %}" class="d-none d-md-block ms-2">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-nav-login btn-sm">Déconnexion</button>
+                        </form>
                     {% else %}
                         <a href="{% url 'login' %}" class="btn btn-nav-login d-none d-md-block">Se connecter</a>
                         <a href="{% url 'accounts:signup' %}" class="btn btn-nav-cta d-none d-md-block">S'inscrire gratuitement</a>
