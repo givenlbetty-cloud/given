@@ -49,9 +49,17 @@
                             
                             <div class="mt-auto">
                                 {% if ins.statut_paiement == 'paid' or ins.statut_validation %}
-                                    <a href="#" class="btn btn-primary w-100 rounded-pill fw-bold">
-                                        Accéder au cours <i class="bi bi-arrow-right ms-1"></i>
-                                    </a>
+                                    {% if ins.session.programme.type_formation == 'online' or ins.session.programme.type_formation == 'hybrid' %}
+                                        <!-- Lien vers LMS pour cours en ligne/hybrides -->
+                                        <a href="{% url 'formations:course_content_default' session_id=ins.session.id %}" class="btn btn-primary w-100 rounded-pill fw-bold">
+                                            Accéder au cours <i class="bi bi-play-circle-fill ms-1"></i>
+                                        </a>
+                                    {% else %}
+                                        <!-- Lien infos pour cours présentiel -->
+                                        <a href="{% url 'formations:detail_session' session_id=ins.session.id %}" class="btn btn-outline-primary w-100 rounded-pill fw-bold">
+                                            Voir les détails <i class="bi bi-info-circle ms-1"></i>
+                                        </a>
+                                    {% endif %}
                                 {% else %}
                                     <div class="d-grid gap-2">
                                         <a href="{% url 'accounts:simuler_paiement' inscription_id=ins.id %}" class="btn btn-warning w-100 rounded-pill fw-bold text-dark">
