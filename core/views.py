@@ -7,6 +7,9 @@ from blog.models import Article, Event
 from .forms import ContactForm
 from .models import TeamMember
 
+class AboutView(TemplateView):
+    template_name = 'core/about.html'
+
 class TeamView(TemplateView):
     template_name = 'core/team.html'
     

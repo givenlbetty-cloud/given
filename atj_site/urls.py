@@ -2,11 +2,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from core.views import HomeView, ContactView, TeamView
+from core.views import HomeView, ContactView, TeamView, AboutView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomeView.as_view(), name='home'),
+    path('apropos/', AboutView.as_view(), name='about'),
     path('equipe/', TeamView.as_view(), name='team'),
     path('contact/', ContactView.as_view(), name='contact'),
     
