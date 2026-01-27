@@ -37,7 +37,7 @@
                         <a class="nav-link" href="{% url 'mentoring:liste' %}">Mentors</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'blog:index' %}">Ressources</a>
+                        <a class="nav-link" href="{% url 'library:liste' %}">Bibliothèque</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'about' %}">À propos</a>
@@ -49,8 +49,8 @@
                         <i class="bi bi-moon-stars-fill"></i>
                     </button>
 
-                    <a class="btn btn-outline-primary btn-sm me-3 d-none d-md-block" href="{% url 'library:liste' %}">
-                        <i class="bi bi-book"></i> Bibliothèque
+                    <a class="btn btn-outline-primary btn-sm me-3 d-none d-md-block" href="{% url 'blog:index' %}">
+                        <i class="bi bi-newspaper"></i> Ressources
                     </a>
                     
                     {% if user.is_authenticated %}
@@ -213,10 +213,10 @@
             </a>
 
             <!-- Ressources -->
-            <a href="{% url 'blog:index' %}" class="nav-link p-2 {% if 'blog' in request.path %}text-primary{% else %}text-secondary{% endif %}">
+            <a href="{% url 'library:liste' %}" class="nav-link p-2 {% if 'library' in request.path %}text-primary{% else %}text-secondary{% endif %}">
                 <div class="d-flex flex-column align-items-center">
-                    <i class="bi bi-newspaper fs-4 mb-1"></i>
-                    <span class="small fw-medium" style="font-size: 0.65rem;">Ressources</span>
+                    <i class="bi bi-book fs-4 mb-1"></i>
+                    <span class="small fw-medium" style="font-size: 0.65rem;">Bibliothèque</span>
                 </div>
             </a>
 

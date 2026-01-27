@@ -85,27 +85,11 @@ class SessionAdmin(admin.ModelAdmin):
     get_date_range.short_description = "Période"
 
     def places_restantes_info(self, obj):
-        # Note: Ce calcul est approximatif sans requête count() directe, 
-        # mais suffisant pour l'admin simple.
-        taken = Inscription.objects.filter(session=obj).count()
-        return f"{taken} / {obj.places_disponibles}"
+        return f"{obj.inscrit_count()} / {obj.places_disponibles}"
     places_restantes_info.short_description = "Inscrits / Capacité"
 
     def is_open_registration(self, obj):
-        from django.utils import timezone
-        today = timezone.now().date()
-        
-        # Si permanent, toujours ouvert
-        if obj.est_permanente:
-            return True
-            
-        # Si date limite passée
-        if obj.date_limite_inscription and today > obj.date_limite_inscription:
-            return False
-            
-        # Si pas commencé ou en cours (si autorisé en cours)
-        # Ici on suppose qu'on peut s'inscrire tant que date limit n'est pas passée
-        return True
+        return obj.is_open()
     is_open_registration.boolean = True
     is_open_registration.short_description = "Inscriptions Ouvertes"
 

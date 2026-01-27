@@ -98,6 +98,37 @@ class Session(models.Model):
     # Pour le mode en ligne, on peut avoir une session "permanente" ou gérée différemment
     est_permanente = models.BooleanField(default=False, help_text="Cocher pour les formations en ligne accessibles à tout moment")
 
+    def inscrit_count(self):
+        """Nombre d'inscrits actuels"""
+        from formations.models import Inscription  # Local import to avoid circular dependency
+        return Inscription.objects.filter(session=self).count()
+
+    def places_restantes(self):
+        return self.places_disponibles - self.inscrit_count()
+
+    def is_open(self):
+        """Vérifie si les inscriptions sont ouvertes (Date et Places)"""
+        from django.utils import timezone
+        today = timezone.now().date()
+        
+        # 1. Vérifier Places
+        if self.places_restantes() <= 0:
+            return False
+            
+        # 2. Vérifier Type
+        if self.est_permanente:
+            return True
+            
+        # 3. Vérifier Date Limite
+        if self.date_limite_inscription and today > self.date_limite_inscription:
+            return False
+            
+        # 4. Vérifier si fini
+        if self.date_fin and today > self.date_fin:
+            return False
+            
+        return True
+
     def __str__(self):
         date_str = "Permanent" if self.est_permanente else f"{self.date_debut}"
         return f"{self.programme.titre} ({date_str})"

@@ -37,17 +37,19 @@
                                 <i class="bi bi-mortarboard fs-1 opacity-25"></i>
                             </div>
                         {% endif %}
-                        <div class="position-absolute top-0 start-0 m-3">
+                        <div class="position-absolute top-0 start-0 m-3 d-flex flex-column gap-1">
                             {% if prog.type_formation == 'online' %}
-                                <span class="badge bg-info text-dark shadow-md mb-1"><i class="bi bi-laptop me-1"></i>En Ligne</span>
-                            {% elif prog.type_formation == 'presencial' %}
-                                <span class="badge bg-warning text-dark shadow-md mb-1"><i class="bi bi-building me-1"></i>Présentiel</span>
+                                <span class="badge bg-info text-dark shadow-md"><i class="bi bi-laptop me-1"></i>En Ligne</span>
+                            {% elif prog.type_formation == 'offline' %}
+                                <span class="badge bg-warning text-dark shadow-md"><i class="bi bi-geo-alt-fill me-1"></i>Présentiel</span>
                             {% else %}
-                                <span class="badge bg-primary shadow-md mb-1"><i class="bi bi-display me-1"></i>Hybride</span>
+                                <span class="badge bg-primary shadow-md"><i class="bi bi-display me-1"></i>Hybride</span>
                             {% endif %}
                             
-                            {% if prog.est_gratuit %}
-                                <span class="badge bg-success shadow-md d-block">Gratuit</span>
+                            {% if prog.prix == 0 %}
+                                <span class="badge bg-success shadow-md">Gratuit</span>
+                            {% else %}
+                                <span class="badge bg-white text-dark shadow-md fw-bold">{{ prog.prix }} €</span>
                             {% endif %}
                         </div>
                     </div>
@@ -64,36 +66,63 @@
                         </div>
                         
                         <h3 class="h5 card-title fw-bold mb-3">{{ prog.titre }}</h3>
+                        
+                        {% if prog.conditions %}
+                        <div class="mb-3 p-2 bg-light rounded border-start border-4 border-info">
+                            <small class="d-block text-muted fw-bold text-uppercase" style="font-size: 0.65rem;">Conditions d'accès</small>
+                            <p class="mb-0 small text-dark">{{ prog.conditions|truncatechars:60 }}</p>
+                        </div>
+                        {% endif %}
+
                         <p class="card-text text-muted small mb-4 flex-grow-1">{{ prog.description|truncatewords:15 }}</p>
                         
                         <div class="mt-auto">
-                            <h6 class="fw-bold text-dark small text-uppercase mb-3"><i class="bi bi-calendar-event me-2 text-primary"></i>Prochaines Sessions</h6>
+                            <h6 class="fw-bold text-dark small text-uppercase mb-3"><i class="bi bi-calendar-event me-2 text-primary"></i>Sites & Sessions</h6>
                             <ul class="list-unstyled mb-0">
                                 {% if prog.sessions.exists %}
-                                    {% for session in prog.sessions.all|slice:":2" %}
-                                        <li class="d-flex justify-content-between align-items-center mb-2 p-2 rounded bg-light border border-light">
-                                            <div>
-                                                {% if session.est_permanente %}
-                                                    <span class="d-block fw-bold small text-success"><i class="bi bi-infinity me-1"></i>Accès immédiat</span>
-                                                    <span class="small text-muted">Formation en ligne</span>
-                                                {% else %}
-                                                    <span class="d-block fw-bold small text-dark">{{ session.date_debut|date:"d M" }} - {{ session.date_fin|date:"d M" }}</span>
-                                                    {% if session.places_disponibles > 0 %}
-                                                        <span class="small text-muted">{{ session.places_disponibles }} places restantes</span>
+                                    {% for session in prog.sessions.all|slice:":3" %}
+                                        <li class="mb-3 p-2 rounded bg-light border border-light">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <div>
+                                                    {% if session.est_permanente %}
+                                                        <span class="d-block fw-bold small text-success"><i class="bi bi-infinity me-1"></i>Accès immédiat 24/7</span>
                                                     {% else %}
-                                                        <span class="small text-danger">Complet</span>
+                                                        <span class="d-block fw-bold small text-dark">{{ session.date_debut|date:"d M" }} - {{ session.date_fin|date:"d M" }}</span>
+                                                        <span class="small text-muted d-block"><i class="bi bi-geo-alt me-1"></i>{{ session.lieu|default:"Siège ATJ" }}</span>
+                                                        
+                                                        {% if session.date_limite_inscription %}
+                                                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle" style="font-size: 0.65rem;">Fin inscrip. : {{ session.date_limite_inscription|date:"d/m" }}</span>
+                                                        {% endif %}
                                                     {% endif %}
-                                                {% endif %}
+                                                </div>
+                                                
+                                                <div class="text-end">
+                                                    {% if not session.est_permanente %}
+                                                        <span class="badge {% if session.places_restantes > 5 %}bg-success-subtle text-success{% else %}bg-warning-subtle text-warning{% endif %} rounded-pill mb-1">
+                                                            {{ session.places_restantes }} places
+                                                        </span>
+                                                    {% endif %}
+                                                </div>
                                             </div>
-                                            {% if session.est_permanente or session.places_disponibles > 0 %}
-                                            <form action="{% url 'formations:inscrire_session' session.id %}" method="POST">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill fw-bold">
-                                                    Rejoindre
+
+                                            {% if user.is_authenticated and user.role == 'mentor' %}
+                                                <button disabled class="btn btn-sm btn-outline-secondary w-100 rounded-pill fw-bold" title="Accès réservé aux étudiants">
+                                                    <i class="bi bi-lock-fill me-1"></i>Réservé Étudiants
                                                 </button>
-                                            </form>
+                                                <small class="d-block text-center text-muted mt-1" style="font-size: 0.65rem;">Contactez le staff pour accès</small>
                                             {% else %}
-                                                <button disabled class="btn btn-sm btn-secondary rounded-pill fw-bold">Complet</button>
+                                                {% if session.is_open %}
+                                                    <form action="{% url 'formations:inscrire_session' session.id %}" method="POST">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-sm btn-primary w-100 rounded-pill fw-bold shadow-sm transition-transform hover-scale">
+                                                            S'inscrire
+                                                        </button>
+                                                    </form>
+                                                {% else %}
+                                                    <button disabled class="btn btn-sm btn-secondary w-100 rounded-pill fw-bold opacity-75">
+                                                        {% if session.places_restantes <= 0 %}Complet{% else %}Fermé{% endif %}
+                                                    </button>
+                                                {% endif %}
                                             {% endif %}
                                         </li>
                                     {% endfor %}
