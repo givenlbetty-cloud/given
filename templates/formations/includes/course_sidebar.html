@@ -8,6 +8,14 @@
         </h2>
         <div id="collapse{{ chapitre.id }}" class="accordion-collapse collapse {% if current_lecon.chapitre.id == chapitre.id %}show{% endif %}" aria-labelledby="heading{{ chapitre.id }}" data-bs-parent="#courseAccordion">
             <div class="accordion-body p-0">
+                {% if chapitre.pdf_resume %}
+                <div class="p-3 bg-light border-bottom">
+                    <a href="{{ chapitre.pdf_resume.url }}" download class="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 shadow-sm">
+                        <i class="bi bi-file-earmark-pdf-fill"></i>
+                        <span>Télécharger le résumé</span>
+                    </a>
+                </div>
+                {% endif %}
                 <div class="list-group list-group-flush">
                     {% for lecon in chapitre.lecons.all %}
                     <a href="{% url 'formations:course_content' session.id lecon.id %}" 

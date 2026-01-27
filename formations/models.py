@@ -32,6 +32,7 @@ class Programme(models.Model):
 class Chapitre(models.Model):
     programme = models.ForeignKey(Programme, on_delete=models.CASCADE, related_name='chapitres')
     titre = models.CharField(max_length=200)
+    pdf_resume = models.FileField(upload_to='chapitres_resumes/', blank=True, null=True, help_text="Résumé PDF du chapitre (téléchargeable)")
     ordre = models.IntegerField(default=0)
     
     class Meta:
@@ -52,6 +53,22 @@ class Lecon(models.Model):
 
     class Meta:
         ordering = ['ordre']
+
+    def get_video_embed_url(self):
+        """Transforme l'URL YouTube/Vimeo en URL d'intégration"""
+        if not self.video_url:
+            return None
+            
+        url = self.video_url
+        if "youtube.com/watch?v=" in url:
+            return url.replace("watch?v=", "embed/")
+        elif "youtu.be/" in url:
+            video_id = url.split("youtu.be/")[1]
+            return f"https://www.youtube.com/embed/{video_id}"
+        elif "vimeo.com/" in url:
+             video_id = url.split("vimeo.com/")[1]
+             return f"https://player.vimeo.com/video/{video_id}"
+        return url
 
     def __str__(self):
         return self.titre

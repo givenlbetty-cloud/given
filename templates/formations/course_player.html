@@ -61,7 +61,7 @@
                     {% elif current_lecon.video_url %}
                         <!-- Player Embed (YouTube/Vimeo) -->
                         <div class="ratio ratio-16x9 mb-4 rounded overflow-hidden shadow">
-                            <iframe src="{{ current_lecon.video_url }}" title="{{ current_lecon.titre }}" allowfullscreen></iframe>
+                            <iframe src="{{ current_lecon.get_video_embed_url }}" title="{{ current_lecon.titre }}" allowfullscreen></iframe>
                         </div>
                     {% endif %}
 
