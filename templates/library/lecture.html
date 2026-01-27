@@ -27,7 +27,7 @@
                 </div>
             </div>
             
-            <div id="pdf-wrapper" class="flex-grow-1 bg-secondary rounded overflow-hidden shadow transition-all position-relative" style="height: 800px;">
+            <div id="pdf-wrapper" class="flex-grow-1 bg-secondary rounded overflow-hidden shadow transition-all position-relative" style="min-height: 50vh;">
                 {% if is_pdf %}
                 <!-- PDF Scroll Container -->
                 <div id="pdf-viewer" class="h-100 w-100 overflow-auto d-flex flex-column align-items-center bg-dark pt-4 pb-5">
@@ -60,7 +60,7 @@
                 const url = '{% url "library:download" livre.id %}';
                 const container = document.getElementById('pdf-viewer');
                 let pdfDoc = null;
-                let scale = 1.2;
+                let scale = 1.0; // Dynamique
                 let lastSavedPage = {{ last_page|default:1 }};
                 let isInitialScroll = true;
 
@@ -95,6 +95,15 @@
                 pdfjsLib.getDocument(url).promise.then(async function(pdfDoc_) {
                     pdfDoc = pdfDoc_;
                     document.getElementById('page_count').textContent = pdfDoc.numPages;
+
+                    // Calculate Scale dynamically for Mobile/Desktop
+                    try {
+                        const page1 = await pdfDoc.getPage(1);
+                        const v1 = page1.getViewport({scale: 1});
+                        const availableWidth = container.clientWidth - 40; // padding
+                        scale = availableWidth / v1.width;
+                        if (scale < 0.5) scale = 0.5; // safety min
+                    } catch(e) { console.error(e); }
                     
                     // Update manual form total pages if it exists
                     const manualTotalInput = document.getElementById('manual_total_pages');
@@ -123,7 +132,6 @@
                     const pageDiv = document.createElement('div');
                     pageDiv.className = 'page-container position-relative bg-white shadow-lg mb-4';
                     pageDiv.dataset.pageNumber = num;
-                    pageDiv.style.minHeight = '600px'; // placeholder height
                     container.appendChild(pageDiv);
 
                     // Observe this page
@@ -150,7 +158,7 @@
                         canvasContext: ctx,
                         viewport: viewport
                     };
-                    page.render(renderContext);
+                    await page.render(renderContext).promise;
                 }
 
                 function savePdfProgress(page, total) {
