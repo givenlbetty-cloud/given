@@ -21,10 +21,15 @@ class Programme(models.Model):
     type_formation = models.CharField(max_length=10, choices=TYPES, default='offline')
     description = models.TextField()
     image = models.ImageField(upload_to='programmes/', blank=True, null=True)
-    prix = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    prix = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name="Frais d'inscription")
+    conditions = models.TextField(blank=True, help_text="Pré-requis, diplômes nécessaires ou matériel requis.")
 
     # Pour les cours en ligne
-    est_publie = models.BooleanField(default=False)
+    est_publie = models.BooleanField(default=False, verbose_name="Publier sur le site")
+
+    @property
+    def est_gratuit(self):
+        return self.prix == 0
 
     def __str__(self):
         return f"{self.get_categorie_display()} - {self.titre}"
@@ -86,11 +91,12 @@ class Session(models.Model):
     programme = models.ForeignKey(Programme, on_delete=models.CASCADE, related_name='sessions')
     date_debut = models.DateField(null=True, blank=True)
     date_fin = models.DateField(null=True, blank=True)
-    lieu = models.CharField(max_length=200, default="Siège ATJ", blank=True)
-    places_disponibles = models.IntegerField(default=20)
+    date_limite_inscription = models.DateField(null=True, blank=True, help_text="Date limite pour accepter de nouvelles inscriptions")
+    lieu = models.CharField(max_length=200, default="Siège ATJ", blank=True, help_text="Pour le présentiel")
+    places_disponibles = models.IntegerField(default=20, verbose_name="Place limites")
     
     # Pour le mode en ligne, on peut avoir une session "permanente" ou gérée différemment
-    est_permanente = models.BooleanField(default=False, help_text="Pour les cours en ligne accessibles tout le temps")
+    est_permanente = models.BooleanField(default=False, help_text="Cocher pour les formations en ligne accessibles à tout moment")
 
     def __str__(self):
         date_str = "Permanent" if self.est_permanente else f"{self.date_debut}"
