@@ -59,10 +59,10 @@
                     {% if livre.image %}
                         <img src="{{ livre.image.url }}" class="card-img-top h-100 w-100 transition-transform" style="object-fit: cover;" alt="{{ livre.titre }}">
                     {% else %}
-                        <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center text-secondary">
-                            <div class="text-center">
-                                <i class="bi bi-book fs-1 mb-2 d-block opacity-50"></i>
-                                <span class="small text-uppercase fw-bold text-truncate d-block px-2 opacity-75">{{ livre.titre|truncatewords:3 }}</span>
+                        <div class="w-100 h-100 bg-white d-flex align-items-center justify-content-center text-dark border">
+                            <div class="text-center p-3">
+                                <span class="fw-bold text-wrap d-block" style="font-size: 0.9rem; line-height: 1.4;">{{ livre.titre }}</span>
+                                <span class="small text-muted mt-2 d-block">Pas de couverture</span>
                             </div>
                         </div>
                     {% endif %}
