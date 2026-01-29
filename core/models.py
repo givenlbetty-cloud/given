@@ -6,6 +6,21 @@ class SiteSettings(models.Model):
     logo = models.ImageField(upload_to='site/', blank=True, null=True)
     hero_image = models.ImageField(upload_to='site/', blank=True, null=True, help_text="Image de fond de la page d'accueil")
     hero_title = models.CharField(max_length=200, default="Révélez votre Potentiel")
+    hero_subtitle = models.TextField(blank=True, default="La plateforme d'excellence pour votre carrière.")
+    
+    # --- Section Mission ---
+    mission_title = models.CharField(max_length=200, default="Notre Mission")
+    mission_text = models.TextField(blank=True, help_text="Texte affiché dans la section Mission", default="Nous formons la prochaine génération de leaders.")
+    
+    # --- Section À Propos ---
+    about_title = models.CharField(max_length=200, default="À Propos de Nous")
+    about_description = models.TextField(blank=True, help_text="Texte principal de la page À propos")
+    
+    # --- Footer / Contact ---
+    footer_text = models.TextField(blank=True, help_text="Texte court en bas de page")
+    contact_email = models.EmailField(blank=True)
+    contact_phone = models.CharField(max_length=50, blank=True)
+    contact_address = models.TextField(blank=True)
     
     def save(self, *args, **kwargs):
         # Singleton pattern simple : on s'assure qu'il n'y a qu'une seule instance

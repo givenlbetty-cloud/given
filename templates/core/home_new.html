@@ -12,12 +12,10 @@
     
     <div class="container position-relative z-2">
         <h1 class="display-3 fw-bold mb-4" style="color: #ffffff !important; text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
-            {{ site_settings.hero_title|default:"Révélez votre Potentiel avec" }}<br>
-            <span class="text-warning" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.9);">L'Excellence</span>
+            {{ site_settings.hero_title|default:"Révélez votre Potentiel avec" }}
         </h1>
         <p class="lead mb-5 mx-auto fw-bold" style="color: #ffffff !important; max-width: 700px; font-size: 1.35rem; opacity: 1; text-shadow: 1px 1px 4px rgba(0,0,0,0.8);">
-            L'Académie Tremplin de la Jeunesse forme les leaders de demain à travers 5 piliers fondamentaux.
-            Excellence, Ethique et Innovation.
+            {{ site_settings.hero_subtitle|default:"L'Académie Tremplin de la Jeunesse forme les leaders de demain à travers 5 piliers fondamentaux. Excellence, Ethique et Innovation." }}
         </p>
         
         <div class="d-flex flex-column flex-md-row gap-3 justify-content-center">

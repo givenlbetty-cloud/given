@@ -7,9 +7,9 @@
 <!-- Hero Section -->
 <div class="position-relative py-5 bg-primary text-white overflow-hidden">
     <div class="container position-relative z-2 py-5 text-center">
-        <h1 class="display-3 fw-bold mb-4">Notre Mission</h1>
+        <h1 class="display-3 fw-bold mb-4">{{ site_settings.mission_title|default:"Notre Mission" }}</h1>
         <p class="lead mx-auto" style="max-width: 800px; font-size: 1.25rem;">
-            Former une nouvelle génération de leaders éthiques, compétents et innovants, capables de transformer positivement leur communauté et le monde.
+            {{ site_settings.mission_text|default:"Former une nouvelle génération de leaders éthiques, compétents et innovants, capables de transformer positivement leur communauté et le monde." }}
         </p>
     </div>
     <!-- Background Decor -->
@@ -24,10 +24,14 @@
                      class="img-fluid rounded-4 shadow-lg" alt="Vision ATJ">
             </div>
             <div class="col-lg-6">
-                <h2 class="display-5 fw-bold mb-4 text-primary">Une Vision d'Excellence</h2>
-                <p class="lead text-muted mb-4">
-                    L'Académie Tremplin de la Jeunesse n'est pas seulement une école, c'est un incubateur de talents. Nous croyons que chaque jeune possède un potentiel immense qui ne demande qu'à être révélé.
-                </p>
+                <h2 class="display-5 fw-bold mb-4 text-primary">{{ site_settings.about_title|default:"Une Vision d'Excellence" }}</h2>
+                <div class="lead text-muted mb-4">
+                    {% if site_settings.about_description %}
+                        {{ site_settings.about_description|linebreaks }}
+                    {% else %}
+                        <p>L'Académie Tremplin de la Jeunesse n'est pas seulement une école, c'est un incubateur de talents. Nous croyons que chaque jeune possède un potentiel immense qui ne demande qu'à être révélé.</p>
+                    {% endif %}
+                </div>
                 <div class="d-flex gap-4 mb-4">
                     <div>
                         <h4 class="fw-bold mb-2">Innovation</h4>
