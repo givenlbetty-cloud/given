@@ -2,16 +2,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap');
 
 :root {
-    /* EdTech Premium Palette / OpenClassrooms Style */
-    --primary-color: #7451eb; /* Main Purple */
-    --primary-hover: #5a3dc2;
-    --primary-light: #ece7fb; /* Light purple for backgrounds */
-    --primary-gradient: linear-gradient(135deg, #7451eb 0%, #5a3dc2 100%);
-    --primary-gradient-reverse: linear-gradient(135deg, #5a3dc2 0%, #7451eb 100%);
+    /* ATJ - Charte Graphique Officielle (Dépliant) */
+    --primary-color: #60100f; /* Bordeaux foncé - Fond dépliant */
+    --primary-hover: #7a1513; /* Bordeaux plus clair pour hover */
+    --primary-light: #f5e6e6; /* Bordeaux très clair pour fonds */
+    --primary-gradient: linear-gradient(135deg, #60100f 0%, #7a1513 100%);
+    --primary-gradient-reverse: linear-gradient(135deg, #7a1513 0%, #60100f 100%);
+    
+    --accent-color: #fec106; /* Or/Jaune - Accent dépliant */
+    --accent-hover: #e5ad00; /* Or foncé pour hover */
+    --accent-gradient: linear-gradient(135deg, #fec106 0%, #e5ad00 100%);
     
     --secondary-color: #3e4248; /* Dark Grey for secondary text */
-    --accent-color: #00d2a1; /* Success Green */
-    --accent-gradient: linear-gradient(135deg, #00d2a1 0%, #00a876 100%);
+    --success-color: #00a876;
+    --success-gradient: linear-gradient(135deg, #00d2a1 0%, #00a876 100%);
     
     --text-dark: #121315;
     --text-grey: #676d7c;
@@ -29,10 +33,10 @@
     --info: #4da6ff;
 
     /* Pastels for Badges */
-    --pastel-purple: #ebe5fc;
+    --pastel-bordeaux: #f5e6e6;
     --pastel-blue: #e3f2fd;
     --pastel-green: #e0f2f1;
-    --pastel-orange: #fff3e0;
+    --pastel-gold: #fff7d6;
 }
 
 body {

@@ -7,4 +7,9 @@ dj-database-url
 psycopg2-binary
 whitenoise
 django-jazzmin
+django-allauth
+requests
+pyjwt
+cryptography
+python-dotenv
 

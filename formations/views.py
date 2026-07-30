@@ -6,13 +6,21 @@ from .decorators import payment_required
 
 def liste_programmes(request):
     query = request.GET.get('q')
+    categorie = request.GET.get('categorie')
     # Filter only published programs for the public list
     programmes = Programme.objects.filter(est_publie=True)
     
     if query:
         programmes = programmes.filter(titre__icontains=query)
+    
+    if categorie:
+        programmes = programmes.filter(categorie=categorie)
         
-    return render(request, 'formations/liste.html', {'programmes': programmes, 'query': query})
+    return render(request, 'formations/liste.html', {
+        'programmes': programmes,
+        'query': query,
+        'categorie': categorie
+    })
 
 @login_required
 def inscrire_session(request, session_id):
@@ -88,15 +96,11 @@ def process_payment(request, session_id):
 @payment_required
 def detail_session(request, session_id):
     session = get_object_or_404(Session, id=session_id)
-    # L'objet inscription est déjà récupéré et vérifié par le décorateur @payment_required
-    # Il est disponible via request.inscription
     inscription = getattr(request, 'inscription', None)
     
     if not inscription:
-        # Fallback de sécurité au cas où le décorateur serait mal utilisé
         inscription = get_object_or_404(Inscription, user=request.user, session=session)
 
-    # Fetch Syllabus for display
     chapitres = session.programme.chapitres.prefetch_related('lecons').all()
 
     return render(request, 'formations/detail_session.html', {
@@ -116,17 +120,25 @@ def course_content(request, session_id, lecon_id=None):
         messages.warning(request, "Veuillez vous inscrire pour accéder au cours.")
         return redirect('formations:detail_session', session_id=session.id)
     
-    # Ici on pourrait ajouter une vérification de paiement stricte
-    # if inscription.statut_paiement != 'paid' and not current_lecon.est_gratuit: ...
+    # Vérification de paiement pour les formations payantes
+    if program.prix > 0 and inscription.statut_paiement != 'paid':
+        # Vérifier si la leçon demandée est gratuite (teaser)
+        if lecon_id:
+            lecon = get_object_or_404(Lecon, id=lecon_id)
+            if not lecon.est_gratuit:
+                messages.warning(request, "Veuillez finaliser le paiement pour accéder à ce cours.")
+                return redirect('formations:detail_session', session_id=session.id)
+        else:
+            messages.warning(request, "Veuillez finaliser le paiement pour accéder au cours.")
+            return redirect('formations:detail_session', session_id=session.id)
 
-    # Récupérer la structure du cours optimisée
+    # Récupérer la structure du cours
     chapitres = program.chapitres.prefetch_related('lecons').all()
     
     current_lecon = None
     if lecon_id:
         current_lecon = get_object_or_404(Lecon, id=lecon_id)
     else:
-        # Get first available lesson
         first_chap = chapitres.first()
         if first_chap:
             current_lecon = first_chap.lecons.first()
@@ -151,6 +163,15 @@ def course_content(request, session_id, lecon_id=None):
             if i < len(all_lecons) - 1:
                 next_lecon = all_lecons[i+1]
             break
+    
+    # Mettre à jour la progression (estimation basée sur la position)
+    if all_lecons and inscription:
+        total = len(all_lecons)
+        current_idx = next((i for i, lec in enumerate(all_lecons) if lec.id == current_lecon.id), 0)
+        progression = int((current_idx + 1) / total * 100) if total > 0 else 0
+        if progression > inscription.progression:
+            inscription.progression = progression
+            inscription.save(update_fields=['progression'])
             
     return render(request, 'formations/course_player.html', {
         'session': session,
@@ -160,46 +181,4 @@ def course_content(request, session_id, lecon_id=None):
         'prev_lecon': prev_lecon,
         'next_lecon': next_lecon,
         'inscription': inscription
-    }) 
-    # But adhering to specs: "S'inscrire et Payer".
-    inscription = get_object_or_404(Inscription, user=request.user, session=session)
-    
-    if inscription.statut_paiement != 'paid':
-         messages.warning(request, "Veuillez finaliser le paiement pour accéder au cours.")
-         return redirect('accounts:dashboard')
-
-    programme = session.programme
-    chapitres = programme.chapitres.prefetch_related('lecons').all()
-    
-    # Determine current lesson
-    if lecon_id:
-        current_lecon = get_object_or_404(Lecon, id=lecon_id)
-    else:
-        # Default to first lesson of first chapter
-        first_chap = chapitres.first()
-        current_lecon = first_chap.lecons.first() if first_chap else None
-
-    # Navigation Logic
-    all_lessons = []
-    for chap in chapitres:
-        all_lessons.extend(chap.lecons.all())
-    
-    prev_lecon = None
-    next_lecon = None
-    
-    if current_lecon and current_lecon in all_lessons:
-        idx = all_lessons.index(current_lecon)
-        if idx > 0:
-            prev_lecon = all_lessons[idx-1]
-        if idx < len(all_lessons) - 1:
-            next_lecon = all_lessons[idx+1]
-
-    context = {
-        'session': session,
-        'programme': programme,
-        'chapitres': chapitres,
-        'current_lecon': current_lecon,
-        'prev_lecon': prev_lecon,
-        'next_lecon': next_lecon,
-    }
-    return render(request, 'formations/course_player.html', context)
+    })

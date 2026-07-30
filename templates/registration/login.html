@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
+{% load socialaccount %}
 
 {% block content %}
-<div class="min-vh-100 d-flex align-items-center justify-content-center py-5" style="background: linear-gradient(135deg, #f5f7fa 0%, #ede7fb 100%);">
+<div class="min-vh-100 d-flex align-items-center justify-content-center py-5" style="background: linear-gradient(135deg, #f5f7fa 0%, #f5e6e6 100%);">
     <div class="container">
         <div class="row justify-content-center">
             <!-- Login Card -->
             <div class="col-lg-5 col-md-6">
                 <div class="card border-0 shadow-lg rounded-4" style="border-radius: 20px;">
                     <!-- Header -->
-                    <div style="background: linear-gradient(135deg, #7451eb 0%, #5a3dc2 100%); padding: 3rem 2rem; color: white; text-align: center; border-radius: 20px 20px 0 0;">
+                    <div style="background: linear-gradient(135deg, #60100f 0%, #7a1513 100%); padding: 3rem 2rem; color: white; text-align: center; border-radius: 20px 20px 0 0;">
                         <div class="mb-3">
                             <i class="bi bi-mortarboard-fill" style="font-size: 2.5rem;"></i>
                         </div>
@@ -88,7 +89,7 @@
 
                             <!-- Login Button -->
                             <div class="d-grid gap-2 mb-4">
-                                <button type="submit" class="btn btn-lg rounded-pill fw-bold text-white" style="background: linear-gradient(135deg, #7451eb 0%, #5a3dc2 100%); border: none; padding: 0.9rem; box-shadow: 0 8px 16px rgba(116, 81, 235, 0.3);">
+                                <button type="submit" class="btn btn-lg rounded-pill fw-bold text-white" style="background: linear-gradient(135deg, #60100f 0%, #7a1513 100%); border: none; padding: 0.9rem; box-shadow: 0 8px 16px rgba(96, 16, 15, 0.3);">
                                     <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
                                 </button>
                             </div>
@@ -112,7 +113,7 @@
                             <a href="#" class="text-decoration-none text-muted small me-3">
                                 <i class="bi bi-question-circle me-1"></i>Aide
                             </a>
-                            <a href="#" class="text-decoration-none text-muted small">
+                            <a href="{% url 'password_reset' %}" class="text-decoration-none text-muted small">
                                 <i class="bi bi-key me-1"></i>Réinitialiser le mot de passe
                             </a>
                         </div>

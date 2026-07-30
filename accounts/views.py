@@ -5,6 +5,7 @@ from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.core.mail import send_mail
 from .forms import CustomUserCreationForm
 from .models import CustomUser
 from formations.models import Inscription, Paiement
@@ -74,8 +75,6 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['inscriptions'] = Inscription.objects.filter(user=self.request.user)
         context['mes_livres'] = AchatLivre.objects.filter(user=self.request.user).select_related('livre').order_by('-date_achat')
         return context
-
-from django.core.mail import send_mail
 
 def simuler_paiement(request, inscription_id):
     if not request.user.is_authenticated:

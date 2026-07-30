@@ -27,11 +27,11 @@ class HomeView(TemplateView):
         # Données statiques pour les 5 piliers
         # Tout en HYBRIDE comme demandé
         context['piliers'] = [
-            ('art_oratoire', 'Art Oratoire', 'bi-mic-fill', '#800020', 'hybrid', 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'),
-            ('leadership', 'Leadership', 'bi-lightning-charge-fill', '#2c3e50', 'hybrid', 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'),
-            ('informatique', 'Informatique', 'bi-laptop', '#2980b9', 'hybrid', 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'),
-            ('langues', 'Langues', 'bi-translate', '#e67e22', 'hybrid', 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'),
-            ('affaires', 'Affaires', 'bi-briefcase-fill', '#27ae60', 'hybrid', 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'),
+            ('art_oratoire', 'Art Oratoire', 'bi-mic-fill', '#60100f', 'hybrid', 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', 'La plupart des professions ne peuvent s\'exercer efficacement que si l\'on a la maîtrise de l\'Art de la parole (Avocature, Journalisme, Enseignement, Politique, Marketing, Prédication...). Venez apprendre !'),
+            ('leadership', 'Leadership', 'bi-lightning-charge-fill', '#60100f', 'hybrid', 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', 'Coaching pratique sur mesure, développement d\'un leadership responsable, motivationnel et fondé sur l\'intelligence émotionnelle.'),
+            ('informatique', 'Informatique', 'bi-laptop', '#60100f', 'hybrid', 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', 'Maîtrise des logiciels de bureautique (Word, Publisher, PowerPoint, Excel, etc.), design graphique et techniques d\'imprimerie.'),
+            ('langues', 'Langues', 'bi-translate', '#60100f', 'hybrid', 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', 'Formation en anglais, espagnol, français et mandarin, avec une approche essentiellement pratique.'),
+            ('affaires', 'Affaires & Entrepreneuriat', 'bi-briefcase-fill', '#60100f', 'hybrid', 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', 'Encadrement et accompagnement des jeunes vers leurs premiers pas dans l\'entrepreneuriat, afin de favoriser leur autonomie et leur épanouissement.'),
         ]
         return context
 
