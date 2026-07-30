@@ -208,10 +208,11 @@ JAZZMIN_SETTINGS = {
     "custom_js": None,
     "use_google_fonts_cdn": True,
     "show_ui_builder": True,
-    "changeform_format": "horizontal_tabs",
+    "changeform_format": "collapsible",
     "changeform_format_overrides": {
         "auth.user": "collapsible",
         "auth.group": "vertical_tabs",
+        "socialaccount.socialapp": "single",
     },
     "topmenu_links": [
         {"name": "Accueil", "url": "admin:index", "permissions": ["auth.view_user"]},
