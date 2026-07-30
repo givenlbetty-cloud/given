@@ -16,8 +16,10 @@ CSRF_TRUSTED_ORIGINS = [
     'https://localhost:8000',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
+    'https://atj-beta.onrender.com',
     'https://*.app.github.dev',
     'https://*.github.dev',
+    'https://*.onrender.com',
 ]
 if 'RENDER_EXTERNAL_HOSTNAME' in os.environ:
     CSRF_TRUSTED_ORIGINS.append(f"https://{os.environ.get('RENDER_EXTERNAL_HOSTNAME')}")
