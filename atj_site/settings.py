@@ -212,7 +212,6 @@ JAZZMIN_SETTINGS = {
     "changeform_format_overrides": {
         "auth.user": "collapsible",
         "auth.group": "vertical_tabs",
-        "socialaccount.socialapp": "single",
     },
     "topmenu_links": [
         {"name": "Accueil", "url": "admin:index", "permissions": ["auth.view_user"]},
@@ -226,14 +225,15 @@ JAZZMIN_SETTINGS = {
 }
 
 JAZZMIN_UI_TWEAKS = {
-    "theme": "simplex",
+    "theme": "flatly",
     "dark_mode_theme": "darkly",
-    "navbar": "navbar-white navbar-light",
-    "sidebar": "sidebar-dark-primary",
-    "sidebar_nav_flat_style": True,
+    "navbar": "navbar-dark navbar-bordeaux",
+    "navbar_small_text": False,
+    "sidebar": "sidebar-dark-bordeaux",
+    "sidebar_nav_flat_style": False,
     "body_small_text": False,
     "brand_small_text": False,
-    "accent": "accent-navy",
+    "accent": "accent-primary",
 }
 
 # ==============================
