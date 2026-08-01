@@ -109,11 +109,8 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# WhiteNoise : activé en production, désactivé en dev
-if DEBUG:
-    STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
-else:
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# WhiteNoise : CompressedStaticFilesStorage (sans Manifest pour éviter les erreurs 404 CSS/JS)
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 # Email Configuration (Console Backend for Development)
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
