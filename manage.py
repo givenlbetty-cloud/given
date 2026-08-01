@@ -15,6 +15,15 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+    # Nettoyer les anciennes tables formations (refonte LMS)
+    # avant le migrate du dashboard Render
+    import django
+    django.setup()
+    from django.db import connection
+    with connection.cursor() as c:
+        c.execute("DROP TABLE IF EXISTS formations_formation, formations_lecon, formations_session, formations_inscription, formations_paiement CASCADE")
+        c.execute("DELETE FROM django_migrations WHERE app = 'formations'")
+
     execute_from_command_line(sys.argv)
 
 
