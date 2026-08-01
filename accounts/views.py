@@ -12,6 +12,7 @@ from formations.models import Inscription, Paiement
 from blog.models import Ressource
 from library.models import AchatLivre
 
+# FIX_V3_20260801_1136 - SignUpView corrigé avec double protection backend
 class SignUpView(CreateView):
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('home')
@@ -25,8 +26,10 @@ class SignUpView(CreateView):
 
     def form_valid(self, form):
         user = form.save()
+        # Protection 1 : attribut sur l'objet utilisateur
         user.backend = 'django.contrib.auth.backends.ModelBackend'
-        login(self.request, user)
+        # Protection 2 : paramètre explicite (double sécurité)
+        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
         return redirect(self.success_url)
 
 class ProfileView(LoginRequiredMixin, DetailView):
