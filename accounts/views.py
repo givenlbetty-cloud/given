@@ -25,7 +25,8 @@ class SignUpView(CreateView):
 
     def form_valid(self, form):
         user = form.save()
-        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        login(self.request, user)
         return redirect(self.success_url)
 
 class ProfileView(LoginRequiredMixin, DetailView):
