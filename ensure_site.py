@@ -19,7 +19,8 @@ if created:
 else:
     print(f'✅ Site existant: {site.domain} (id=1)')
     # Mettre à jour le domaine si changé
-    if site.domain != os.environ.get('RENDER_EXTERNAL_HOSTNAME', site.domain):
-        site.domain = os.environ.get('RENDER_EXTERNAL_HOSTNAME', site.domain)
+    expected_domain = os.environ.get('RENDER_EXTERNAL_HOSTNAME', 'atj-beta.onrender.com')
+    if site.domain != expected_domain:
+        site.domain = expected_domain
         site.save()
         print(f'   Domaine mis à jour: {site.domain}')
