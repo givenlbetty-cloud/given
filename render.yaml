@@ -3,7 +3,7 @@ services:
     name: atj-beta
     runtime: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn atj_site.wsgi:application"
+    startCommand: "./start.sh"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
