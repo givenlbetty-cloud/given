@@ -97,6 +97,20 @@
                             <!-- Divider -->
                             <div class="position-relative mb-4">
                                 <hr class="bg-secondary opacity-20">
+                                <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 small text-muted" style="transform: translate(-50%, -50%);">Ou continuer avec</span>
+                            </div>
+
+                            <!-- Google Login Button -->
+                            <div class="d-grid gap-2 mb-3">
+                                <a href="{% provider_login_url 'google' %}" class="btn btn-lg rounded-pill fw-bold border" style="color: #444; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <img src="https://www.google.com/favicon.ico" width="20" class="me-2" alt="Google">
+                                    Se connecter avec Google
+                                </a>
+                            </div>
+
+                            <!-- Divider -->
+                            <div class="position-relative mb-4">
+                                <hr class="bg-secondary opacity-20">
                                 <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 small text-muted" style="transform: translate(-50%, -50%);">Vous êtes nouveau ?</span>
                             </div>
 
