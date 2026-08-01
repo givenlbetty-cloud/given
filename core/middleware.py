@@ -1,6 +1,7 @@
 """
 🔐 Middleware Basic Authentication pour environnement BETA
 Protège l'accès au site par mot de passe
++ EnsureSiteMiddleware : garantit que Site(id=1) existe pour django.contrib.sites
 """
 
 import base64
@@ -79,6 +80,31 @@ class BasicAuthMiddleware(MiddlewareMixin):
         )
         response['WWW-Authenticate'] = 'Basic realm="ATJ Beta Testing"'
         return response
+
+
+class EnsureSiteMiddleware(MiddlewareMixin):
+    """
+    Garantit que le Site (id=1) existe dans la base de données.
+    Requis par django.contrib.sites + django-allauth pour la page de login.
+    S'exécute à chaque requête → fonctionne quelle que soit la config Render.
+    """
+    _site_checked = False
+
+    def process_request(self, request):
+        if not EnsureSiteMiddleware._site_checked:
+            try:
+                from django.contrib.sites.models import Site
+                Site.objects.get_or_create(
+                    id=1,
+                    defaults={
+                        'domain': 'atj-beta.onrender.com',
+                        'name': 'ATJ',
+                    }
+                )
+                EnsureSiteMiddleware._site_checked = True
+            except Exception:
+                pass  # DB pas encore prête, on réessaiera à la prochaine requête
+        return None
 
 
 class BetaEnvironmentHeaderMiddleware(MiddlewareMixin):
