@@ -26,12 +26,12 @@
 <div class="container">
     <!-- Course Grid -->
     <div class="row g-4">
-            {% for prog in programmes %}
+            {% for prog in formations %}
             <div class="col-md-6 col-lg-4">
                 <article class="card h-100 border-0 shadow-hover-lg">
                     <div class="position-relative">
-                        {% if prog.image %}
-                            <img src="{{ prog.image.url }}" class="card-img-top" alt="{{ prog.titre }}" style="height: 220px; object-fit: cover;">
+                        {% if prog.image_couverture %}
+                            <img src="{{ prog.image_couverture.url }}" class="card-img-top" alt="{{ prog.titre }}" style="height: 220px; object-fit: cover;">
                         {% else %}
                             <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-secondary" style="height: 220px;">
                                 <i class="bi bi-mortarboard fs-1 opacity-25"></i>

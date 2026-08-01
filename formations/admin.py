@@ -47,7 +47,7 @@ class FormationAdmin(admin.ModelAdmin):
     def prix_affiche(self, obj):
         if obj.prix == 0:
             return format_html('<span style="color:green;font-weight:bold">GRATUIT</span>')
-        return f"{obj.prix} €"
+        return format_html('{} €', obj.prix)
     prix_affiche.short_description = "Prix"
 
     def total_lecons(self, obj):
@@ -72,7 +72,7 @@ class SessionAdmin(admin.ModelAdmin):
     list_filter = ('type_session', 'formation')
 
     def places_info(self, obj):
-        return f"{obj.inscrit_count()} / {obj.places_disponibles}"
+        return format_html('{} / {}', obj.inscrit_count(), obj.places_disponibles)
     places_info.short_description = "Inscrits / Places"
 
     def is_open(self, obj):
