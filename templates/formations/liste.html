@@ -1,157 +1,71 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- Hero Section -->
-<div class="text-white py-5 mb-5" style="background: linear-gradient(rgba(30, 30, 40, 0.4), rgba(30, 30, 40, 0.6)), url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') center/cover; background-color: #7451eb;">
+<div class="text-white py-5 mb-5" style="background: linear-gradient(135deg, #60100f 0%, #7a1513 100%);">
     <div class="container text-center">
-        <span class="badge badge-category bg-white text-primary mb-3 px-3 py-2">Catalogue Officiel</span>
-        <h1 class="display-3 fw-bold mb-3" style="color: #ffffff !important; text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">Nos Formations d'Excellence</h1>
-        <p class="lead mb-4 fw-bold" style="color: #ffffff !important; text-shadow: 1px 1px 4px rgba(0,0,0,0.8);">Développez les compétences les plus recherchées par les employeurs.</p>
-        
-        <!-- Search & Filter -->
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <form method="get" class="d-flex position-relative shadow-lg rounded-pill overflow-hidden bg-white">
-                    <span class="position-absolute top-50 start-0 translate-middle-y ms-4 text-muted">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    <input class="form-control border-0 ps-5 py-3" type="search" name="q" placeholder="Quel domaine vous intéresse ? (ex: Développement...)" value="{{ query|default:'' }}" style="padding-left: 3.5rem !important;">
-                    <button class="btn btn-primary rounded-pill px-4 fw-bold m-1" type="submit">Rechercher</button>
-                </form>
-            </div>
-        </div>
+        <h1 class="display-4 fw-bold mb-3">Nos Formations</h1>
+        <p class="lead mb-4">Développez les compétences les plus recherchées.</p>
+        <form method="get" class="d-flex justify-content-center">
+            <input class="form-control w-50 rounded-pill px-4 py-3" type="search" name="q" placeholder="Rechercher une formation..." value="{{ query|default:'' }}">
+            <button class="btn btn-light rounded-pill px-4 fw-bold ms-2" type="submit">Rechercher</button>
+        </form>
     </div>
 </div>
 
 <div class="container">
-    <!-- Course Grid -->
     <div class="row g-4">
-            {% for prog in formations %}
-            <div class="col-md-6 col-lg-4">
-                <article class="card h-100 border-0 shadow-hover-lg">
-                    <div class="position-relative">
-                        {% if prog.image_couverture %}
-                            <img src="{{ prog.image_couverture.url }}" class="card-img-top" alt="{{ prog.titre }}" style="height: 220px; object-fit: cover;">
+        {% for formation in formations %}
+        <div class="col-md-6 col-lg-4">
+            <article class="card h-100 border-0 shadow-sm">
+                {% if formation.image_couverture %}
+                    <img src="{{ formation.image_couverture.url }}" class="card-img-top" alt="{{ formation.titre }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-secondary" style="height: 200px;">
+                        <i class="bi bi-mortarboard fs-1 opacity-25"></i>
+                    </div>
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <span class="badge bg-primary mb-2 align-self-start">{{ formation.get_categorie_display }}</span>
+                    <h3 class="h5 card-title fw-bold">{{ formation.titre }}</h3>
+                    <p class="card-text text-muted small flex-grow-1">{{ formation.description|truncatewords:20 }}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <span class="fw-bold">{{ formation.lecons.count }} leçons</span>
+                        {% if formation.est_gratuit %}
+                            <span class="badge bg-success">Gratuit</span>
                         {% else %}
-                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-secondary" style="height: 220px;">
-                                <i class="bi bi-mortarboard fs-1 opacity-25"></i>
-                            </div>
+                            <span class="badge bg-dark">{{ formation.prix }} €</span>
                         {% endif %}
-                        <div class="position-absolute top-0 start-0 m-3 d-flex flex-column gap-1">
-                            {% if prog.type_formation == 'online' %}
-                                <span class="badge bg-info text-dark shadow-md"><i class="bi bi-laptop me-1"></i>En Ligne</span>
-                            {% elif prog.type_formation == 'offline' %}
-                                <span class="badge bg-warning text-dark shadow-md"><i class="bi bi-geo-alt-fill me-1"></i>Présentiel</span>
-                            {% else %}
-                                <span class="badge bg-primary shadow-md"><i class="bi bi-display me-1"></i>Hybride</span>
-                            {% endif %}
-                            
-                            {% if prog.prix == 0 %}
-                                <span class="badge bg-success shadow-md">Gratuit</span>
-                            {% else %}
-                                <span class="badge bg-white text-dark shadow-md fw-bold">{{ prog.prix }} €</span>
-                            {% endif %}
-                        </div>
                     </div>
-                    
-                    <div class="card-body p-4 d-flex flex-column">
-                        <div class="mb-2">
-                             <!-- Rating Stars Fake (Static) for Social Proof -->
-                            <i class="bi bi-star-fill text-warning small"></i>
-                            <i class="bi bi-star-fill text-warning small"></i>
-                            <i class="bi bi-star-fill text-warning small"></i>
-                            <i class="bi bi-star-fill text-warning small"></i>
-                            <i class="bi bi-star-half text-warning small"></i>
-                            <span class="text-muted small ms-1">(4.8)</span>
-                        </div>
-                        
-                        <h3 class="h5 card-title fw-bold mb-3">{{ prog.titre }}</h3>
-                        
-                        {% if prog.conditions %}
-                        <div class="mb-3 p-2 bg-light rounded border-start border-4 border-info">
-                            <small class="d-block text-muted fw-bold text-uppercase" style="font-size: 0.65rem;">Conditions d'accès</small>
-                            <p class="mb-0 small text-dark">{{ prog.conditions|truncatechars:60 }}</p>
-                        </div>
-                        {% endif %}
-
-                        <p class="card-text text-muted small mb-4 flex-grow-1">{{ prog.description|truncatewords:15 }}</p>
-                        
-                        <div class="mt-auto">
-                            <h6 class="fw-bold text-dark small text-uppercase mb-3"><i class="bi bi-calendar-event me-2 text-primary"></i>Sites & Sessions</h6>
-                            <ul class="list-unstyled mb-0">
-                                {% if prog.sessions.exists %}
-                                    {% for session in prog.sessions.all|slice:":3" %}
-                                        <li class="mb-3 p-2 rounded bg-light border border-light">
-                                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <div>
-                                                    {% if session.est_permanente %}
-                                                        <span class="d-block fw-bold small text-success"><i class="bi bi-infinity me-1"></i>Accès immédiat 24/7</span>
-                                                    {% else %}
-                                                        <span class="d-block fw-bold small text-dark">{{ session.date_debut|date:"d M" }} - {{ session.date_fin|date:"d M" }}</span>
-                                                        <span class="small text-muted d-block"><i class="bi bi-geo-alt me-1"></i>{{ session.lieu|default:"Siège ATJ" }}</span>
-                                                        
-                                                        {% if session.date_limite_inscription %}
-                                                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle" style="font-size: 0.65rem;">Fin inscrip. : {{ session.date_limite_inscription|date:"d/m" }}</span>
-                                                        {% endif %}
-                                                    {% endif %}
-                                                </div>
-                                                
-                                                <div class="text-end">
-                                                    {% if not session.est_permanente %}
-                                                        <span class="badge {% if session.places_restantes > 5 %}bg-success-subtle text-success{% else %}bg-warning-subtle text-warning{% endif %} rounded-pill mb-1">
-                                                            {{ session.places_restantes }} places
-                                                        </span>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-
-                                            {% if user.is_authenticated and user.role == 'mentor' %}
-                                                <button disabled class="btn btn-sm btn-outline-secondary w-100 rounded-pill fw-bold" title="Accès réservé aux étudiants">
-                                                    <i class="bi bi-lock-fill me-1"></i>Réservé Étudiants
-                                                </button>
-                                                <small class="d-block text-center text-muted mt-1" style="font-size: 0.65rem;">Contactez le staff pour accès</small>
-                                            {% else %}
-                                                {% if session.is_open %}
-                                                    <form action="{% url 'formations:inscrire_session' session.id %}" method="POST">
-                                                        {% csrf_token %}
-                                                        <button type="submit" class="btn btn-sm btn-primary w-100 rounded-pill fw-bold shadow-sm transition-transform hover-scale">
-                                                            S'inscrire
-                                                        </button>
-                                                    </form>
-                                                {% else %}
-                                                    <button disabled class="btn btn-sm btn-secondary w-100 rounded-pill fw-bold opacity-75">
-                                                        {% if session.places_restantes <= 0 %}Complet{% else %}Fermé{% endif %}
-                                                    </button>
-                                                {% endif %}
-                                            {% endif %}
-                                        </li>
-                                    {% endfor %}
+                    {% if formation.sessions.exists %}
+                    <div class="mt-3 pt-3 border-top">
+                        <small class="text-muted fw-bold">Sessions disponibles :</small>
+                        {% for session in formation.sessions.all|slice:":2" %}
+                        <div class="d-flex justify-content-between align-items-center mt-2 p-2 bg-light rounded">
+                            <small>
+                                {% if session.type_session == 'en_ligne' %}
+                                    🌐 {{ session.nom }}
                                 {% else %}
-                                    <li class="p-3 bg-light rounded text-center text-muted small">
-                                        <i class="bi bi-hourglass-split mb-1 d-block fs-5"></i>
-                                        Bientôt disponible / Dates à venir
-                                    </li>
+                                    📍 {{ session.date_debut|date:"d/m/Y"|default:"" }} - {{ session.lieu }}
                                 {% endif %}
-                            </ul>
-                            
-                            {% if prog.sessions.count > 2 %}
-                                <div class="text-center mt-2">
-                                    <small class="text-muted">+ {{ prog.sessions.count|add:"-2" }} autres dates</small>
-                                </div>
-                            {% endif %}
+                            </small>
+                            <form action="{% url 'formations:inscrire_session' session.id %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill">S'inscrire</button>
+                            </form>
                         </div>
+                        {% endfor %}
                     </div>
-                </article>
-            </div>
-            {% empty %}
-            <div class="col-12 text-center py-5">
-                <div class="bg-white p-5 rounded-4 shadow-sm d-inline-block">
-                    <i class="bi bi-clipboard-x fs-1 text-muted mb-3 d-block"></i>
-                    <p class="text-muted h5">Aucun programme trouvé.</p>
+                    {% endif %}
                 </div>
-            </div>
-            {% endfor %}
+            </article>
         </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="bi bi-clipboard-x fs-1 text-muted mb-3 d-block"></i>
+            <p class="text-muted h5">Aucune formation trouvée.</p>
+            <a href="{% url 'formations:liste' %}" class="btn btn-outline-primary mt-3">Voir tout le catalogue</a>
+        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
