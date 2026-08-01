@@ -204,7 +204,7 @@ JAZZMIN_SETTINGS = {
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
     "related_modal_active": True,
-    "custom_css": None,
+    "custom_css": "css/jazzmin-custom.css",
     "custom_js": None,
     "use_google_fonts_cdn": True,
     "show_ui_builder": True,
@@ -222,13 +222,15 @@ JAZZMIN_SETTINGS = {
 JAZZMIN_UI_TWEAKS = {
     "theme": "flatly",
     "dark_mode_theme": "darkly",
-    "navbar": "navbar-dark navbar-bordeaux",
+    "navbar": "navbar-dark",
     "navbar_small_text": False,
-    "sidebar": "sidebar-dark-bordeaux",
+    "sidebar": "sidebar-dark-primary",
     "sidebar_nav_flat_style": False,
     "body_small_text": False,
     "brand_small_text": False,
     "accent": "accent-primary",
+    "navbar_fixed": True,
+    "layout_boxed": False,
 }
 
 # ==============================

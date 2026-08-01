@@ -1,0 +1,82 @@
+/* ATJ - Thème Bordeaux personnalisé pour Jazzmin */
+:root {
+    --bordeaux: #60100f;
+    --bordeaux-light: #7a1513;
+    --bordeaux-dark: #4a0c0b;
+    --bordeaux-accent: #8b1a17;
+}
+
+/* Navbar */
+.main-header.navbar-dark {
+    background: linear-gradient(135deg, var(--bordeaux) 0%, var(--bordeaux-light) 100%) !important;
+    border-bottom: 2px solid var(--bordeaux-accent);
+}
+.main-header.navbar-dark .nav-link {
+    color: rgba(255,255,255,0.9) !important;
+}
+.main-header .navbar-nav .nav-link:hover {
+    color: #fff !important;
+    background: rgba(255,255,255,0.1);
+}
+
+/* Sidebar */
+.main-sidebar.sidebar-dark-primary {
+    background: linear-gradient(180deg, var(--bordeaux-dark) 0%, var(--bordeaux) 100%) !important;
+}
+.main-sidebar .nav-link.active {
+    background: var(--bordeaux-accent) !important;
+    border-left: 3px solid #fff;
+}
+.main-sidebar .nav-link:hover {
+    background: rgba(255,255,255,0.08);
+}
+.main-sidebar .brand-link {
+    background: var(--bordeaux-dark) !important;
+    border-bottom: 1px solid var(--bordeaux-accent);
+}
+.main-sidebar .user-panel {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Footer */
+.main-footer {
+    background: #f8f9fa;
+    border-top: 2px solid var(--bordeaux);
+    color: var(--bordeaux);
+}
+
+/* Tableaux */
+.table thead {
+    background: var(--bordeaux);
+    color: #fff;
+}
+.table-hover tbody tr:hover {
+    background: rgba(96, 16, 15, 0.05);
+}
+
+/* Boutons */
+.btn-primary {
+    background: var(--bordeaux) !important;
+    border-color: var(--bordeaux-dark) !important;
+}
+.btn-primary:hover {
+    background: var(--bordeaux-light) !important;
+}
+
+/* Login page */
+.login-page {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8d5d5 100%);
+}
+.login-logo a {
+    color: var(--bordeaux) !important;
+}
+
+/* Responsive fix - centrer le contenu */
+.content-wrapper {
+    margin-left: 250px;
+}
+@media (max-width: 991px) {
+    .content-wrapper {
+        margin-left: 0;
+    }
+}
