@@ -1,23 +1,26 @@
 """
 WSGI config for atj_site project.
 
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/6.0/howto/deployment/wsgi/
+Applique les migrations et crée le Site(id=1) AVANT que Gunicorn
+n'accepte des requêtes. C'est le SEUL moment où PostgreSQL est
+accessible et où les tables n'ont pas encore été lues.
 """
-
 import os
-
-from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "atj_site.settings")
 
-application = get_wsgi_application()
+# Initialiser Django AVANT get_wsgi_application() pour pouvoir
+# exécuter migrate sur PostgreSQL (DATABASE_URL dispo au runtime)
+import django
+django.setup()
 
-# Garantit que le Site (id=1) existe pour django.contrib.sites + allauth
-# Exécuté à chaque démarrage du worker, pas seulement au build
+from django.core.management import call_command
 from django.contrib.sites.models import Site
+
+# Appliquer les migrations sur PostgreSQL (idempotent)
+call_command('migrate', '--no-input')
+
+# Créer le Site id=1 requis par django.contrib.sites + django-allauth
 Site.objects.get_or_create(
     id=1,
     defaults={
@@ -25,3 +28,6 @@ Site.objects.get_or_create(
         'name': 'ATJ',
     }
 )
+
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
