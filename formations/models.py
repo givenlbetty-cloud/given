@@ -1,7 +1,9 @@
 from django.db import models
 from django.conf import settings
 
-class Programme(models.Model):
+
+class Formation(models.Model):
+    """Le contenu principal - ultra simple"""
     CATEGORIES = (
         ('art_oratoire', 'Art Oratoire'),
         ('leadership', 'Leadership'),
@@ -9,129 +11,116 @@ class Programme(models.Model):
         ('langues', 'Langues'),
         ('affaires', 'Affaires'),
     )
-    # Mode Hybride
-    TYPES = (
-        ('online', 'En Ligne'),
-        ('offline', 'Présentiel'),
-        ('hybrid', 'Hybride'),
-    )
-    
-    titre = models.CharField(max_length=200)
+    titre = models.CharField(max_length=200, verbose_name="Titre de la formation")
     categorie = models.CharField(max_length=20, choices=CATEGORIES, default='art_oratoire')
-    type_formation = models.CharField(max_length=10, choices=TYPES, default='offline')
-    description = models.TextField()
-    image = models.ImageField(upload_to='programmes/', blank=True, null=True)
-    prix = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name="Frais d'inscription")
-    conditions = models.TextField(blank=True, help_text="Pré-requis, diplômes nécessaires ou matériel requis.")
-
-    # Pour les cours en ligne
+    description = models.TextField(verbose_name="Description")
+    image_couverture = models.ImageField(upload_to='formations/', blank=True, null=True, verbose_name="Image de couverture")
+    prix = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name="Prix (0 = gratuit)")
+    conditions = models.TextField(blank=True, verbose_name="Pré-requis / Conditions")
     est_publie = models.BooleanField(default=False, verbose_name="Publier sur le site")
+
+    class Meta:
+        verbose_name = "Formation"
+        verbose_name_plural = "Formations"
+        ordering = ['categorie', 'titre']
 
     @property
     def est_gratuit(self):
         return self.prix == 0
 
+    @property
+    def nombre_lecons(self):
+        return self.lecons.count()
+
     def __str__(self):
         return f"{self.get_categorie_display()} - {self.titre}"
 
-class Chapitre(models.Model):
-    programme = models.ForeignKey(Programme, on_delete=models.CASCADE, related_name='chapitres')
-    titre = models.CharField(max_length=200)
-    pdf_resume = models.FileField(upload_to='chapitres_resumes/', blank=True, null=True, help_text="Résumé PDF du chapitre (téléchargeable)")
-    ordre = models.IntegerField(default=0)
-    
-    class Meta:
-        ordering = ['ordre']
-
-    def __str__(self):
-        return self.titre
 
 class Lecon(models.Model):
-    chapitre = models.ForeignKey(Chapitre, on_delete=models.CASCADE, related_name='lecons')
-    titre = models.CharField(max_length=200)
-    contenu = models.TextField(help_text="Contenu HTML, Texte ou Embed Vidéo")
-    video_url = models.URLField(blank=True, null=True, help_text="Lien YouTube/Vimeo")
-    video_file = models.FileField(upload_to='cours_videos/', blank=True, null=True, help_text="Vidéo locale (MP4, WebM). Prioritaire sur le lien URL.")
-    duree_minutes = models.IntegerField(default=10)
-    ordre = models.IntegerField(default=0)
-    est_gratuit = models.BooleanField(default=False, help_text="Accessible sans paiement (teaser)")
+    """Une leçon rattachée directement à la formation (plus de chapitre)"""
+    formation = models.ForeignKey(Formation, on_delete=models.CASCADE, related_name='lecons', verbose_name="Formation")
+    titre = models.CharField(max_length=200, verbose_name="Titre de la leçon")
+    ordre = models.IntegerField(default=0, verbose_name="Ordre")
+    
+    # Vidéo : upload direct OU lien YouTube
+    video = models.FileField(upload_to='videos/', blank=True, null=True, verbose_name="Vidéo (MP4)", help_text="Uploader un fichier vidéo (prioritaire sur le lien)")
+    video_url = models.URLField(blank=True, null=True, verbose_name="Ou lien YouTube/Vimeo", help_text="Lien vidéo externe (utilisé si aucun fichier uploadé)")
+    
+    contenu_texte = models.TextField(blank=True, verbose_name="Contenu texte", help_text="Texte, HTML ou description de la leçon")
+    ressource_fichier = models.FileField(upload_to='ressources/', blank=True, null=True, verbose_name="Document (PDF, ZIP)", help_text="Support téléchargeable pour l'étudiant")
+    
+    duree_minutes = models.IntegerField(default=10, verbose_name="Durée (minutes)")
+    est_gratuit = models.BooleanField(default=False, verbose_name="Accès gratuit (teaser)", help_text="Accessible sans paiement ni inscription")
 
     class Meta:
+        verbose_name = "Leçon"
+        verbose_name_plural = "Leçons"
         ordering = ['ordre']
 
     def get_video_embed_url(self):
-        """Transforme l'URL YouTube/Vimeo en URL d'intégration"""
+        """Retourne l'URL embed YouTube/Vimeo si pas de fichier local"""
+        if self.video:
+            return self.video.url
         if not self.video_url:
             return None
-            
         url = self.video_url
         if "youtube.com/watch?v=" in url:
             return url.replace("watch?v=", "embed/")
         elif "youtu.be/" in url:
-            video_id = url.split("youtu.be/")[1]
+            video_id = url.split("youtu.be/")[1].split("?")[0]
             return f"https://www.youtube.com/embed/{video_id}"
         elif "vimeo.com/" in url:
-             video_id = url.split("vimeo.com/")[1]
-             return f"https://player.vimeo.com/video/{video_id}"
+            video_id = url.split("vimeo.com/")[1].split("?")[0]
+            return f"https://player.vimeo.com/video/{video_id}"
         return url
 
-    def __str__(self):
-        return self.titre
-
-class Ressource(models.Model):
-    lecon = models.ForeignKey(Lecon, on_delete=models.CASCADE, related_name='ressources')
-    titre = models.CharField(max_length=200)
-    fichier = models.FileField(upload_to='ressources_cours/')
-    date_ajout = models.DateTimeField(auto_now_add=True)
+    @property
+    def has_video(self):
+        return bool(self.video or self.video_url)
 
     def __str__(self):
-        return self.titre
+        return f"Leçon {self.ordre}: {self.titre}"
+
 
 class Session(models.Model):
-    programme = models.ForeignKey(Programme, on_delete=models.CASCADE, related_name='sessions')
-    date_debut = models.DateField(null=True, blank=True)
-    date_fin = models.DateField(null=True, blank=True)
-    date_limite_inscription = models.DateField(null=True, blank=True, help_text="Date limite pour accepter de nouvelles inscriptions")
-    lieu = models.CharField(max_length=200, default="Siège ATJ", blank=True, help_text="Pour le présentiel")
-    places_disponibles = models.IntegerField(default=20, verbose_name="Place limites")
-    
-    # Pour le mode en ligne, on peut avoir une session "permanente" ou gérée différemment
-    est_permanente = models.BooleanField(default=False, help_text="Cocher pour les formations en ligne accessibles à tout moment")
+    """L'accès : en ligne (permanent) ou présentiel (dates + lieu)"""
+    TYPE_SESSION = (
+        ('en_ligne', '🌐 En Ligne'),
+        ('presentiel', '📍 Présentiel'),
+    )
+    formation = models.ForeignKey(Formation, on_delete=models.CASCADE, related_name='sessions', verbose_name="Formation")
+    type_session = models.CharField(max_length=15, choices=TYPE_SESSION, default='en_ligne', verbose_name="Type")
+    nom = models.CharField(max_length=200, default="Accès Libre", verbose_name="Nom de la session", help_text="Ex: 'Promo Octobre 2026' ou 'Accès Libre'")
+    date_debut = models.DateField(null=True, blank=True, verbose_name="Date de début", help_text="Obligatoire si Présentiel")
+    date_fin = models.DateField(null=True, blank=True, verbose_name="Date de fin")
+    lieu = models.CharField(max_length=200, blank=True, default="Siège ATJ", verbose_name="Lieu", help_text="Pour le présentiel")
+    places_disponibles = models.IntegerField(default=20, verbose_name="Places disponibles")
+
+    class Meta:
+        verbose_name = "Session"
+        verbose_name_plural = "Sessions"
+        ordering = ['-date_debut']
 
     def inscrit_count(self):
-        """Nombre d'inscrits actuels"""
-        from formations.models import Inscription  # Local import to avoid circular dependency
-        return Inscription.objects.filter(session=self).count()
+        return self.inscriptions.count()
 
     def places_restantes(self):
         return self.places_disponibles - self.inscrit_count()
 
     def is_open(self):
-        """Vérifie si les inscriptions sont ouvertes (Date et Places)"""
         from django.utils import timezone
-        today = timezone.now().date()
-        
-        # 1. Vérifier Places
         if self.places_restantes() <= 0:
             return False
-            
-        # 2. Vérifier Type
-        if self.est_permanente:
+        if self.type_session == 'en_ligne':
             return True
-            
-        # 3. Vérifier Date Limite
-        if self.date_limite_inscription and today > self.date_limite_inscription:
-            return False
-            
-        # 4. Vérifier si fini
+        today = timezone.now().date()
         if self.date_fin and today > self.date_fin:
             return False
-            
         return True
 
     def __str__(self):
-        date_str = "Permanent" if self.est_permanente else f"{self.date_debut}"
-        return f"{self.programme.titre} ({date_str})"
+        return f"{self.formation.titre} - {self.nom}"
+
 
 class Inscription(models.Model):
     STATUT_PAIEMENT = (
@@ -139,26 +128,27 @@ class Inscription(models.Model):
         ('paid', 'Payé'),
     )
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='inscriptions')
-    session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='inscriptions')
+    session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='inscriptions', verbose_name="Session")
     date_inscription = models.DateTimeField(auto_now_add=True)
     statut_paiement = models.CharField(max_length=20, choices=STATUT_PAIEMENT, default='pending')
-    statut_validation = models.BooleanField(default=False)
-    progression = models.IntegerField(default=0, help_text="Pourcentage de progression (0-100)")
-    completed_lessons = models.ManyToManyField(Lecon, blank=True, related_name='completed_by')
+    statut_validation = models.BooleanField(default=False, verbose_name="Validée")
+    progression = models.IntegerField(default=0, verbose_name="Progression (%)")
+    completed_lessons = models.ManyToManyField(Lecon, blank=True, related_name='completed_by', verbose_name="Leçons complétées")
 
-    def __str__(self):
-        return f"{self.user} - {self.session}"
+    class Meta:
+        verbose_name = "Inscription"
+        verbose_name_plural = "Inscriptions"
 
     def recalculate_progression(self):
-        """Recalcule la progression réelle basée sur les leçons complétées"""
-        total = Lecon.objects.filter(chapitre__programme=self.session.programme).count()
+        total = Lecon.objects.filter(formation=self.session.formation).count()
         completed = self.completed_lessons.count()
-        if total > 0:
-            self.progression = int((completed / total) * 100)
-        else:
-            self.progression = 0
+        self.progression = int((completed / total) * 100) if total > 0 else 0
         self.save(update_fields=['progression'])
         return self.progression
+
+    def __str__(self):
+        return f"{self.user.username} → {self.session}"
+
 
 class Paiement(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='paiements')
@@ -168,5 +158,9 @@ class Paiement(models.Model):
     valide = models.BooleanField(default=True)
     transaction_id = models.CharField(max_length=100, blank=True, null=True)
 
+    class Meta:
+        verbose_name = "Paiement"
+        verbose_name_plural = "Paiements"
+
     def __str__(self):
-        return f"Paiement {self.id} - {self.user.username} - {self.inscription.session.programme.titre}"
+        return f"Paiement {self.id} - {self.user.username}"

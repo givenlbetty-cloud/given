@@ -2,10 +2,6 @@
 Script de configuration Google OAuth pour ATJ Beta.
 Exécutez dans le Render Shell :
     python manage.py shell < setup_google_oauth.py
-
-Ou bien :
-    python manage.py shell
-    >>> exec(open('setup_google_oauth.py').read())
 """
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'atj_site.settings')
@@ -17,8 +13,8 @@ from allauth.socialaccount.models import SocialApp
 
 # === CONFIGURATION ===
 # Remplacez par vos vrais identifiants Google Cloud
-CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', 'VOTRE_CLIENT_ID_ICI')
-CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', 'VOTRE_CLIENT_SECRET_ICI')
+CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', 'VOTRE_CLIENT_ID')
+CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', 'VOTRE_CLIENT_SECRET')
 
 # 1. Créer ou mettre à jour la SocialApp Google
 app, created = SocialApp.objects.update_or_create(

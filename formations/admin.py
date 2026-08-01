@@ -1,127 +1,106 @@
 from django.contrib import admin
-from django.urls import reverse
 from django.utils.html import format_html
-from .models import Programme, Session, Inscription, Chapitre, Lecon, Ressource
+from .models import Formation, Lecon, Session, Inscription, Paiement
 
-class RessourceInline(admin.TabularInline):
-    model = Ressource
-    extra = 1
 
 class LeconInline(admin.StackedInline):
     model = Lecon
     extra = 1
-    show_change_link = True
+    fields = (
+        ('titre', 'ordre'),
+        ('video', 'video_url'),
+        ('contenu_texte',),
+        ('ressource_fichier',),
+        ('duree_minutes', 'est_gratuit'),
+    )
+    ordering = ('ordre',)
 
-class ProgrammeAdmin(admin.ModelAdmin):
-    list_display = ('titre', 'categorie', 'get_type_display_pretty', 'get_prix_display', 'est_publie', 'chapitres_link')
-    list_filter = ('categorie', 'type_formation', 'est_publie')
+
+class SessionInline(admin.StackedInline):
+    model = Session
+    extra = 1
+    fields = (
+        ('type_session', 'nom'),
+        ('date_debut', 'date_fin'),
+        ('lieu', 'places_disponibles'),
+    )
+
+
+@admin.register(Formation)
+class FormationAdmin(admin.ModelAdmin):
+    list_display = ('titre', 'categorie', 'prix_affiche', 'total_lecons', 'total_sessions', 'est_publie')
+    list_filter = ('categorie', 'est_publie')
     search_fields = ('titre', 'description')
+    inlines = [LeconInline, SessionInline]
     fieldsets = (
-        ('Informations Générales', {
-            'fields': ('titre', 'categorie', 'type_formation', 'image')
+        ('📋 Informations', {
+            'fields': ('titre', 'categorie', 'description', 'image_couverture')
         }),
-        ('Conditions & Tarifs', {
+        ('💰 Tarif & Conditions', {
             'fields': ('prix', 'conditions'),
-            'description': "Mettez 0.00 pour une formation Gratuite."
         }),
-        ('Description Détaillée', {
-            'fields': ('description',),
-            'classes': ('collapse',)
-        }),
-        ('Publication', {
+        ('📢 Publication', {
             'fields': ('est_publie',),
-            'description': "Cochez pour rendre visible sur le site."
-        })
+        }),
     )
 
-    def chapitres_link(self, obj):
-        count = obj.chapitres.count()
-        url = reverse('admin:formations_chapitre_changelist') + f'?programme__id__exact={obj.id}'
-        return format_html(
-            '<a href="{}">📚 {} chapitre{}</a>',
-            url,
-            count,
-            's' if count > 1 else ''
-        )
-    chapitres_link.short_description = "Chapitres"
-
-    def get_type_display_pretty(self, obj):
-        return obj.get_type_formation_display()
-    get_type_display_pretty.short_description = "Format"
-
-    def get_prix_display(self, obj):
+    def prix_affiche(self, obj):
         if obj.prix == 0:
-            return "GRATUIT"
+            return format_html('<span style="color:green;font-weight:bold">GRATUIT</span>')
         return f"{obj.prix} €"
-    get_prix_display.short_description = "Tarif"
+    prix_affiche.short_description = "Prix"
+
+    def total_lecons(self, obj):
+        return obj.nombre_lecons
+    total_lecons.short_description = "Leçons"
+
+    def total_sessions(self, obj):
+        return obj.sessions.count()
+    total_sessions.short_description = "Sessions"
 
 
-class SessionAdmin(admin.ModelAdmin):
-    list_display = ('programme', 'get_date_range', 'lieu', 'places_restantes_info', 'is_open_registration')
-    list_filter = ('programme', 'est_permanente', 'lieu')
-    fieldsets = (
-        ('Programme associé', {
-             'fields': ('programme', 'est_permanente')
-        }),
-        ('Planification (Présentiel / Daté)', {
-            'fields': ('date_debut', 'date_fin', 'date_limite_inscription'),
-            'description': "Laissez vide si c'est une formation permanente en ligne."
-        }),
-        ('Logistique', {
-            'fields': ('lieu', 'places_disponibles'),
-            'description': "Lieu physique e capacité d'accueil."
-        })
-    )
-
-    def get_date_range(self, obj):
-        if obj.est_permanente:
-            return "Permanent (Toujours ouvert)"
-        if obj.date_debut and obj.date_fin:
-            return f"{obj.date_debut.strftime('%d/%m/%Y')} - {obj.date_fin.strftime('%d/%m/%Y')}"
-        return "Dates non définies"
-    get_date_range.short_description = "Période"
-
-    def places_restantes_info(self, obj):
-        return f"{obj.inscrit_count()} / {obj.places_disponibles}"
-    places_restantes_info.short_description = "Inscrits / Capacité"
-
-    def is_open_registration(self, obj):
-        return obj.is_open()
-    is_open_registration.boolean = True
-    is_open_registration.short_description = "Inscriptions Ouvertes"
-
-
-class ChapitreAdmin(admin.ModelAdmin):
-    list_display = ('titre', 'programme', 'ordre')
-    list_filter = ('programme',)
-    inlines = [LeconInline]
-
+@admin.register(Lecon)
 class LeconAdmin(admin.ModelAdmin):
-    list_display = ('titre', 'chapitre', 'ordre', 'est_gratuit')
-    list_filter = ('chapitre__programme',)
-    search_fields = ('titre', 'contenu')
-    inlines = [RessourceInline]
-    fieldsets = (
-        ('Détails de la Leçon', {
-            'fields': ('chapitre', 'titre', 'ordre', 'est_gratuit')
-        }),
-        ('Contenu Multimédia', {
-            'fields': ('video_file', 'video_url', 'contenu', 'duree_minutes'),
-            'description': "Chargez une vidéo locale OU mettez un lien YouTube. La vidéo locale est prioritaire."
-        }),
-    )
+    list_display = ('titre', 'formation', 'ordre', 'has_video', 'est_gratuit')
+    list_filter = ('formation', 'est_gratuit')
+    search_fields = ('titre',)
 
+
+@admin.register(Session)
+class SessionAdmin(admin.ModelAdmin):
+    list_display = ('nom', 'formation', 'type_session', 'places_info', 'is_open')
+    list_filter = ('type_session', 'formation')
+
+    def places_info(self, obj):
+        return f"{obj.inscrit_count()} / {obj.places_disponibles}"
+    places_info.short_description = "Inscrits / Places"
+
+    def is_open(self, obj):
+        return obj.is_open()
+    is_open.boolean = True
+    is_open.short_description = "Ouverte"
+
+
+@admin.register(Inscription)
 class InscriptionAdmin(admin.ModelAdmin):
-    list_display = ('user', 'session', 'statut_paiement', 'statut_validation')
+    list_display = ('user', 'session', 'statut_paiement', 'progression_barre', 'statut_validation')
     list_filter = ('statut_paiement', 'statut_validation')
-    actions = ['valider_inscription']
+    actions = ['valider_inscriptions']
 
-    @admin.action(description='Valider les inscriptions sélectionnées')
-    def valider_inscription(self, request, queryset):
+    def progression_barre(self, obj):
+        return format_html(
+            '<progress value="{}" max="100"></progress> {}%',
+            obj.progression,
+            obj.progression
+        )
+    progression_barre.short_description = "Progression"
+
+    @admin.action(description='✅ Valider les inscriptions sélectionnées')
+    def valider_inscriptions(self, request, queryset):
         queryset.update(statut_validation=True)
 
-admin.site.register(Programme, ProgrammeAdmin)
-admin.site.register(Chapitre, ChapitreAdmin)
-admin.site.register(Lecon, LeconAdmin)
-admin.site.register(Session, SessionAdmin)
-admin.site.register(Inscription, InscriptionAdmin)
+
+@admin.register(Paiement)
+class PaiementAdmin(admin.ModelAdmin):
+    list_display = ('user', 'inscription', 'montant', 'valide', 'date_paiement')
+    list_filter = ('valide',)
