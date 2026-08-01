@@ -13,7 +13,6 @@ urlpatterns = [
     
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('accounts.urls')),
-    path('accounts/', include('allauth.urls')),  # Google OAuth (après auth pour garder login custom)
     path('formations/', include('formations.urls')),
     path('mentoring/', include('mentoring.urls')),
     path('chat/', include('chat.urls')),

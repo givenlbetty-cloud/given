@@ -31,19 +31,12 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
-    "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     
     # Third-party
     "crispy_forms",
     "crispy_bootstrap5",
-    
-    # Allauth (Google/Facebook login)
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.google",
 
     # Local Apps
     "core",
@@ -55,10 +48,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "core.middleware.EnsureSiteMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -230,29 +221,6 @@ JAZZMIN_UI_TWEAKS = {
     "body_small_text": False,
     "brand_small_text": False,
     "accent": "accent-primary",
-}
-
-# ==============================
-# DJANGO ALLAUTH CONFIGURATION
-# ==============================
-SITE_ID = 1
-
-AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
-]
-
-# Allauth settings
-ACCOUNT_LOGIN_METHODS = {"username", "email"}
-ACCOUNT_EMAIL_VERIFICATION = "optional"
-ACCOUNT_SIGNUP_FIELDS = ["email*", "username*"]
-SOCIALACCOUNT_AUTO_SIGNUP = True
-SOCIALACCOUNT_LOGIN_ON_GET = True
-SOCIALACCOUNT_PROVIDERS = {
-    "google": {
-        "SCOPE": ["profile", "email"],
-        "AUTH_PARAMS": {"access_type": "online"},
-    }
 }
 
 LOGIN_URL = "/accounts/login/"
