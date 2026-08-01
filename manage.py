@@ -21,7 +21,16 @@ def main():
     django.setup()
     from django.db import connection
     with connection.cursor() as c:
-        c.execute("DROP TABLE IF EXISTS formations_formation, formations_lecon, formations_session, formations_inscription, formations_paiement CASCADE")
+        # DROP toutes les tables formations (PostgreSQL)
+        c.execute("""
+            DO $$ DECLARE
+                r RECORD;
+            BEGIN
+                FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'formations_%') LOOP
+                    EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';
+                END LOOP;
+            END $$;
+        """)
         c.execute("DELETE FROM django_migrations WHERE app = 'formations'")
 
     execute_from_command_line(sys.argv)
