@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.urls import reverse
+from django.utils.html import format_html
 from .models import Programme, Session, Inscription, Chapitre, Lecon, Ressource
 
 class RessourceInline(admin.TabularInline):
@@ -8,18 +10,12 @@ class RessourceInline(admin.TabularInline):
 class LeconInline(admin.StackedInline):
     model = Lecon
     extra = 1
-    show_change_link = True  # Permet d'aller éditer la leçon en détail
-
-class ChapitreInline(admin.StackedInline):
-    model = Chapitre
-    extra = 1
     show_change_link = True
 
 class ProgrammeAdmin(admin.ModelAdmin):
-    list_display = ('titre', 'categorie', 'get_type_display_pretty', 'get_prix_display', 'est_publie')
+    list_display = ('titre', 'categorie', 'get_type_display_pretty', 'get_prix_display', 'est_publie', 'chapitres_link')
     list_filter = ('categorie', 'type_formation', 'est_publie')
     search_fields = ('titre', 'description')
-    inlines = [ChapitreInline]
     fieldsets = (
         ('Informations Générales', {
             'fields': ('titre', 'categorie', 'type_formation', 'image')
@@ -38,15 +34,16 @@ class ProgrammeAdmin(admin.ModelAdmin):
         })
     )
 
-    def get_inline_instances(self, request, obj=None):
-        """
-        Désactive l'ajout de Chapitres si la formation est en Présentiel.
-        Les chapitres sont réservés aux formations en ligne ou hybrides.
-        """
-        inline_instances = super().get_inline_instances(request, obj)
-        if obj and obj.type_formation == 'offline':
-            return []
-        return inline_instances
+    def chapitres_link(self, obj):
+        count = obj.chapitres.count()
+        url = reverse('admin:formations_chapitre_changelist') + f'?programme__id__exact={obj.id}'
+        return format_html(
+            '<a href="{}">📚 {} chapitre{}</a>',
+            url,
+            count,
+            's' if count > 1 else ''
+        )
+    chapitres_link.short_description = "Chapitres"
 
     def get_type_display_pretty(self, obj):
         return obj.get_type_formation_display()

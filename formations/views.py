@@ -164,14 +164,10 @@ def course_content(request, session_id, lecon_id=None):
                 next_lecon = all_lecons[i+1]
             break
     
-    # Mettre à jour la progression (estimation basée sur la position)
-    if all_lecons and inscription:
-        total = len(all_lecons)
-        current_idx = next((i for i, lec in enumerate(all_lecons) if lec.id == current_lecon.id), 0)
-        progression = int((current_idx + 1) / total * 100) if total > 0 else 0
-        if progression > inscription.progression:
-            inscription.progression = progression
-            inscription.save(update_fields=['progression'])
+    # Marquer la leçon comme complétée et recalculer la progression réelle
+    if inscription and not inscription.completed_lessons.filter(id=current_lecon.id).exists():
+        inscription.completed_lessons.add(current_lecon)
+        inscription.recalculate_progression()
             
     return render(request, 'formations/course_player.html', {
         'session': session,

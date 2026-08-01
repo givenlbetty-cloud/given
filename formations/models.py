@@ -144,9 +144,21 @@ class Inscription(models.Model):
     statut_paiement = models.CharField(max_length=20, choices=STATUT_PAIEMENT, default='pending')
     statut_validation = models.BooleanField(default=False)
     progression = models.IntegerField(default=0, help_text="Pourcentage de progression (0-100)")
+    completed_lessons = models.ManyToManyField(Lecon, blank=True, related_name='completed_by')
 
     def __str__(self):
         return f"{self.user} - {self.session}"
+
+    def recalculate_progression(self):
+        """Recalcule la progression réelle basée sur les leçons complétées"""
+        total = Lecon.objects.filter(chapitre__programme=self.session.programme).count()
+        completed = self.completed_lessons.count()
+        if total > 0:
+            self.progression = int((completed / total) * 100)
+        else:
+            self.progression = 0
+        self.save(update_fields=['progression'])
+        return self.progression
 
 class Paiement(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='paiements')
