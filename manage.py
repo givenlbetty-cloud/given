@@ -35,6 +35,13 @@ def main():
                 """)
             c.execute("DELETE FROM django_migrations WHERE app = 'formations'")
 
+        # Repeupler automatiquement les formations après un migrate
+        from django.core.management import call_command
+        try:
+            call_command('populate_formations')
+        except Exception:
+            pass  # Silencieux si les tables n'existent pas encore
+
     execute_from_command_line(sys.argv)
 
 
