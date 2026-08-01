@@ -16,23 +16,24 @@ def main():
             "forget to activate a virtual environment?"
         ) from exc
     # Nettoyer les anciennes tables formations (refonte LMS)
-    # avant le migrate du dashboard Render
-    import django
-    django.setup()
-    from django.db import connection
-    with connection.cursor() as c:
-        # DROP toutes les tables formations (PostgreSQL uniquement)
-        if connection.vendor == 'postgresql':
-            c.execute("""
-                DO $$ DECLARE
-                    r RECORD;
-                BEGIN
-                    FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'formations_%') LOOP
-                        EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';
-                    END LOOP;
-                END $$;
-            """)
-        c.execute("DELETE FROM django_migrations WHERE app = 'formations'")
+    # UNIQUEMENT avant la commande migrate
+    if len(sys.argv) >= 2 and sys.argv[1] == 'migrate':
+        import django
+        django.setup()
+        from django.db import connection
+        with connection.cursor() as c:
+            # DROP toutes les tables formations (PostgreSQL uniquement)
+            if connection.vendor == 'postgresql':
+                c.execute("""
+                    DO $$ DECLARE
+                        r RECORD;
+                    BEGIN
+                        FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'formations_%') LOOP
+                            EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';
+                        END LOOP;
+                    END $$;
+                """)
+            c.execute("DELETE FROM django_migrations WHERE app = 'formations'")
 
     execute_from_command_line(sys.argv)
 
