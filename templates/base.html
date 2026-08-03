@@ -18,7 +18,7 @@
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">
-                <img src="{% static 'img/logo.jpeg' %}" alt="ATJ Logo" height="45" class="me-2" style="border-radius: 8px;">
+                <img src="{% static 'img/logo.jpeg' %}" alt="ATJ Logo" height="40" width="40" class="me-2" style="border-radius: 8px; max-width: 40px; max-height: 40px; object-fit: contain;">
                 <span class="fw-bold">{{ site_settings.site_name|default:"ATJ" }}</span>
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText">
