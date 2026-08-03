@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ current_lecon.titre }} - {{ session.programme.titre }}{% endblock %}
+{% block title %}{{ current_lecon.titre }} - {{ formation.titre }}{% endblock %}
 
 {% block content %}
 <!-- Use a specialized layout for the player -->
@@ -12,7 +12,7 @@
         <div class="col-lg-3 d-none d-lg-block">
             <div class="card shadow-sm h-100 border-0">
                 <div class="card-header bg-white py-3">
-                    <h5 class="mb-0 fw-bold text-primary">{{ session.programme.titre }}</h5>
+                    <h5 class="mb-0 fw-bold text-primary">{{ formation.titre }}</h5>
                     <div class="progress mt-2" style="height: 5px;">
                         <div class="progress-bar bg-success" role="progressbar" style="width: {{ inscription.progression }}%" aria-valuenow="{{ inscription.progression }}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>

@@ -6,16 +6,6 @@ from django.core.management.base import BaseCommand
 from formations.models import Formation, Lecon, Session
 
 
-# URLs d'images de couverture (Unsplash - libres de droit)
-COVER_IMAGES = {
-    "art_oratoire": "https://placehold.co/800x400/60100f/white?text=Art+Oratoire+-+Parler+en+Public",
-    "leadership": "https://placehold.co/800x400/4a0c0b/white?text=Leadership+et+Confiance+en+Soi",
-    "informatique": "https://placehold.co/800x400/1a1a2e/00ff88?text=Informatique+et+Programmation",
-    "langues": "https://placehold.co/800x400/1a3a5c/white?text=English+Fundamentals",
-    "affaires": "https://placehold.co/800x400/2d4a22/white?text=Entrepreneuriat+et+Business",
-}
-
-
 class Command(BaseCommand):
     help = "Crée des formations génériques enrichies pour les 5 piliers ATJ."
 
@@ -41,7 +31,7 @@ class Command(BaseCommand):
                     "utiliser votre voix comme un instrument de persuasion. Que vous soyez étudiant, "
                     "entrepreneur ou professionnel, l'éloquence est un atout incontournable."
                 ),
-                "image_couverture": COVER_IMAGES["art_oratoire"],
+                "image_couverture": None,
                 "prix": 0.00,
                 "conditions": "Aucun pré-requis – ouvert à tous.",
                 "est_publie": True,
@@ -165,7 +155,7 @@ class Command(BaseCommand):
                     "Ce parcours alterne théorie du leadership moderne et mises en situation concrètes : gestion de "
                     "conflit, motivation d'équipe, intelligence émotionnelle et affirmation de soi."
                 ),
-                "image_couverture": COVER_IMAGES["leadership"],
+                "image_couverture": None,
                 "prix": 0.00,
                 "conditions": "Ouvert à tous – recommandé pour les porteurs de projet.",
                 "est_publie": True,
@@ -275,7 +265,7 @@ class Command(BaseCommand):
                     "algorithmique et premiers pas en programmation avec Python. Ce cours est conçu pour les "
                     "grands débutants et vous donnera les bases pour évoluer vers des spécialisations (web, data, IA)."
                 ),
-                "image_couverture": COVER_IMAGES["informatique"],
+                "image_couverture": None,
                 "prix": 0.00,
                 "conditions": "Avoir un ordinateur (Windows, Mac ou Linux). Aucune connaissance préalable.",
                 "est_publie": True,
@@ -409,7 +399,7 @@ print(random.randint(1, 6))  # Simule un lancer de dé
                     "des exercices interactifs et des mises en situation réelles. À la fin de ce parcours, "
                     "vous serez capable de tenir une conversation simple et de comprendre des textes courants."
                 ),
-                "image_couverture": COVER_IMAGES["langues"],
+                "image_couverture": None,
                 "prix": 0.00,
                 "conditions": "Aucun pré-requis – débutants bienvenus.",
                 "est_publie": True,
@@ -614,7 +604,7 @@ How     is         he      today ?</code></pre>
                     "marketing digital et la gestion de la relation client. Un concentré pratique pour "
                     "lancer et gérer votre activité avec succès."
                 ),
-                "image_couverture": COVER_IMAGES["affaires"],
+                "image_couverture": None,
                 "prix": 0.00,
                 "conditions": "Avoir une idée de projet (même vague).",
                 "est_publie": True,

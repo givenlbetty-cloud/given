@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}Formation : {{ session.programme.titre }} - ATJ{% endblock %}
+{% block title %}Formation : {{ formation.titre }} - ATJ{% endblock %}
 
 {% block content %}
 <div class="container py-5">
     <div class="row">
         <div class="col-lg-8">
-            <h1 class="display-5 fw-bold mb-4">{{ session.programme.titre }}</h1>
+            <h1 class="display-5 fw-bold mb-4">{{ formation.titre }}</h1>
             
             <div class="card shadow-sm border-0 mb-4 bg-primary-subtle">
                 <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-3">
@@ -34,59 +34,40 @@
                 <div class="card-header bg-white border-bottom py-3">
                     <h4 class="h5 mb-0 fw-bold">Programme de la formation</h4>
                 </div>
-                <div class="accordion accordion-flush" id="syllabusAccordion">
-                    {% for chapitre in chapitres %}
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{ chapitre.id }}">
-                            <button class="accordion-button {% if forloop.first %}{% else %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ chapitre.id }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ chapitre.id }}">
-                                <span class="fw-semibold">{{ chapitre.titre }}</span>
-                                <span class="badge bg-light text-secondary ms-2 rounded-pill border">{{ chapitre.lecons.count }} leçons</span>
-                            </button>
-                        </h2>
-                        <div id="collapse{{ chapitre.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ chapitre.id }}" data-bs-parent="#syllabusAccordion">
-                            <div class="accordion-body p-0">
-                                <ul class="list-group list-group-flush mb-0 ps-0">
-                                    {% for lecon in chapitre.lecons.all %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-4 py-3">
-                                        <div class="d-flex align-items-center">
-                                            <i class="bi bi-play-btn text-primary me-3 fs-5"></i>
-                                            <div>
-                                                <span class="d-block">{{ lecon.titre }}</span>
-                                                {% if lecon.duree_minutes %}
-                                                <small class="text-muted">{{ lecon.duree_minutes }} min</small>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                        <a href="{% url 'formations:course_content' session.id lecon.id %}" class="btn btn-sm btn-outline-secondary">Voir</a>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
+                <ul class="list-group list-group-flush">
+                    {% for lecon in lecons %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-secondary me-3">{{ forloop.counter }}</span>
+                            <div>
+                                <span class="d-block fw-semibold">{{ lecon.titre }}</span>
+                                <small class="text-muted">{{ lecon.duree_minutes }} min</small>
                             </div>
                         </div>
-                    </div>
+                        <a href="{% url 'formations:course_content' session.id lecon.id %}" class="btn btn-sm btn-outline-secondary rounded-pill">Voir</a>
+                    </li>
                     {% empty %}
-                        <div class="p-4 text-center text-muted">
-                            <i class="bi bi-exclamation-circle mb-2 fs-4 d-block"></i>
-                            Aucun contenu disponible pour le moment.
-                        </div>
+                    <li class="list-group-item text-center text-muted py-4">
+                        <i class="bi bi-exclamation-circle mb-2 fs-4 d-block"></i>
+                        Aucun contenu disponible pour le moment.
+                    </li>
                     {% endfor %}
-                </div>
+                </ul>
             </div>
         </div>
 
         <div class="col-lg-4 mt-4 mt-lg-0">
-            <!-- Sidebar Info -->
             <div class="card shadow-sm border-0 mb-4 position-sticky" style="top: 90px;">
-                {% if session.programme.image %}
-                <img src="{{ session.programme.image.url }}" class="card-img-top" alt="{{ session.programme.titre }}">
+                {% if formation.image_couverture %}
+                <img src="{{ formation.image_couverture.url }}" class="card-img-top" alt="{{ formation.titre }}">
                 {% endif %}
                 <div class="card-body">
                     <h5 class="fw-bold">À propos</h5>
-                    <p class="text-secondary small">{{ session.programme.description|truncatewords:20 }}</p>
+                    <p class="text-secondary small">{{ formation.description|truncatewords:30 }}</p>
                     <hr>
                     <div class="d-grid">
-                         <a href="{% url 'formations:course_content_default' session.id %}" class="btn btn-primary">
-                            Commencer
+                         <a href="{% url 'formations:course_content_default' session.id %}" class="btn btn-primary rounded-pill">
+                            <i class="bi bi-play-fill me-1"></i> Commencer
                         </a>
                     </div>
                 </div>
