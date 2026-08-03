@@ -8,11 +8,11 @@ from formations.models import Formation, Lecon, Session
 
 # URLs d'images de couverture (Unsplash - libres de droit)
 COVER_IMAGES = {
-    "art_oratoire": "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&h=400&fit=crop",
-    "leadership": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&h=400&fit=crop",
-    "informatique": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=400&fit=crop",
-    "langues": "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=800&h=400&fit=crop",
-    "affaires": "https://images.unsplash.com/photo-1664575602554-2087b04935a5?w=800&h=400&fit=crop",
+    "art_oratoire": "https://placehold.co/800x400/60100f/white?text=Art+Oratoire+-+Parler+en+Public",
+    "leadership": "https://placehold.co/800x400/4a0c0b/white?text=Leadership+et+Confiance+en+Soi",
+    "informatique": "https://placehold.co/800x400/1a1a2e/00ff88?text=Informatique+et+Programmation",
+    "langues": "https://placehold.co/800x400/1a3a5c/white?text=English+Fundamentals",
+    "affaires": "https://placehold.co/800x400/2d4a22/white?text=Entrepreneuriat+et+Business",
 }
 
 
