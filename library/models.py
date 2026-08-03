@@ -27,24 +27,6 @@ class Livre(models.Model):
     prix = models.DecimalField(max_digits=6, decimal_places=2, default=0.00, help_text="0.00 pour gratuit")
     date_creation = models.DateTimeField(auto_now_add=True)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        # Génération de couverture — tente UNE fois, ne bloque JAMAIS
-        if self.fichier and not self.image and convert_from_bytes and self.fichier.name.lower().endswith('.pdf'):
-            try:
-                self.fichier.seek(0)
-                content = self.fichier.read()
-                if content:
-                    images = convert_from_bytes(content, first_page=1, last_page=1)
-                    if images:
-                        buffer = BytesIO()
-                        img = images[0].convert('RGB')
-                        img.save(buffer, format='JPEG', quality=85)
-                        self.image.save('cover.jpg', ContentFile(buffer.getvalue()), save=False)
-                        Livre.objects.filter(pk=self.pk).update(image=self.image.name)
-            except Exception:
-                pass
-
     def is_free(self):
         return True
 
