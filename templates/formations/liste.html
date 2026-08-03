@@ -20,15 +20,15 @@
                 {% if formation.image_couverture %}
                     <img src="{{ formation.image_couverture.url }}" class="card-img-top" alt="{{ formation.titre }}" style="height: 200px; object-fit: cover;">
                 {% elif formation.categorie == 'art_oratoire' %}
-                    <div class="card-img-top d-flex align-items-center justify-content-center text-white fw-bold fs-5" style="height: 200px; background: linear-gradient(135deg, #60100f, #7a1513);">🎤 Art Oratoire</div>
+                    <img src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=800&h=400&fit=crop" class="card-img-top" alt="{{ formation.titre }}" style="height: 200px; object-fit: cover;">
                 {% elif formation.categorie == 'leadership' %}
-                    <div class="card-img-top d-flex align-items-center justify-content-center text-white fw-bold fs-5" style="height: 200px; background: linear-gradient(135deg, #4a0c0b, #7a1513);">👑 Leadership</div>
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=400&fit=crop" class="card-img-top" alt="{{ formation.titre }}" style="height: 200px; object-fit: cover;">
                 {% elif formation.categorie == 'informatique' %}
-                    <div class="card-img-top d-flex align-items-center justify-content-center text-white fw-bold fs-5" style="height: 200px; background: linear-gradient(135deg, #1a1a2e, #16213e);">💻 Informatique</div>
+                    <img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=800&h=400&fit=crop" class="card-img-top" alt="{{ formation.titre }}" style="height: 200px; object-fit: cover;">
                 {% elif formation.categorie == 'langues' %}
-                    <div class="card-img-top d-flex align-items-center justify-content-center text-white fw-bold fs-5" style="height: 200px; background: linear-gradient(135deg, #1a3a5c, #2c5282);">🇬🇧 Langues</div>
+                    <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=800&h=400&fit=crop" class="card-img-top" alt="{{ formation.titre }}" style="height: 200px; object-fit: cover;">
                 {% elif formation.categorie == 'affaires' %}
-                    <div class="card-img-top d-flex align-items-center justify-content-center text-white fw-bold fs-5" style="height: 200px; background: linear-gradient(135deg, #2d4a22, #4a7c34);">📊 Affaires</div>
+                    <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&h=400&fit=crop" class="card-img-top" alt="{{ formation.titre }}" style="height: 200px; object-fit: cover;">
                 {% else %}
                     <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-secondary" style="height: 200px;">
                         <i class="bi bi-mortarboard fs-1 opacity-25"></i>
