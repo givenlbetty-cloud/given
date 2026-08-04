@@ -26,10 +26,9 @@ class Command(BaseCommand):
             defaults={
                 "categorie": "art_oratoire",
                 "description": (
-                    "Maîtrisez l'art de la parole pour convaincre, inspirer et captiver votre auditoire. "
-                    "Cette formation vous donne les clés pour structurer un discours, gérer le trac et "
-                    "utiliser votre voix comme un instrument de persuasion. Que vous soyez étudiant, "
-                    "entrepreneur ou professionnel, l'éloquence est un atout incontournable."
+                    "La plupart des professions dans la société ne peuvent s'exercer efficacement que si "
+                    "l'on a la maîtrise de l'Art de la parole (Avocature, Journalisme, Enseignement, "
+                    "Politique, Marketing, Prédication...). Venez apprendre !"
                 ),
                 "image_couverture": None,
                 "prix": 0.00,
@@ -151,9 +150,8 @@ class Command(BaseCommand):
             defaults={
                 "categorie": "leadership",
                 "description": (
-                    "Développez votre charisme et votre capacité à mobiliser une équipe autour d'une vision commune. "
-                    "Ce parcours alterne théorie du leadership moderne et mises en situation concrètes : gestion de "
-                    "conflit, motivation d'équipe, intelligence émotionnelle et affirmation de soi."
+                    "Coaching pratique sur mesure, développement d'un leadership responsable, motivationnel "
+                    "et fondé sur l'intelligence émotionnelle."
                 ),
                 "image_couverture": None,
                 "prix": 0.00,
@@ -261,9 +259,8 @@ class Command(BaseCommand):
             defaults={
                 "categorie": "informatique",
                 "description": (
-                    "Découvrez les fondamentaux de l'informatique : fonctionnement d'un ordinateur, logique "
-                    "algorithmique et premiers pas en programmation avec Python. Ce cours est conçu pour les "
-                    "grands débutants et vous donnera les bases pour évoluer vers des spécialisations (web, data, IA)."
+                    "Maîtrise des logiciels de bureautique (Word, Publisher, PowerPoint, Excel, etc.), "
+                    "design graphique et techniques d'imprimerie."
                 ),
                 "image_couverture": None,
                 "prix": 0.00,
