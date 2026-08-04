@@ -711,6 +711,73 @@ footer a.text-muted:hover {
     color: #fff;
 }
 
+/* Accordion */
+[data-theme="dark"] .accordion-button {
+    background-color: var(--white);
+    color: var(--text-dark);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .accordion-button:not(.collapsed) {
+    background-color: #2a2240;
+    color: #b794f4;
+}
+[data-theme="dark"] .accordion-body {
+    background-color: var(--white);
+    border-color: var(--border-color);
+    color: var(--text-dark);
+}
+
+/* Badges */
+[data-theme="dark"] .badge.bg-primary-subtle {
+    background-color: #2a2240 !important;
+    color: #b794f4 !important;
+}
+[data-theme="dark"] .badge.bg-success-subtle {
+    background-color: rgba(6, 95, 70, 0.4) !important;
+    color: #a7f3d0 !important;
+}
+[data-theme="dark"] .badge.bg-warning-subtle {
+    background-color: rgba(120, 80, 0, 0.4) !important;
+    color: #fde68a !important;
+}
+
+/* Dropdown */
+[data-theme="dark"] .dropdown-menu {
+    background-color: var(--white);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .dropdown-item {
+    color: var(--text-dark);
+}
+[data-theme="dark"] .dropdown-item:hover {
+    background-color: var(--bg-light);
+    color: #b794f4;
+}
+
+/* Progress */
+[data-theme="dark"] .progress {
+    background-color: #2d2d35;
+}
+
+/* Breadcrumb */
+[data-theme="dark"] .breadcrumb-item.active {
+    color: var(--text-grey);
+}
+[data-theme="dark"] .breadcrumb-item a {
+    color: #b794f4;
+}
+
+/* Modal */
+[data-theme="dark"] .modal-content {
+    background-color: var(--white);
+    color: var(--text-dark);
+}
+
+/* Dashboard header gradient - keep visible */
+[data-theme="dark"] .bg-primary-subtle {
+    background-color: #2a2240 !important;
+}
+
 /* --- Dark Mode Navbar & Mobile Fixes --- */
 [data-theme="dark"] .navbar-toggler-icon {
     filter: invert(1) grayscale(100%) brightness(200%);
