@@ -71,12 +71,39 @@
     color: var(--bordeaux) !important;
 }
 
-/* Responsive fix - centrer le contenu */
-.content-wrapper {
-    margin-left: 250px;
-}
-@media (max-width: 991px) {
+/* NE PAS forcer margin-left — Jazzmin le gère dynamiquement */
+/* .content-wrapper { margin-left: auto; } — supprimé */
+
+/* Responsive admin pour mobile */
+@media (max-width: 768px) {
     .content-wrapper {
-        margin-left: 0;
+        margin-left: 0 !important;
+        padding: 10px;
+    }
+    .main-sidebar {
+        position: fixed;
+        z-index: 1050;
+        width: 250px;
+    }
+    .sidebar-collapse .main-sidebar {
+        transform: translateX(-250px);
+    }
+    .navbar-expand .navbar-nav .dropdown-menu {
+        position: absolute;
+    }
+    /* Formulaires admin : plein écran */
+    .col-md-6, .col-md-8, .col-lg-9 {
+        width: 100% !important;
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+    /* Inputs plus grands sur mobile */
+    .form-control, .form-select {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    /* Tableaux scrollables */
+    .table-responsive {
+        overflow-x: auto;
     }
 }

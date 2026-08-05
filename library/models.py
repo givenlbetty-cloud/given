@@ -27,6 +27,27 @@ class Livre(models.Model):
     prix = models.DecimalField(max_digits=6, decimal_places=2, default=0.00, help_text="0.00 pour gratuit")
     date_creation = models.DateTimeField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Génère la 1ère page du PDF comme couverture si absente
+        if not self.fichier or self.image or not convert_from_bytes:
+            return
+        if not self.fichier.name.lower().endswith('.pdf'):
+            return
+        try:
+            import os
+            path = self.fichier.path
+            if os.path.exists(path):
+                from pdf2image import convert_from_path
+                images = convert_from_path(path, first_page=1, last_page=1, size=(400, None))
+                if images:
+                    buffer = BytesIO()
+                    images[0].convert('RGB').save(buffer, format='JPEG', quality=80)
+                    self.image.save('cover.jpg', ContentFile(buffer.getvalue()), save=False)
+                    Livre.objects.filter(pk=self.pk).update(image=self.image.name)
+        except Exception:
+            pass
+
     def is_free(self):
         return True
 
