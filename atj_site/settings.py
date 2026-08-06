@@ -149,7 +149,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 JAZZMIN_SETTINGS = {
     "site_title": "ATJ Admin",
     "site_header": "ATJ Administration",
-    "site_brand": "Académie Tremplin de la Jeunesse",
+    "site_brand": "ATJ",
     "site_logo": "img/logo.jpeg",
     "login_logo": "img/logo.jpeg",
     "welcome_sign": "⚠️ Bienvenue dans l'administration ATJ",
@@ -205,7 +205,7 @@ JAZZMIN_SETTINGS = {
     "default_icon_children": "fas fa-circle",
     "related_modal_active": True,
     "custom_css": "css/jazzmin-custom.css",
-    "custom_js": None,
+    "custom_js": "js/jazzmin-fix.js",
     "use_google_fonts_cdn": True,
     "show_ui_builder": True,
     "topmenu_links": [
