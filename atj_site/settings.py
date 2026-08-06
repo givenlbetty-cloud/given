@@ -227,7 +227,7 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar": "sidebar-dark-primary",
     "sidebar_nav_flat_style": False,
     "body_small_text": False,
-    "brand_small_text": False,
+    "brand_small_text": True,
     "accent": "accent-primary",
     "navbar_fixed": True,
     "layout_boxed": False,
