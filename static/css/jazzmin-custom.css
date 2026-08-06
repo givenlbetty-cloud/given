@@ -1,109 +1,26 @@
-/* ATJ - Thème Bordeaux personnalisé pour Jazzmin */
-:root {
-    --bordeaux: #60100f;
-    --bordeaux-light: #7a1513;
-    --bordeaux-dark: #4a0c0b;
-    --bordeaux-accent: #8b1a17;
-}
+/* ATJ - Thème Bordeaux (couleurs uniquement, pas de layout) */
 
 /* Navbar */
 .main-header.navbar-dark {
-    background: linear-gradient(135deg, var(--bordeaux) 0%, var(--bordeaux-light) 100%) !important;
-    border-bottom: 2px solid var(--bordeaux-accent);
+    background: linear-gradient(135deg, #60100f 0%, #7a1513 100%) !important;
 }
-.main-header.navbar-dark .nav-link {
-    color: rgba(255,255,255,0.9) !important;
-}
-.main-header .navbar-nav .nav-link:hover {
-    color: #fff !important;
-    background: rgba(255,255,255,0.1);
-}
+.main-header.navbar-dark .nav-link { color: rgba(255,255,255,0.9) !important; }
+.main-header .navbar-nav .nav-link:hover { color: #fff !important; background: rgba(255,255,255,0.1); }
 
 /* Sidebar */
 .main-sidebar.sidebar-dark-primary {
-    background: linear-gradient(180deg, var(--bordeaux-dark) 0%, var(--bordeaux) 100%) !important;
+    background: linear-gradient(180deg, #4a0c0b 0%, #60100f 100%) !important;
 }
-.main-sidebar .nav-link.active {
-    background: var(--bordeaux-accent) !important;
-    border-left: 3px solid #fff;
-}
-.main-sidebar .nav-link:hover {
-    background: rgba(255,255,255,0.08);
-}
-.main-sidebar .brand-link {
-    background: var(--bordeaux-dark) !important;
-    border-bottom: 1px solid var(--bordeaux-accent);
-}
-.main-sidebar .user-panel {
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-/* Footer */
-.main-footer {
-    background: #f8f9fa;
-    border-top: 2px solid var(--bordeaux);
-    color: var(--bordeaux);
-}
+.main-sidebar .nav-link.active { background: #8b1a17 !important; border-left: 3px solid #fff; }
+.main-sidebar .brand-link { background: #4a0c0b !important; }
 
 /* Tableaux */
-.table thead {
-    background: var(--bordeaux);
-    color: #fff;
-}
-.table-hover tbody tr:hover {
-    background: rgba(96, 16, 15, 0.05);
-}
+.table thead { background: #60100f; color: #fff; }
 
 /* Boutons */
-.btn-primary {
-    background: var(--bordeaux) !important;
-    border-color: var(--bordeaux-dark) !important;
-}
-.btn-primary:hover {
-    background: var(--bordeaux-light) !important;
-}
+.btn-primary { background: #60100f !important; border-color: #4a0c0b !important; }
+.btn-primary:hover { background: #7a1513 !important; }
 
 /* Login page */
-.login-page {
-    background: linear-gradient(135deg, #f5f7fa 0%, #e8d5d5 100%);
-}
-.login-logo a {
-    color: var(--bordeaux) !important;
-}
-
-/* NE PAS forcer margin-left — Jazzmin le gère dynamiquement */
-/* .content-wrapper { margin-left: auto; } — supprimé */
-
-/* Responsive admin pour mobile */
-@media (max-width: 768px) {
-    .content-wrapper {
-        margin-left: 0 !important;
-        padding: 10px;
-    }
-    .main-sidebar {
-        position: fixed;
-        z-index: 1050;
-        width: 250px;
-    }
-    .sidebar-collapse .main-sidebar {
-        transform: translateX(-250px);
-    }
-    .navbar-expand .navbar-nav .dropdown-menu {
-        position: absolute;
-    }
-    /* Formulaires admin : plein écran */
-    .col-md-6, .col-md-8, .col-lg-9 {
-        width: 100% !important;
-        flex: 0 0 100% !important;
-        max-width: 100% !important;
-    }
-    /* Inputs plus grands sur mobile */
-    .form-control, .form-select {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-    /* Tableaux scrollables */
-    .table-responsive {
-        overflow-x: auto;
-    }
-}
+.login-page { background: linear-gradient(135deg, #f5f7fa 0%, #e8d5d5 100%); }
+.login-logo a { color: #60100f !important; }
