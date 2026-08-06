@@ -1,4 +1,14 @@
-/* ATJ - Thème Bordeaux (couleurs uniquement, pas de layout) */
+/* ATJ - Thème Bordeaux */
+/* Empêcher le nom de marque long d'étendre la sidebar (cause du décalage admin) */
+.brand-link .brand-image { float: none !important; }
+.brand-link .brand-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+    display: inline-block;
+    vertical-align: middle;
+}
 
 /* Navbar */
 .main-header.navbar-dark {
