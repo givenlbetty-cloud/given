@@ -1,11 +1,31 @@
-// Corrige le décalage admin Jazzmin
-// Jazzmin applique un margin-left dynamique après chargement
-// Ce script le réinitialise après 500ms
-window.addEventListener('load', function() {
-    setTimeout(function() {
-        var wrapper = document.querySelector('.content-wrapper');
-        if (wrapper) {
-            wrapper.style.marginLeft = '';
+// Corrige le décalage admin Jazzmin — force margin-left à 250px
+(function() {
+    function fix() {
+        var w = document.querySelector('.content-wrapper');
+        if (w && w.style.marginLeft && w.style.marginLeft !== '250px') {
+            w.style.setProperty('margin-left', '250px', 'important');
         }
-    }, 500);
-});
+    }
+    // Surveiller les changements de style sur .content-wrapper
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(m) {
+            if (m.attributeName === 'style') fix();
+        });
+    });
+    var wrapper = document.querySelector('.content-wrapper');
+    if (wrapper) {
+        observer.observe(wrapper, { attributes: true, attributeFilter: ['style'] });
+    } else {
+        // Si pas encore chargé, attendre
+        window.addEventListener('DOMContentLoaded', function() {
+            var w = document.querySelector('.content-wrapper');
+            if (w) observer.observe(w, { attributes: true, attributeFilter: ['style'] });
+        });
+    }
+    // Appliquer immédiatement + après délais
+    fix();
+    setTimeout(fix, 100);
+    setTimeout(fix, 500);
+    setTimeout(fix, 1000);
+    setTimeout(fix, 2000);
+})();
