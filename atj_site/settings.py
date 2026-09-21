@@ -87,11 +87,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "atj_site.wsgi.application"
 
+# 1. On récupère l'URL de la base de données sur Vercel
+db_url = os.environ.get("DATABASE_URL")
+
+# 2. Si l'URL est vide pendant l'installation sur Vercel, on met SQLite pour éviter l'erreur
+if not db_url:
+    db_url = f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+
+# 3. On configure la base de données
 DATABASES = {
-    "default": dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600
-    )
+    "default": dj_database_url.parse(db_url, conn_max_age=600)
 }
 
 AUTH_PASSWORD_VALIDATORS = [
