@@ -89,32 +89,19 @@ WSGI_APPLICATION = "atj_site.wsgi.application"
 
 db_url = os.environ.get("DATABASE_URL")
 
-if db_url:
-    # Optionnel : encode automatiquement le mot de passe s'il contient des caractères spéciaux
-    try:
-        parsed = urlparse(db_url)
-        if parsed.password:
-            encoded_password = quote_plus(parsed.password)
-            user = parsed.username or ""
-            host = parsed.hostname or ""
-            port = f":{parsed.port}" if parsed.port else ""
-            netloc = f"{user}:{encoded_password}@{host}{port}"
-            db_url = urlunparse(parsed._replace(netloc=netloc))
-    except Exception:
-        pass
-
-    DATABASES = {
-        "default": dj_database_url.parse(db_url, conn_max_age=600)
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("SUPABASE_POSTGRES_DATABASE", "postgres"),
+        "USER": os.environ.get("SUPABASE_POSTGRES_USER"),
+        "PASSWORD": os.environ.get("SUPABASE_POSTGRES_PASSWORD"),
+        "HOST": "aws-0-us-east-1.pooler.supabase.com",
+        "PORT": "5432",
+        "OPTIONS": {
+            "sslmode": "require",
+        },
     }
-else:
-    # Base de données par défaut si DATABASE_URL n'est pas définie (évite de planter au build)
-   DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
-        conn_max_age=600,
-        ssl_require=True
-    )
-    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
