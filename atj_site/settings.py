@@ -1,6 +1,7 @@
 import dj_database_url
 from pathlib import Path
 import os
+from urllib.parse import urlparse, unquote
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -87,16 +88,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "atj_site.wsgi.application"
 
-db_url = os.environ.get("DATABASE_URL")
+db_url = os.environ.get("SUPABASE_POSTGRES_URL_NON_POOLING")
+
+db = urlparse(db_url)
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("SUPABASE_POSTGRES_DATABASE", "postgres"),
-        "USER": os.environ.get("SUPABASE_POSTGRES_USER"),
-        "PASSWORD": os.environ.get("SUPABASE_POSTGRES_PASSWORD"),
-        "HOST": "aws-0-us-east-1.pooler.supabase.com",
-        "PORT": "5432",
+        "NAME": db.path.lstrip("/"),
+        "USER": unquote(db.username),
+        "PASSWORD": unquote(db.password),
+        "HOST": db.hostname,
+        "PORT": str(db.port or 5432),
         "OPTIONS": {
             "sslmode": "require",
         },
