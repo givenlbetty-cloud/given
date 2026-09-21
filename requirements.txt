@@ -13,4 +13,5 @@ pyjwt
 cryptography
 python-dotenv
 pdf2image
-
+dj-database-url
+psycopg2-binary
