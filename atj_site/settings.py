@@ -2,8 +2,12 @@ import dj_database_url
 from pathlib import Path
 import os
 from urllib.parse import urlparse, unquote
+from dotenv import load_dotenv, dotenv_values
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
+load_dotenv(BASE_DIR / ".env.production")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-change-me-in-production")
@@ -53,6 +57,7 @@ INSTALLED_APPS = [
     "mentoring",
     "blog",
     "library",
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -88,24 +93,23 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "atj_site.wsgi.application"
 
-db_url = os.environ.get("SUPABASE_POSTGRES_URL_NON_POOLING")
+db_url = (
+    os.environ.get("SUPABASE_POSTGRES_URL_NON_POOLING")
+    or os.environ.get("SUPABASE_POSTGRES_URL")
+)
+
+if not db_url:
+    raise RuntimeError(
+        "Aucune URL Supabase trouvée. Vérifiez qu'un fichier .env "
+        "existe à la racine du projet avec la variable SUPABASE_POSTGRES_URL."
+    )
 
 db = urlparse(db_url)
 
+# Utilise dj_database_url pour parser l'URL automatiquement
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": db.path.lstrip("/"),
-        "USER": unquote(db.username),
-        "PASSWORD": unquote(db.password),
-        "HOST": db.hostname,
-        "PORT": str(db.port or 5432),
-        "OPTIONS": {
-            "sslmode": "require",
-        },
-    }
+    "default": dj_database_url.parse(db_url, conn_max_age=600, conn_health_checks=True, ssl_require=True)
 }
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -270,3 +274,16 @@ SOCIALACCOUNT_PROVIDERS = {
 
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "accounts:dashboard"
+
+# Configuration du stockage d'images sur Supabase (S3)
+AWS_ACCESS_KEY_ID = os.environ.get('SUPABASE_S3_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('SUPABASE_S3_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = 'media' # Le nom du bucket que vous avez créé
+AWS_S3_ENDPOINT_URL = os.environ.get('SUPABASE_S3_ENDPOINT_URL')
+AWS_S3_REGION_NAME = 'us-east-1' # Ou la région indiquée dans Supabase
+
+# Ne pas rajouter de signatures complexes dans l'URL des images
+AWS_QUERYSTRING_AUTH = False
+
+# Dire à Django d'utiliser ce stockage pour les fichiers médias
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
