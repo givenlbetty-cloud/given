@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     "mentoring",
     "blog",
     "library",
-    'storages',
+    "storages",
 ]
 
 MIDDLEWARE = [
@@ -285,6 +285,7 @@ AWS_S3_REGION_NAME = 'us-east-1' # Ou la région indiquée dans Supabase
 # Ne pas rajouter de signatures complexes dans l'URL des images
 AWS_QUERYSTRING_AUTH = False
 
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # Dire à Django d'utiliser ce stockage pour les fichiers médias
 STORAGES = {
     "default": {
