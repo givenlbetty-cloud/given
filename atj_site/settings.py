@@ -93,22 +93,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "atj_site.wsgi.application"
 
-db_url = (
-    os.environ.get("SUPABASE_POSTGRES_URL_NON_POOLING")
-    or os.environ.get("SUPABASE_POSTGRES_URL")
-)
+db_url = os.environ.get("SUPABASE_POSTGRES_URL")
 
 if not db_url:
     raise RuntimeError(
-        "Aucune URL Supabase trouvée. Vérifiez qu'un fichier .env "
-        "existe à la racine du projet avec la variable SUPABASE_POSTGRES_URL."
+        "SUPABASE_POSTGRES_URL_NON_POOLING est introuvable."
     )
+
+if isinstance(db_url, bytes):
+    db_url = db_url.decode("utf-8")
 
 db = urlparse(db_url)
 
-# Utilise dj_database_url pour parser l'URL automatiquement
 DATABASES = {
-    "default": dj_database_url.parse(db_url, conn_max_age=600, conn_health_checks=True, ssl_require=True)
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": db.path.lstrip("/"),
+        "USER": unquote(db.username or ""),
+        "PASSWORD": unquote(db.password or ""),
+        "HOST": db.hostname,
+        "PORT": str(db.port or 5432),
+        "OPTIONS": {
+            "sslmode": "require",
+        },
+    }
 }
 AUTH_PASSWORD_VALIDATORS = [
     {
