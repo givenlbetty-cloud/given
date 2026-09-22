@@ -278,7 +278,7 @@ LOGIN_REDIRECT_URL = "accounts:dashboard"
 # Configuration du stockage d'images sur Supabase (S3)
 AWS_ACCESS_KEY_ID = os.environ.get('SUPABASE_S3_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('SUPABASE_S3_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = 'media' # Le nom du bucket que vous avez créé
+AWS_STORAGE_BUCKET_NAME = 'images' # Le nom du bucket que vous avez créé
 AWS_S3_ENDPOINT_URL = os.environ.get('SUPABASE_S3_ENDPOINT_URL')
 AWS_S3_REGION_NAME = 'us-east-1' # Ou la région indiquée dans Supabase
 
@@ -292,6 +292,6 @@ STORAGES = {
         "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
     },
     "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        "BACKEND": "django.congit add .trib.staticfiles.storage.StaticFilesStorage",
     },
 }
