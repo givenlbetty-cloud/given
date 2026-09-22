@@ -286,4 +286,11 @@ AWS_S3_REGION_NAME = 'us-east-1' # Ou la région indiquée dans Supabase
 AWS_QUERYSTRING_AUTH = False
 
 # Dire à Django d'utiliser ce stockage pour les fichiers médias
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
