@@ -1,56 +1,268 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block title %}Lecture - {{ livre.titre }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid py-3" style="min-height: 85vh;">
-    <div class="d-flex justify-content-between align-items-center mb-2 px-2">
-        <nav aria-label="breadcrumb">
+<div class="container-fluid py-3 pb-5" style="min-height:85vh;">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 px-2">
+        <nav aria-label="Fil d'Ariane">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{% url 'library:liste' %}">Bibliothèque</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'library:liste' %}">Biblioth&egrave;que</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'library:detail' livre.id %}">{{ livre.titre }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Lecture</li>
             </ol>
         </nav>
-        <div class="btn-group">
-            <a href="{% url 'library:download' livre.id %}" class="btn btn-outline-primary btn-sm" download>
-                <i class="bi bi-download"></i> Télécharger
+        <div class="d-flex flex-wrap gap-2">
+            {% if is_pdf %}
+            <a href="{% url 'library:read_file' livre.id %}#page={{ last_page }}"
+               class="btn btn-outline-secondary btn-sm" target="_blank" rel="noopener">
+                <i class="bi bi-box-arrow-up-right"></i> Ouvrir dans un onglet
             </a>
-            <button class="btn btn-outline-dark btn-sm" onclick="toggleFullScreen()">
-                <i class="bi bi-arrows-fullscreen"></i> Plein écran
+            {% endif %}
+            <a href="{% url 'library:download' livre.id %}" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-download"></i> T&eacute;l&eacute;charger
+            </a>
+            {% if is_pdf %}
+            <button class="btn btn-outline-dark btn-sm" type="button" id="fullscreen-reader">
+                <i class="bi bi-arrows-fullscreen"></i> Plein &eacute;cran
             </button>
+            {% endif %}
         </div>
     </div>
 
     {% if is_pdf %}
-    <!-- Lecteur PDF natif (comme Chrome) -->
-    <iframe id="pdf-iframe"
-            src="{% url 'library:download' livre.id %}#toolbar=1&navpanes=0"
-            style="width: 100%; height: 85vh; border: none; border-radius: 8px;"
-            title="Lecture de {{ livre.titre }}">
-    </iframe>
-    {% else %}
-    <!-- Texte brut -->
-    <div class="overflow-auto bg-white p-5 rounded shadow-sm" style="height: 85vh;">
-        <div class="container" style="max-width: 800px;">
-            <h2 class="mb-4">{{ livre.titre }}</h2>
-            <pre style="white-space: pre-wrap; font-family: 'Georgia', serif; font-size: 1.1rem; line-height: 1.8; color: #333;">{{ content }}</pre>
+    <section id="pdf-reader"
+             data-file-url="{% url 'library:read_file' livre.id %}"
+             data-progress-url="{% url 'library:lecture' livre.id %}"
+             data-last-page="{{ last_page|default:1 }}"
+             aria-label="Lecteur PDF : {{ livre.titre }}">
+        <div id="pdf-toolbar" class="d-flex flex-wrap align-items-center justify-content-center gap-2 p-2 bg-dark text-white rounded-top">
+            <button type="button" id="previous-page" class="btn btn-light btn-sm" aria-label="Page pr&eacute;c&eacute;dente">
+                <i class="bi bi-chevron-left"></i> Pr&eacute;c&eacute;dente
+            </button>
+            <label for="page-number" class="small mb-0">Page</label>
+            <input type="number" id="page-number" class="form-control form-control-sm" min="1" value="{{ last_page|default:1 }}" style="width:5rem;">
+            <span class="small">sur <span id="page-count">&hellip;</span></span>
+            <button type="button" id="next-page" class="btn btn-light btn-sm" aria-label="Page suivante">
+                Suivante <i class="bi bi-chevron-right"></i>
+            </button>
+            <span class="vr mx-1"></span>
+            <button type="button" id="zoom-out" class="btn btn-outline-light btn-sm" aria-label="R&eacute;duire le zoom">&minus;</button>
+            <span id="zoom-label" class="small" aria-live="polite">100%</span>
+            <button type="button" id="zoom-in" class="btn btn-outline-light btn-sm" aria-label="Agrandir le zoom">+</button>
+            <span id="reader-progress" class="small ms-md-2" aria-live="polite">Chargement du livre&hellip;</span>
         </div>
+        <div id="pdf-viewer" tabindex="0" aria-label="Page du livre">
+            <canvas id="pdf-canvas" aria-label="Page PDF"></canvas>
+            <div id="pdf-error" class="alert alert-warning m-3" role="status" hidden></div>
+            <iframe id="pdf-fallback"
+                    title="Lecteur PDF du navigateur"
+                    src="{% url 'library:read_file' livre.id %}#page={{ last_page }}&toolbar=1&navpanes=0"
+                    hidden></iframe>
+        </div>
+        <form id="reader-csrf" class="d-none">{% csrf_token %}</form>
+    </section>
+    {% elif is_text %}
+    <article class="overflow-auto bg-white p-4 p-md-5 rounded shadow-sm mx-auto"
+             style="height:calc(100vh - 210px); min-height:480px; max-width:900px;">
+        <h1 class="h3 mb-4">{{ livre.titre }}</h1>
+        <pre style="white-space:pre-wrap; overflow-wrap:anywhere; font-family:Georgia,serif; font-size:1.1rem; line-height:1.8; color:#333;">{{ content }}</pre>
+    </article>
+    {% else %}
+    <div class="alert alert-info" role="status">
+        <h1 class="h5">Ce format ne peut pas &ecirc;tre lu dans le navigateur.</h1>
+        <p class="mb-3">T&eacute;l&eacute;chargez le fichier pour l'ouvrir dans une application compatible.</p>
+        <a href="{% url 'library:download' livre.id %}" class="btn btn-primary">T&eacute;l&eacute;charger le livre</a>
     </div>
     {% endif %}
 </div>
 
+{% if is_pdf %}
+<style>
+#pdf-toolbar { position: sticky; top: 0; z-index: 2; }
+#pdf-viewer {
+    min-height: calc(100vh - 245px);
+    max-height: calc(100vh - 195px);
+    overflow: auto;
+    padding: 1rem;
+    background: #525659;
+    text-align: center;
+}
+#pdf-canvas {
+    display: block;
+    height: auto;
+    margin: 0 auto;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, .35);
+}
+#pdf-fallback { width: 100%; height: calc(100vh - 245px); min-height: 480px; border: 0; }
+#pdf-reader:fullscreen { height: 100vh; display: flex; flex-direction: column; background: #525659; }
+#pdf-reader:fullscreen #pdf-viewer { flex: 1; min-height: 0; max-height: none; }
+#page-number { color: #212529; }
+@media (max-width: 767.98px) {
+    #pdf-viewer { min-height: 65vh; max-height: 72vh; padding: .5rem; }
+    #reader-progress { width: 100%; text-align: center; }
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"
+        onerror="window.dispatchEvent(new Event('pdfjsloaderror'))"></script>
 <script>
-function toggleFullScreen() {
-    const iframe = document.getElementById('pdf-iframe');
-    if (iframe) {
-        if (iframe.requestFullscreen) {
-            iframe.requestFullscreen();
-        } else if (iframe.webkitRequestFullscreen) {
-            iframe.webkitRequestFullscreen();
+(() => {
+    const reader = document.getElementById('pdf-reader');
+    if (!reader) return;
+
+    const fileUrl = reader.dataset.fileUrl;
+    const progressUrl = reader.dataset.progressUrl;
+    const viewer = document.getElementById('pdf-viewer');
+    const canvas = document.getElementById('pdf-canvas');
+    const context = canvas.getContext('2d');
+    const pageInput = document.getElementById('page-number');
+    const pageCount = document.getElementById('page-count');
+    const progressLabel = document.getElementById('reader-progress');
+    const fallback = document.getElementById('pdf-fallback');
+    const errorPanel = document.getElementById('pdf-error');
+    let pdf = null;
+    let pageNumber = Math.max(1, Number.parseInt(reader.dataset.lastPage, 10) || 1);
+    let zoom = 1;
+    let renderTask = null;
+    let renderSequence = 0;
+    let saveTimer = null;
+
+    function useBrowserReader(message) {
+        document.getElementById('pdf-toolbar').hidden = true;
+        canvas.hidden = true;
+        errorPanel.textContent = message;
+        errorPanel.hidden = false;
+        fallback.hidden = false;
+    }
+
+    function csrfToken() {
+        const input = document.querySelector('#reader-csrf input[name="csrfmiddlewaretoken"]');
+        return input ? input.value : '';
+    }
+
+    async function saveProgress(page) {
+        const body = new URLSearchParams({
+            update_progress: '1',
+            page: String(page),
+            total_pages: String(pdf.numPages)
+        });
+        try {
+            const response = await fetch(progressUrl, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                    'X-CSRFToken': csrfToken()
+                },
+                body
+            });
+            if (!response.ok) throw new Error('Progression non enregistree');
+            progressLabel.textContent = 'Progression enregistree';
+        } catch (error) {
+            progressLabel.textContent = 'Progression non enregistree';
         }
     }
-}
+
+    async function renderPage(requestedPage, save = false) {
+        if (!pdf) return;
+        const renderId = ++renderSequence;
+        const parsedPage = Number.parseInt(requestedPage, 10);
+        const targetPage = Math.min(Math.max(1, Number.isFinite(parsedPage) ? parsedPage : 1), pdf.numPages);
+        pageNumber = targetPage;
+        pageInput.value = String(pageNumber);
+        pageInput.max = String(pdf.numPages);
+        document.getElementById('previous-page').disabled = pageNumber <= 1;
+        document.getElementById('next-page').disabled = pageNumber >= pdf.numPages;
+
+        if (renderTask) {
+            const previousTask = renderTask;
+            renderTask = null;
+            previousTask.cancel();
+        }
+        const page = await pdf.getPage(pageNumber);
+        if (renderId !== renderSequence) return;
+        const baseViewport = page.getViewport({ scale: 1 });
+        const availableWidth = Math.max(260, viewer.clientWidth - 32);
+        const fitScale = Math.min(1.5, availableWidth / baseViewport.width);
+        const scale = fitScale * zoom;
+        const viewport = page.getViewport({ scale });
+        const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+
+        canvas.width = Math.floor(viewport.width * pixelRatio);
+        canvas.height = Math.floor(viewport.height * pixelRatio);
+        canvas.style.width = String(Math.floor(viewport.width)) + 'px';
+        canvas.style.height = String(Math.floor(viewport.height)) + 'px';
+        context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+        const currentTask = page.render({ canvasContext: context, viewport });
+        renderTask = currentTask;
+        try {
+            await currentTask.promise;
+        } catch (error) {
+            if (error.name !== 'RenderingCancelledException') throw error;
+            return;
+        } finally {
+            if (renderTask === currentTask) renderTask = null;
+        }
+        if (renderId !== renderSequence) return;
+
+        progressLabel.textContent = 'Page ' + pageNumber + ' sur ' + pdf.numPages;
+        if (save) {
+            clearTimeout(saveTimer);
+            saveTimer = setTimeout(() => saveProgress(pageNumber), 350);
+        }
+    }
+
+    async function startReader() {
+        if (!window.pdfjsLib) {
+            useBrowserReader('Lecteur PDF integre indisponible. Le lecteur de votre navigateur est affiche ci-dessous.');
+            return;
+        }
+        try {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+            pdf = await pdfjsLib.getDocument(fileUrl).promise;
+            pageCount.textContent = String(pdf.numPages);
+            pageNumber = Math.min(pageNumber, pdf.numPages);
+            await renderPage(pageNumber);
+        } catch (error) {
+            useBrowserReader('Ce PDF ne peut pas etre affiche par le lecteur integre. Le lecteur de votre navigateur est affiche ci-dessous.');
+        }
+    }
+
+    document.getElementById('previous-page').addEventListener('click', () => renderPage(pageNumber - 1, true));
+    document.getElementById('next-page').addEventListener('click', () => renderPage(pageNumber + 1, true));
+    pageInput.addEventListener('change', () => renderPage(Number.parseInt(pageInput.value, 10), true));
+    document.getElementById('zoom-in').addEventListener('click', () => {
+        zoom = Math.min(zoom + 0.15, 2.5);
+        document.getElementById('zoom-label').textContent = String(Math.round(zoom * 100)) + '%';
+        renderPage(pageNumber);
+    });
+    document.getElementById('zoom-out').addEventListener('click', () => {
+        zoom = Math.max(zoom - 0.15, 0.55);
+        document.getElementById('zoom-label').textContent = String(Math.round(zoom * 100)) + '%';
+        renderPage(pageNumber);
+    });
+    document.getElementById('fullscreen-reader').addEventListener('click', () => {
+        if (!document.fullscreenElement && reader.requestFullscreen) {
+            reader.requestFullscreen();
+        } else if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    });
+    viewer.addEventListener('keydown', event => {
+        if (event.key === 'ArrowRight' || event.key === 'PageDown') renderPage(pageNumber + 1, true);
+        if (event.key === 'ArrowLeft' || event.key === 'PageUp') renderPage(pageNumber - 1, true);
+    });
+    window.addEventListener('resize', () => {
+        if (pdf) renderPage(pageNumber);
+    });
+    window.addEventListener('pdfjsloaderror', () => {
+        if (!pdf) useBrowserReader('Lecteur PDF integre indisponible. Le lecteur de votre navigateur est affiche ci-dessous.');
+    });
+
+    startReader();
+})();
 </script>
+{% endif %}
 {% endblock %}

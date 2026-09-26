@@ -1,72 +1,64 @@
-/* ATJ - Thème Bordeaux */
+/* ATJ admin theme */
+.content-wrapper,
+.content-wrapper .content {
+    min-width: 0;
+}
 
-/* ============================================
-   1. CORRECTION GRILLE FORMULAIRES (Jazzmin)
-   Les labels cassent les mots et poussent les champs à droite
-   ============================================ */
+.content-wrapper .card,
+.content-wrapper .card-body,
+.content-wrapper .form-control,
+.content-wrapper .custom-select,
+.content-wrapper .select2-container {
+    max-width: 100%;
+}
 
-/* Empêcher le cassage des mots dans les labels */
 .form-group label,
 .col-form-label {
-    white-space: nowrap !important;
-    word-break: normal !important;
-    hyphens: none !important;
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
-/* Réaligner la grille des formulaires */
-@media (min-width: 768px) {
-    .form-horizontal .col-form-label,
-    .form-horizontal .control-label {
-        flex: 0 0 200px !important;
-        max-width: 200px !important;
-        text-align: right !important;
-        padding-right: 15px !important;
-    }
-    .form-horizontal .col-sm-10,
-    .form-horizontal .col-sm-9 {
-        flex: 1 1 auto !important;
-        max-width: calc(100% - 210px) !important;
-    }
-}
-
-/* Réinitialiser le conteneur principal */
-.content-wrapper {
-    overflow-x: hidden !important;
-}
-
-/* ============================================
-   2. SIDEBAR - Logo uniquement (texte masqué)
-   ============================================ */
-.brand-link .brand-text { display: none !important; }
-.brand-link .brand-image { float: none !important; margin-right: 0 !important; }
-
-/* ============================================
-   3. THÈME BORDEAUX
-   ============================================ */
-
-/* Navbar */
+/* Brand colors */
 .main-header.navbar-dark {
     background: linear-gradient(135deg, #60100f 0%, #7a1513 100%) !important;
 }
-.main-header.navbar-dark .nav-link { color: rgba(255,255,255,0.9) !important; }
-
-/* Sidebar */
+.main-header.navbar-dark .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
 .main-sidebar.sidebar-dark-primary {
     background: linear-gradient(180deg, #4a0c0b 0%, #60100f 100%) !important;
 }
-.main-sidebar .nav-link.active { background: #8b1a17 !important; border-left: 3px solid #fff; }
-.main-sidebar .brand-link { background: #4a0c0b !important; }
-
-/* Tableaux */
-.table thead { background: #60100f; color: #fff; }
-
-/* Boutons */
-.btn-primary { background: #60100f !important; border-color: #4a0c0b !important; }
-.btn-primary:hover { background: #7a1513 !important; }
-
-/* Login page */
-.login-page { background: linear-gradient(135deg, #f5f7fa 0%, #e8d5d5 100%); }
-.login-logo a { color: #60100f !important; }
+.main-sidebar .nav-link.active {
+    background: #8b1a17 !important;
+    border-left: 3px solid #fff;
+}
+.main-sidebar .brand-link {
+    background: #4a0c0b !important;
+}
+.brand-link .brand-text {
+    display: none !important;
+}
+.brand-link .brand-image {
+    float: none !important;
+    margin-right: 0 !important;
+}
+.table thead {
+    background: #60100f;
+    color: #fff;
+}
+.btn-primary {
+    background: #60100f !important;
+    border-color: #4a0c0b !important;
+}
+.btn-primary:hover {
+    background: #7a1513 !important;
+}
+.login-page {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8d5d5 100%);
+}
+.login-logo a {
+    color: #60100f !important;
+}
 .login-logo img {
     max-width: 120px !important;
     max-height: 120px !important;

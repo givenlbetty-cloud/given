@@ -1,50 +1,29 @@
-"""
-Génère les couvertures (1ère page PDF) pour tous les livres qui n'en ont pas.
-Usage : python manage.py generate_covers
-"""
-from django.core.management.base import BaseCommand
-from library.models import Livre
-from io import BytesIO
-from django.core.files.base import ContentFile
-
-try:
-    from pdf2image import convert_from_bytes
-except ImportError:
-    convert_from_bytes = None
+"""Generate missing book covers from the first page of PDF files."""
+from django.core.management.base import BaseCommand, CommandError
+from django.db.models import Q
+from library.models import Livre, convert_from_bytes
 
 
 class Command(BaseCommand):
-    help = 'Génère les couvertures manquantes à partir de la 1ère page du PDF'
+    help = "Genere les couvertures absentes depuis la premiere page des PDF"
 
     def handle(self, *args, **options):
         if not convert_from_bytes:
-            self.stderr.write('pdf2image non installé. Installez poppler-utils + pdf2image.')
-            return
+            raise CommandError("pdf2image est absent. Installez pdf2image et Poppler.")
 
-        livres = Livre.objects.filter(image__isnull=True, fichier__isnull=False)
+        books = Livre.objects.filter(fichier__isnull=False).exclude(fichier="").filter(
+            Q(image__isnull=True) | Q(image="")
+        )
         updated = 0
 
-        for livre in livres:
-            if not livre.fichier.name.lower().endswith('.pdf'):
+        for book in books:
+            if not book.fichier.name.lower().endswith(".pdf"):
                 continue
-
             try:
-                livre.fichier.open('rb')
-                content = livre.fichier.read()
-                livre.fichier.close()
-
-                if not content:
-                    continue
-
-                images = convert_from_bytes(content, first_page=1, last_page=1)
-                if images:
-                    buffer = BytesIO()
-                    img = images[0].convert('RGB')
-                    img.save(buffer, format='JPEG', quality=85)
-                    livre.image.save('cover.jpg', ContentFile(buffer.getvalue()), save=True)
+                if book.generate_cover_from_pdf():
                     updated += 1
-                    self.stdout.write(f'✅ Couverture générée : {livre.titre}')
-            except Exception as e:
-                self.stderr.write(f'❌ Erreur {livre.titre}: {e}')
+                    self.stdout.write(f"Couverture generee : {book.titre}")
+            except Exception as error:
+                self.stderr.write(f"Erreur pour {book.titre}: {error}")
 
-        self.stdout.write(self.style.SUCCESS(f'{updated} couverture(s) générée(s)'))
+        self.stdout.write(self.style.SUCCESS(f"{updated} couverture(s) generee(s)"))

@@ -2,6 +2,9 @@ from django.db import models
 from accounts.models import CustomUser
 from io import BytesIO
 from django.core.files.base import ContentFile
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Optionnel — ne bloque jamais
 try:
@@ -29,24 +32,50 @@ class Livre(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        # Génère la 1ère page du PDF comme couverture si absente
-        if not self.fichier or self.image or not convert_from_bytes:
-            return
-        if not self.fichier.name.lower().endswith('.pdf'):
-            return
         try:
-            import os
-            path = self.fichier.path
-            if os.path.exists(path):
-                from pdf2image import convert_from_path
-                images = convert_from_path(path, first_page=1, last_page=1, size=(400, None))
-                if images:
-                    buffer = BytesIO()
-                    images[0].convert('RGB').save(buffer, format='JPEG', quality=80)
-                    self.image.save('cover.jpg', ContentFile(buffer.getvalue()), save=False)
-                    Livre.objects.filter(pk=self.pk).update(image=self.image.name)
+            self.generate_cover_from_pdf()
         except Exception:
-            pass
+            # A failed thumbnail must not prevent a book from being imported.
+            logger.exception("Could not generate a cover for book %s", self.pk)
+
+    def generate_cover_from_pdf(self):
+        """Create a first-page cover using the configured file storage."""
+        if (
+            not self.pk
+            or not self.fichier
+            or self.image
+            or not convert_from_bytes
+            or not self.fichier.name.lower().endswith('.pdf')
+        ):
+            return False
+
+        self.fichier.open('rb')
+        try:
+            pdf_content = self.fichier.read()
+        finally:
+            self.fichier.close()
+
+        if not pdf_content:
+            return False
+
+        pages = convert_from_bytes(
+            pdf_content,
+            first_page=1,
+            last_page=1,
+            size=(400, None),
+        )
+        if not pages:
+            return False
+
+        buffer = BytesIO()
+        pages[0].convert('RGB').save(buffer, format='JPEG', quality=85)
+        self.image.save(
+            f'livre-{self.pk}-cover.jpg',
+            ContentFile(buffer.getvalue()),
+            save=False,
+        )
+        type(self).objects.filter(pk=self.pk).update(image=self.image.name)
+        return True
 
     def is_free(self):
         return True

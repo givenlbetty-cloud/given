@@ -85,15 +85,16 @@
                     <div>
                         <div class="text-warning" style="font-size: 1.5rem;">
                             <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-half"></i>
                         </div>
                     </div>
                     <div>
-                        <strong class="d-block">4.8/5</strong>
-                        <small class="text-muted">Basé sur {{ avis_list.count }} avis</small>
+                        {% if note_moyenne %}
+                        <strong class="d-block">{{ note_moyenne|floatformat:1 }}/5</strong>
+                        <small class="text-muted">Bas&eacute; sur {{ avis_list.count }} avis</small>
+                        {% else %}
+                        <strong class="d-block">Pas encore not&eacute;</strong>
+                        <small class="text-muted">Aucun avis pour le moment</small>
+                        {% endif %}
                     </div>
                 </div>
             </div>

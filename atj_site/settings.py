@@ -1,7 +1,6 @@
 import dj_database_url
 from pathlib import Path
 import os
-from urllib.parse import urlparse, unquote
 from dotenv import load_dotenv, dotenv_values
 
 
@@ -93,31 +92,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "atj_site.wsgi.application"
 
-db_url = os.environ.get("SUPABASE_POSTGRES_URL")
+db_url = (
+    os.environ.get("SUPABASE_POSTGRES_URL")
+    or os.environ.get("SUPABASE_POSTGRES_URL_NON_POOLING")
+    or os.environ.get("DATABASE_URL")
+)
 
 if not db_url:
     raise RuntimeError(
-        "SUPABASE_POSTGRES_URL_NON_POOLING est introuvable."
+        "No database URL is configured. Set DATABASE_URL or SUPABASE_POSTGRES_URL."
     )
 
-if isinstance(db_url, bytes):
-    db_url = db_url.decode("utf-8")
-
-db = urlparse(db_url)
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": db.path.lstrip("/"),
-        "USER": unquote(db.username or ""),
-        "PASSWORD": unquote(db.password or ""),
-        "HOST": db.hostname,
-        "PORT": str(db.port or 5432),
-        "OPTIONS": {
-            "sslmode": "require",
-        },
-    }
+    "default": dj_database_url.parse(
+        db_url,
+        conn_max_age=600,
+        ssl_require=db_url.startswith(("postgres://", "postgresql://")),
+    )
 }
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -229,7 +222,7 @@ JAZZMIN_SETTINGS = {
     "default_icon_children": "fas fa-circle",
     "related_modal_active": True,
     "custom_css": "css/jazzmin-custom.css",
-    "custom_js": "js/jazzmin-fix.js",
+
     "use_google_fonts_cdn": True,
     "show_ui_builder": True,
     "topmenu_links": [

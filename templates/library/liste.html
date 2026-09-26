@@ -91,7 +91,7 @@
                     <!-- Rating (if available) -->
                     <div class="d-flex align-items-center mb-3 text-warning small">
                         <i class="bi bi-star-fill me-1"></i>
-                        <span class="text-dark fw-600">4.8</span>
+                        <span class="text-dark fw-600">{% if livre.note_moyenne %}{{ livre.note_moyenne|floatformat:1 }}{% else %}Nouveau{% endif %}</span>
                     </div>
                     
                     <div class="mt-auto">

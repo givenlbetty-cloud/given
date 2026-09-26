@@ -2,18 +2,17 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Avg, Q
 from django.http import FileResponse, Http404, JsonResponse
 from .models import Livre, AchatLivre, Note, Avis, Favori
+import mimetypes
 import os
-import re
-from django.conf import settings
 
 def liste_livres(request):
     categorie = request.GET.get('categorie')
     query = request.GET.get('q')
     
-    livres_qs = Livre.objects.all().order_by('-date_creation')
+    livres_qs = Livre.objects.annotate(note_moyenne=Avg('avis__note')).order_by('-date_creation')
 
     if categorie:
         livres_qs = livres_qs.filter(categorie=categorie)
@@ -55,6 +54,7 @@ def detail_livre(request, livre_id):
         is_favori = Favori.objects.filter(user=request.user, livre=livre).exists()
         
     avis_list = livre.avis.all().order_by('-date_creation')
+    note_moyenne = avis_list.aggregate(moyenne=Avg('note'))['moyenne']
     
     if request.method == 'POST' and 'submit_avis' in request.POST:
         if not request.user.is_authenticated:
@@ -70,6 +70,7 @@ def detail_livre(request, livre_id):
         'livre': livre, 
         'achat': achat, 
         'avis_list': avis_list,
+        'note_moyenne': note_moyenne,
         'is_favori': is_favori
     })
 
@@ -90,15 +91,18 @@ def lire_livre(request, livre_id):
             if achat and page:
                 try:
                     current_page = int(page)
-                    achat.derniere_page_lue = current_page
-                    
-                    # Si on connait le total de pages, on vérifie la fin
+                    if current_page < 1:
+                        raise ValueError
                     if total_pages:
                         total = int(total_pages)
-                        # On considère fini si on est à la dernière page (ou plus pour être sûr)
-                        if current_page >= total:
-                            achat.est_termine = True
-                    
+                        if total < 1:
+                            raise ValueError
+                        current_page = min(current_page, total)
+                        achat.derniere_page_lue = current_page
+                        achat.est_termine = current_page >= total
+                    else:
+                        achat.derniere_page_lue = current_page
+
                     achat.save()
                     return JsonResponse({
                         'status': 'ok', 
@@ -123,29 +127,57 @@ def lire_livre(request, livre_id):
     notes = Note.objects.filter(user=request.user, livre=livre).order_by('-date_creation')
     last_page = achat.derniere_page_lue if achat else 1
     
-    # Check for text file content
     content = None
-    is_pdf = True
+    is_pdf = False
+    is_text = False
     if livre.fichier:
-        if livre.fichier.name.lower().endswith('.txt'):
-            is_pdf = False
+        extension = os.path.splitext(livre.fichier.name)[1].lower()
+        is_pdf = extension == '.pdf'
+        is_text = extension == '.txt'
+        if is_text:
             try:
-                with open(livre.fichier.path, 'r', encoding='utf-8') as f:
-                    content = f.read()
-            except Exception as e:
+                livre.fichier.open('rb')
+                try:
+                    content = livre.fichier.read().decode('utf-8')
+                finally:
+                    livre.fichier.close()
+            except Exception:
                 content = "Impossible de lire le contenu du fichier."
-        elif not livre.fichier.name.lower().endswith('.pdf'):
-            # Fallback for other types if any, or assume PDF for now if not txt
-            # But the template uses PDF.js, so non-PDFs won't work there either.
-            pass
 
     return render(request, 'library/lecture.html', {
-        'livre': livre, 
-        'notes': notes, 
+        'livre': livre,
+        'notes': notes,
         'last_page': last_page,
         'content': content,
-        'is_pdf': is_pdf
+        'is_pdf': is_pdf,
+        'is_text': is_text,
     })
+
+
+def _book_file_response(livre, *, as_attachment):
+    filename = os.path.basename(livre.fichier.name)
+    extension = os.path.splitext(filename)[1].lower()
+    content_type = (
+        'application/pdf'
+        if extension == '.pdf'
+        else mimetypes.guess_type(filename)[0] or 'application/octet-stream'
+    )
+    file_object = livre.fichier.open('rb')
+    return FileResponse(
+        file_object,
+        as_attachment=as_attachment,
+        filename=filename,
+        content_type=content_type,
+    )
+
+
+@login_required
+def lire_fichier_livre(request, livre_id):
+    livre = get_object_or_404(Livre, id=livre_id)
+    if not livre.fichier:
+        raise Http404("No file is associated with this book.")
+    return _book_file_response(livre, as_attachment=False)
+
 
 @login_required
 def acheter_livre(request, livre_id):
@@ -197,9 +229,7 @@ def telecharger_livre(request, livre_id):
     
     if livre.fichier:
         try:
-            livre.fichier.open('rb')
-            response = FileResponse(livre.fichier, as_attachment=True)
-            return response
+            return _book_file_response(livre, as_attachment=True)
         except Exception:
             messages.error(request, "Le fichier de ce livre est temporairement indisponible.")
             return redirect('library:detail', livre_id=livre.id)
