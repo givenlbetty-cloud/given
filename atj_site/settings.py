@@ -12,7 +12,10 @@ load_dotenv(BASE_DIR / ".env.production")
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-change-me-in-production")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "True") == "True"
+DEBUG = os.environ.get("DEBUG", "True").strip().lower() in {"1", "true", "yes", "on"}
+if os.environ.get("VERCEL_ENV") == "production":
+    # Never expose Django's debug traceback to public production requests.
+    DEBUG = False
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
