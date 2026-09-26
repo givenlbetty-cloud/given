@@ -239,7 +239,10 @@ JAZZMIN_SETTINGS = {
     "custom_css": "css/jazzmin-custom.css",
 
     "use_google_fonts_cdn": True,
-    "show_ui_builder": True,
+    # The legacy UI builder becomes an extra grid item under AdminLTE 4,
+    # widening the sidebar column and pushing the entire admin to the right.
+    "show_ui_builder": False,
+    "show_theme_chooser": True,
     "topmenu_links": [
         {"name": "Accueil", "url": "admin:index", "permissions": ["auth.view_user"]},
         {"name": "Site Public", "url": "home", "new_window": True},
@@ -253,7 +256,7 @@ JAZZMIN_SETTINGS = {
 
 JAZZMIN_UI_TWEAKS = {
     "theme": "flatly",
-    "dark_mode_theme": "darkly",
+    "default_theme_mode": "auto",
     "navbar": "navbar-dark",
     "navbar_small_text": False,
     "sidebar": "sidebar-dark-primary",
