@@ -66,3 +66,80 @@
     height: auto !important;
     object-fit: contain;
 }
+
+/* Keep every Jazzmin add/edit form wide enough for its fields. */
+.change-form #content-main,
+.change-form #content-main > form {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.change-form #content-main > form > .row {
+    align-items: flex-start;
+}
+
+.change-form #content-main > form > .row > .col-12.col-lg-9,
+.change-form #content-main > form > .row > .col-12.col-lg-3 {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 100%;
+}
+
+.change-form #content-main .card-body.p-5 {
+    padding: 1.25rem !important;
+}
+
+.change-form .form-group,
+.change-form .form-group > .row,
+.change-form .fieldBox {
+    min-width: 0;
+}
+
+.change-form .form-group > .row > label {
+    max-width: 100%;
+    line-height: 1.4;
+    padding-top: 0.35rem;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+.change-form .fieldBox .form-control,
+.change-form .fieldBox input:not([type="checkbox"]):not([type="radio"]),
+.change-form .fieldBox textarea,
+.change-form .fieldBox select,
+.change-form .fieldBox .select2-container {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+}
+
+.change-form .help-block {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.change-form #jazzy-actions {
+    position: static;
+}
+
+.change-form #jazzy-actions .d-flex {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.change-form #jazzy-actions .d-flex .btn,
+.change-form #jazzy-actions .d-flex input[type="submit"] {
+    width: auto;
+    max-width: 100%;
+    white-space: normal;
+}
+
+@media (max-width: 575.98px) {
+    .change-form .form-group > .row > label.col-sm-3,
+    .change-form .form-group > .row > .col-sm-9 {
+        flex: 0 0 100%;
+        width: 100%;
+        max-width: 100%;
+    }
+}
