@@ -2,6 +2,7 @@ import dj_database_url
 from pathlib import Path
 import os
 from dotenv import load_dotenv, dotenv_values
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -105,6 +106,17 @@ if not db_url:
     raise RuntimeError(
         "No database URL is configured. Set DATABASE_URL or SUPABASE_POSTGRES_URL."
     )
+
+# Supabase URLs may include the provider-specific `supa` flag, which libpq
+# does not recognize as a PostgreSQL connection option.
+db_url_parts = urlsplit(db_url)
+if db_url_parts.scheme.lower() in {"postgres", "postgresql"}:
+    db_query = [
+        (key, value)
+        for key, value in parse_qsl(db_url_parts.query, keep_blank_values=True)
+        if key.lower() != "supa"
+    ]
+    db_url = urlunsplit(db_url_parts._replace(query=urlencode(db_query)))
 
 DATABASES = {
     "default": dj_database_url.parse(
