@@ -68,22 +68,51 @@
 }
 
 /* Keep every Jazzmin add/edit form wide enough for its fields. */
-.change-form #content-main,
-.change-form #content-main > form {
+body.change-form .app-content > .container-fluid {
+    width: 100%;
+    max-width: none;
+}
+
+body.change-form .app-content > .container-fluid > .row {
+    display: block;
+    width: 100%;
+    margin: 0;
+}
+
+body.change-form #content-main,
+body.change-form #content-main > form {
+    display: block;
+    float: none;
     width: 100%;
     max-width: 100%;
     min-width: 0;
+    margin: 0;
 }
 
-.change-form #content-main > form > .row {
-    align-items: flex-start;
+body.change-form #content-main {
+    padding: 0 0.75rem;
 }
 
-.change-form #content-main > form > .row > .col-12.col-lg-9,
-.change-form #content-main > form > .row > .col-12.col-lg-3 {
-    flex: 0 0 100%;
+body.change-form #content-main > form > .row {
+    display: block;
+    width: 100%;
+    margin: 0;
+}
+
+body.change-form #content-main > form > .row > .col-12.col-lg-9,
+body.change-form #content-main > form > .row > .col-12.col-lg-3 {
+    display: block;
+    float: none;
+    flex: none;
     width: 100%;
     max-width: 100%;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+body.change-form #content-main .card {
+    width: 100%;
+    max-width: none;
 }
 
 .change-form #content-main .card-body.p-5 {
