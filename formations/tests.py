@@ -23,6 +23,18 @@ class PublicFormationPresentationTests(TestCase):
                 self.assertEqual(response.context['pilier'], pilier)
                 self.assertContains(response, pilier['image'])
 
+    def test_catalog_shows_all_brochure_domains_without_published_courses(self):
+        self.formation.est_publie = False
+        self.formation.save(update_fields=['est_publie'])
+
+        response = self.client.get(reverse('formations:liste'))
+
+        self.assertEqual(response.status_code, 200)
+        for pilier in PILIERS:
+            self.assertContains(response, pilier['titre'])
+            self.assertContains(response, pilier['image'])
+        self.assertNotContains(response, 'Aucune formation trouvée.')
+
     def test_public_presentation_shows_photo_and_full_description(self):
         response = self.client.get(reverse('formations:detail_formation', args=[self.formation.id]))
 

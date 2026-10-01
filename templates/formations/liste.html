@@ -16,6 +16,30 @@
     </div>
 </div>
 
+{% if not pilier and not query %}
+<section class="container mb-5" aria-labelledby="atj-catalog-domains-title">
+    <div class="text-center mb-4">
+        <p class="atj-section-label mb-2">Nos domaines</p>
+        <h2 id="atj-catalog-domains-title" class="h1 fw-bold">Les cinq formations du dépliant</h2>
+    </div>
+    <div class="row g-4 justify-content-center">
+        {% for domaine in piliers %}
+        <div class="col-md-6 col-lg-4">
+            <a href="{% url 'formations:liste' %}?categorie={{ domaine.code }}" class="atj-programme atj-programme-photo card h-100 text-decoration-none">
+                <img class="atj-programme-background" src="{% static domaine.image %}" alt="" loading="lazy" decoding="async">
+                <div class="card-body p-4 d-flex flex-column">
+                    <span class="atj-programme-icon mb-4"><i class="bi {{ domaine.icone }}"></i></span>
+                    <h3 class="h4 fw-bold mb-3">{{ domaine.titre }}</h3>
+                    <p class="atj-programme-description flex-grow-1 mb-4">{{ domaine.description }}</p>
+                    <span class="fw-bold atj-link">Découvrir ce domaine <i class="bi bi-arrow-right ms-1"></i></span>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
 <div class="container">
     <div class="row g-4">
         {% for formation in formations %}
@@ -70,9 +94,8 @@
         </div>
         {% empty %}
         <div class="col-12 text-center py-5">
-            <i class="bi bi-clipboard-x fs-1 text-muted mb-3 d-block"></i>
-            <p class="text-muted h5">Aucune formation trouvée.</p>
-            <a href="{% url 'formations:liste' %}" class="btn btn-outline-primary mt-3">Voir tout le catalogue</a>
+            <p class="text-muted h5">{% if query %}Aucun cours ne correspond à cette recherche.{% else %}Contactez l'ATJ pour connaître les disponibilités des cours.{% endif %}</p>
+            <a href="{% url 'contact' %}" class="btn btn-outline-primary mt-3">Contacter l'ATJ</a>
         </div>
         {% endfor %}
     </div>

@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Formation, Session, Inscription, Lecon
 from django.contrib import messages
 from .decorators import payment_required
-from core.brochure import PILIER_PAR_CODE
+from core.brochure import PILIERS, PILIER_PAR_CODE
 
 
 def liste_formations(request):
@@ -21,6 +21,7 @@ def liste_formations(request):
         'query': query,
         'categorie': categorie,
         'pilier': PILIER_PAR_CODE.get(categorie),
+        'piliers': PILIERS,
     })
 
 
