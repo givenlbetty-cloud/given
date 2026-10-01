@@ -9,8 +9,18 @@ class BrochurePagesTests(TestCase):
         response = self.client.get('/')
 
         self.assertEqual(response.status_code, 200)
-        for text in ('Art oratoire', 'Leadership', 'Informatique', 'Langues', 'Affaires et entrepreneuriat'):
+        for text in ('ART ORATOIRE | PRISE DE PAROLE EN PUBLIC', 'LEADERSHIP | DEVELOPPEMENT PERSONNEL', 'INFORMATIQUE', 'LANGUES', 'AFFAIRES | ENTREPRENEURIAT'):
             self.assertContains(response, text)
+        self.assertEqual(
+            [pilier['description'] for pilier in response.context['piliers']],
+            [
+                "La plupart des professions dans la société ne peuvent s'exercer efficacement que si l'on a la maîtrise de l'Art de la parole ( Avocature, Journalisme, Enseignement, Politique, Marketing, Prédication... ), Venez apprendre !",
+                "Coaching pratique sur mesure, développement d'un leadership responsable, motivationnel et fondé sur l'intelligence émotionnelle.",
+                "Maîtrise des logiciels de bureautique (Word, Publisher, PowerPoint, Excel, etc.), design graphique et techniques d'imprimerie.",
+                "Formation en anglais, espagnol, français et mandarin, avec une approche essentiellement pratique.",
+                "Encadrement et accompagnement des jeunes vers leurs premiers pas dans l'entrepreneuriat, afin de favoriser leur autonomie et leur épanouissement.",
+            ],
+        )
         self.assertNotContains(response, '20 000 jeunes')
         self.assertNotContains(response, 'Certificats Reconnus')
 

@@ -28,11 +28,11 @@ class HomeView(TemplateView):
         
         # Domaines et descriptions présentés dans le dépliant ATJ.
         context['piliers'] = [
-            {'code': 'art_oratoire', 'titre': 'Art oratoire', 'sous_titre': 'Prise de parole en public', 'icone': 'bi-mic-fill', 'description': "Développez l'art de la parole, utile notamment en avocature, journalisme, enseignement, politique, marketing et prédication."},
-            {'code': 'leadership', 'titre': 'Leadership', 'sous_titre': 'Développement personnel', 'icone': 'bi-people-fill', 'description': "Un coaching pratique sur mesure pour développer un leadership responsable, motivant et fondé sur l'intelligence émotionnelle."},
-            {'code': 'informatique', 'titre': 'Informatique', 'sous_titre': 'Bureautique et création', 'icone': 'bi-laptop', 'description': "Apprenez la bureautique (Word, Publisher, PowerPoint, Excel), le design graphique et les techniques d'imprimerie."},
-            {'code': 'langues', 'titre': 'Langues', 'sous_titre': 'Une approche pratique', 'icone': 'bi-translate', 'description': "Formez-vous en anglais, espagnol, français et mandarin avec une approche essentiellement pratique."},
-            {'code': 'affaires', 'titre': 'Affaires et entrepreneuriat', 'sous_titre': 'Premiers pas accompagnés', 'icone': 'bi-briefcase-fill', 'description': "Un accompagnement vers l'entrepreneuriat pour favoriser l'autonomie et l'épanouissement des jeunes."},
+            {'code': 'art_oratoire', 'titre': 'ART ORATOIRE | PRISE DE PAROLE EN PUBLIC', 'icone': 'bi-mic-fill', 'description': "La plupart des professions dans la société ne peuvent s'exercer efficacement que si l'on a la maîtrise de l'Art de la parole ( Avocature, Journalisme, Enseignement, Politique, Marketing, Prédication... ), Venez apprendre !"},
+            {'code': 'leadership', 'titre': 'LEADERSHIP | DEVELOPPEMENT PERSONNEL', 'icone': 'bi-people-fill', 'description': "Coaching pratique sur mesure, développement d'un leadership responsable, motivationnel et fondé sur l'intelligence émotionnelle."},
+            {'code': 'informatique', 'titre': 'INFORMATIQUE', 'icone': 'bi-laptop', 'description': "Maîtrise des logiciels de bureautique (Word, Publisher, PowerPoint, Excel, etc.), design graphique et techniques d'imprimerie."},
+            {'code': 'langues', 'titre': 'LANGUES', 'icone': 'bi-translate', 'description': "Formation en anglais, espagnol, français et mandarin, avec une approche essentiellement pratique."},
+            {'code': 'affaires', 'titre': 'AFFAIRES | ENTREPRENEURIAT', 'icone': 'bi-briefcase-fill', 'description': "Encadrement et accompagnement des jeunes vers leurs premiers pas dans l'entrepreneuriat, afin de favoriser leur autonomie et leur épanouissement."},
         ]
         return context
 

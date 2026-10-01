@@ -38,7 +38,6 @@
                 <a href="{% url 'formations:liste' %}?categorie={{ pilier.code }}" class="atj-programme card h-100 text-decoration-none">
                     <div class="card-body p-4 d-flex flex-column">
                         <span class="atj-programme-icon mb-4"><i class="bi {{ pilier.icone }}"></i></span>
-                        <p class="atj-section-label mb-2">{{ pilier.sous_titre }}</p>
                         <h3 class="h4 fw-bold mb-3">{{ pilier.titre }}</h3>
                         <p class="text-muted flex-grow-1 mb-4">{{ pilier.description }}</p>
                         <span class="fw-bold atj-link">Explorer les formations <i class="bi bi-arrow-right ms-1"></i></span>
