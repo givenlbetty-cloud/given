@@ -903,6 +903,9 @@ footer a.text-muted:hover {
     border-bottom: 3px solid var(--accent-color);
 }
 .atj-hero { min-height: 520px; display: flex; align-items: center; }
+.atj-home-hero {
+    background: linear-gradient(90deg, rgba(53, 12, 19, .96) 0%, rgba(53, 12, 19, .84) 48%, rgba(53, 12, 19, .48) 100%), url('../img/atj/atj-groupe.jpeg') center 20% / cover no-repeat;
+}
 .atj-hero h1, .atj-page-hero h1, .atj-editorial-hero h1 { color: #fff; }
 .atj-hero h1 span { color: var(--accent-color); }
 .atj-hero .lead { max-width: 680px; }
@@ -976,15 +979,44 @@ footer a.text-muted:hover {
 }
 .atj-link { color: var(--primary-color); }
 .atj-mission-band { background: #fff8f4; }
+.atj-photo-band {
+    color: #fff;
+    background: linear-gradient(90deg, rgba(53, 12, 19, .96) 0%, rgba(53, 12, 19, .82) 58%, rgba(53, 12, 19, .65) 100%), url('../img/atj/gm1-5838.jpeg') center 12% / cover no-repeat;
+}
+.atj-photo-band h2 { color: #fff; }
+.atj-photo-band .atj-section-label { color: #ffd4b1; }
+.atj-photo-band .btn-primary { background: var(--accent-color); border-color: var(--accent-color); color: #262626; }
+.atj-photo-band .btn-primary:hover, .atj-photo-band .btn-primary:focus-visible { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; }
+.atj-gallery-section { background: #fff8f4; }
+.atj-gallery {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+.atj-gallery-item {
+    margin: 0;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #eadfda;
+}
+.atj-gallery-wide { grid-column: span 2; aspect-ratio: 3 / 2; }
+.atj-gallery-item img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.atj-gallery-wide img { object-position: center 35%; }
 .atj-contact-item { display: flex; align-items: flex-start; gap: 18px; }
 .atj-contact-item a { color: var(--primary-color); }
 .atj-contact-card { border: 1px solid var(--border-color); border-radius: 20px; box-shadow: 0 2px 8px rgba(0, 0, 0, .04); }
 [data-theme="dark"] .atj-mission-band { background: #302321; }
+[data-theme="dark"] .atj-photo-band { background: linear-gradient(90deg, rgba(35, 8, 13, .96), rgba(35, 8, 13, .68)), url('../img/atj/gm1-5838.jpeg') center 12% / cover no-repeat; }
+[data-theme="dark"] .atj-gallery-section { background: #302321; }
 [data-theme="dark"] .atj-section-label,
 [data-theme="dark"] .atj-link,
 [data-theme="dark"] .atj-contact-item a { color: #ffac72; }
 @media (max-width: 575.98px) {
     .atj-hero { min-height: 0; }
+    .atj-home-hero { background-position: center 43%; }
     .atj-hero h1 { font-size: clamp(2.4rem, 11vw, 3.5rem); }
     .atj-eyebrow { line-height: 1.6; }
+    .atj-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .atj-gallery-item { border-radius: 10px; }
 }

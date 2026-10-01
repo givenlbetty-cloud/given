@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="text-white py-5 mb-5 atj-page-hero">
@@ -18,15 +19,15 @@
         <div class="col-md-6 col-lg-4">
             <article class="card h-100 border-0 shadow-sm">
                 {% if formation.categorie == 'art_oratoire' %}
-                    <img src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=800&h=400&fit=crop" class="card-img-top" alt="{{ formation.titre }}" style="height: 200px; object-fit: cover;">
+                    <img src="{% static 'img/atj/gm1-5845.jpeg' %}" class="card-img-top" alt="Activité de prise de parole à l'ATJ" loading="lazy" style="height: 200px; object-fit: cover;">
                 {% elif formation.categorie == 'leadership' %}
-                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=400&fit=crop" class="card-img-top" alt="{{ formation.titre }}" style="height: 200px; object-fit: cover;">
+                    <img src="{% static 'img/atj/gm1-5847.jpeg' %}" class="card-img-top" alt="Intervenant lors d'une activité de l'ATJ" loading="lazy" style="height: 200px; object-fit: cover;">
                 {% elif formation.categorie == 'informatique' %}
-                    <img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=800&h=400&fit=crop" class="card-img-top" alt="{{ formation.titre }}" style="height: 200px; object-fit: cover;">
+                    <img src="{% static 'img/atj/atj-atelier-informatique.jpeg' %}" class="card-img-top" alt="Atelier informatique de l'ATJ" loading="lazy" style="height: 200px; object-fit: cover;">
                 {% elif formation.categorie == 'langues' %}
-                    <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=800&h=400&fit=crop" class="card-img-top" alt="{{ formation.titre }}" style="height: 200px; object-fit: cover;">
+                    <img src="{% static 'img/atj/atj-groupe.jpeg' %}" class="card-img-top" alt="Participants de l'ATJ" loading="lazy" style="height: 200px; object-fit: cover;">
                 {% elif formation.categorie == 'affaires' %}
-                    <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&h=400&fit=crop" class="card-img-top" alt="{{ formation.titre }}" style="height: 200px; object-fit: cover;">
+                    <img src="{% static 'img/atj/gm1-5853.jpeg' %}" class="card-img-top" alt="Membre de l'ATJ en réunion" loading="lazy" style="height: 200px; object-fit: cover;">
                 {% else %}
                     <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-secondary" style="height: 200px;">
                         <i class="bi bi-mortarboard fs-1 opacity-25"></i>

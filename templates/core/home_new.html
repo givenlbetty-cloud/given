@@ -4,7 +4,7 @@
 {% block title %}Accueil - Académie Tremplin de la Jeunesse{% endblock %}
 
 {% block content %}
-<section class="atj-hero text-white">
+<section class="atj-hero atj-home-hero text-white">
     <div class="container py-5">
         <div class="row align-items-center g-5 py-lg-5">
             <div class="col-lg-8">
@@ -14,11 +14,6 @@
                 <div class="d-flex flex-wrap gap-3">
                     <a href="#formations" class="btn btn-atj-accent btn-lg rounded-pill px-4 fw-bold">Découvrir nos formations <i class="bi bi-arrow-right ms-2"></i></a>
                     <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg rounded-pill px-4">Connaître l'ATJ</a>
-                </div>
-            </div>
-            <div class="col-lg-4 d-none d-lg-block text-center">
-                <div class="atj-hero-mark">
-                    <img src="{% static 'img/logo_atj_charte.jpeg' %}" alt="Emblème de l'Académie Tremplin de la Jeunesse" class="img-fluid">
                 </div>
             </div>
         </div>
@@ -52,7 +47,32 @@
     </div>
 </section>
 
-<section class="py-5 atj-mission-band">
+<section class="py-5 atj-gallery-section" aria-labelledby="atj-gallery-title">
+    <div class="container py-lg-4">
+        <div class="text-center mb-4">
+            <p class="atj-section-label mb-2">La vie de l'Académie</p>
+            <h2 id="atj-gallery-title" class="display-6 fw-bold mb-0">L'ATJ en images</h2>
+        </div>
+        <div class="atj-gallery">
+            <figure class="atj-gallery-item atj-gallery-wide"><img src="{% static 'img/atj/atj-groupe.jpeg' %}" alt="Groupe de participants de l'ATJ présentant leurs certificats" loading="lazy" decoding="async"></figure>
+            <figure class="atj-gallery-item"><img src="{% static 'img/atj/gm1-5838.jpeg' %}" alt="Intervenant de l'ATJ s'exprimant au microphone" loading="lazy" decoding="async"></figure>
+            <figure class="atj-gallery-item"><img src="{% static 'img/atj/gm1-5845.jpeg' %}" alt="Participant prenant la parole lors d'une activité de l'ATJ" loading="lazy" decoding="async"></figure>
+            <figure class="atj-gallery-item atj-gallery-wide"><img src="{% static 'img/atj/atj-atelier-informatique.jpeg' %}" alt="Deux participantes travaillant ensemble sur un ordinateur" loading="lazy" decoding="async"></figure>
+            <figure class="atj-gallery-item"><img src="{% static 'img/atj/atj-certificat-informatique-1.jpeg' %}" alt="Participante présentant son certificat en informatique" loading="lazy" decoding="async"></figure>
+            <figure class="atj-gallery-item"><img src="{% static 'img/atj/atj-certificat-informatique-2.jpeg' %}" alt="Participante présentant son certificat de formation" loading="lazy" decoding="async"></figure>
+            <figure class="atj-gallery-item"><img src="{% static 'img/atj/gm1-5832.jpeg' %}" alt="Participant à une rencontre de l'ATJ" loading="lazy" decoding="async"></figure>
+            <figure class="atj-gallery-item"><img src="{% static 'img/atj/gm1-5840.jpeg' %}" alt="Membre de l'ATJ lors d'une rencontre" loading="lazy" decoding="async"></figure>
+            <figure class="atj-gallery-item"><img src="{% static 'img/atj/gm1-5841.jpeg' %}" alt="Membre de l'ATJ debout pendant une activité" loading="lazy" decoding="async"></figure>
+            <figure class="atj-gallery-item"><img src="{% static 'img/atj/gm1-5842.jpeg' %}" alt="Participant de l'ATJ sous un parasol" loading="lazy" decoding="async"></figure>
+            <figure class="atj-gallery-item"><img src="{% static 'img/atj/gm1-5847.jpeg' %}" alt="Intervenant s'exprimant au microphone" loading="lazy" decoding="async"></figure>
+            <figure class="atj-gallery-item"><img src="{% static 'img/atj/gm1-5853.jpeg' %}" alt="Membre de l'ATJ participant à une réunion" loading="lazy" decoding="async"></figure>
+            <figure class="atj-gallery-item"><img src="{% static 'img/atj/atj-portrait.jpeg' %}" alt="Participant prenant la parole devant un groupe" loading="lazy" decoding="async"></figure>
+            <figure class="atj-gallery-item"><img src="{% static 'img/atj/atj-ordinateur.jpeg' %}" alt="Participante travaillant sur un ordinateur portable" loading="lazy" decoding="async"></figure>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 atj-mission-band atj-photo-band">
     <div class="container py-lg-4">
         <div class="row align-items-center g-4">
             <div class="col-lg-8">
