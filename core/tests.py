@@ -2,6 +2,7 @@ from django.core import mail
 from django.test import TestCase, override_settings
 
 from .models import SiteSettings
+from .brochure import MISSION, VISION, PILIERS
 
 
 class BrochurePagesTests(TestCase):
@@ -23,6 +24,19 @@ class BrochurePagesTests(TestCase):
         )
         self.assertNotContains(response, '20 000 jeunes')
         self.assertNotContains(response, 'Certificats Reconnus')
+
+    def test_about_shows_brochure_mission_vision_and_five_programmes(self):
+        response = self.client.get('/apropos/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['mission_depliant'], MISSION)
+        self.assertEqual(response.context['vision_depliant'], VISION)
+        self.assertEqual(response.context['piliers'], PILIERS)
+        self.assertContains(response, 'img/atj/gm1-5838.jpeg')
+        self.assertContains(response, 'img/atj/atj-groupe.jpeg')
+        for pilier in PILIERS:
+            self.assertContains(response, pilier['titre'])
+            self.assertContains(response, pilier['image'])
 
     def test_contact_uses_brochure_phone_and_no_demo_email_form(self):
         response = self.client.get('/contact/')

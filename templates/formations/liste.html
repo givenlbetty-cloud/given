@@ -2,14 +2,17 @@
 {% load static %}
 
 {% block content %}
-<div class="text-white py-5 mb-5 atj-page-hero">
+<div class="text-white py-5 mb-5 atj-page-hero atj-formations-hero">
+    {% if pilier %}<img class="atj-page-hero-photo" src="{% static pilier.image %}" alt="" decoding="async">{% endif %}
     <div class="container text-center">
-        <h1 class="display-4 fw-bold mb-3">Nos Formations</h1>
-        <p class="lead mb-4">Développez les compétences les plus recherchées.</p>
-        <form method="get" class="d-flex justify-content-center">
-            <input class="form-control w-50 rounded-pill px-4 py-3" type="search" name="q" placeholder="Rechercher une formation..." value="{{ query|default:'' }}">
+        <h1 class="display-4 fw-bold mb-3">{{ pilier.titre|default:'Nos formations' }}</h1>
+        <p class="lead mb-4 mx-auto" style="max-width: 780px;">{% if pilier %}{{ pilier.description }}{% else %}Découvrez les cinq domaines de formation de l'ATJ.{% endif %}</p>
+        <form method="get" class="d-flex justify-content-center atj-search-form">
+            {% if pilier %}<input type="hidden" name="categorie" value="{{ pilier.code }}">{% endif %}
+            <input class="form-control rounded-pill px-4 py-3" type="search" name="q" placeholder="Rechercher une formation..." value="{{ query|default:'' }}">
             <button class="btn btn-light rounded-pill px-4 fw-bold ms-2" type="submit">Rechercher</button>
         </form>
+        {% if pilier %}<a href="{% url 'formations:liste' %}" class="d-inline-block mt-3 text-white">Voir tous les domaines</a>{% endif %}
     </div>
 </div>
 
@@ -17,26 +20,23 @@
     <div class="row g-4">
         {% for formation in formations %}
         <div class="col-md-6 col-lg-4">
-            <article class="card h-100 border-0 shadow-sm">
-                {% if formation.categorie == 'art_oratoire' %}
-                    <img src="{% static 'img/atj/gm1-5845.jpeg' %}" class="card-img-top" alt="Activité de prise de parole à l'ATJ" loading="lazy" style="height: 200px; object-fit: cover;">
-                {% elif formation.categorie == 'leadership' %}
-                    <img src="{% static 'img/atj/gm1-5847.jpeg' %}" class="card-img-top" alt="Intervenant lors d'une activité de l'ATJ" loading="lazy" style="height: 200px; object-fit: cover;">
-                {% elif formation.categorie == 'informatique' %}
-                    <img src="{% static 'img/atj/atj-atelier-informatique.jpeg' %}" class="card-img-top" alt="Atelier informatique de l'ATJ" loading="lazy" style="height: 200px; object-fit: cover;">
-                {% elif formation.categorie == 'langues' %}
-                    <img src="{% static 'img/atj/atj-groupe.jpeg' %}" class="card-img-top" alt="Participants de l'ATJ" loading="lazy" style="height: 200px; object-fit: cover;">
-                {% elif formation.categorie == 'affaires' %}
-                    <img src="{% static 'img/atj/gm1-5853.jpeg' %}" class="card-img-top" alt="Membre de l'ATJ en réunion" loading="lazy" style="height: 200px; object-fit: cover;">
-                {% else %}
-                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-secondary" style="height: 200px;">
-                        <i class="bi bi-mortarboard fs-1 opacity-25"></i>
+            <article class="card h-100 border-0 shadow-sm atj-course-card">
+                <a href="{% url 'formations:detail_formation' formation.id %}" class="atj-course-cover text-decoration-none">
+                    {% if formation.image_couverture %}
+                        <img src="{{ formation.image_couverture.url }}" alt="" loading="lazy" decoding="async">
+                    {% elif formation.pilier %}
+                        <img src="{% static formation.pilier.image %}" alt="" loading="lazy" decoding="async">
+                    {% else %}
+                        <img src="{% static 'img/atj/atj-groupe.jpeg' %}" alt="" loading="lazy" decoding="async">
+                    {% endif %}
+                    <div class="atj-course-cover-content">
+                        <span class="badge bg-light text-primary mb-3">{{ formation.get_categorie_display }}</span>
+                        <h2 class="h4 fw-bold mb-2">{{ formation.titre }}</h2>
+                        <p class="mb-3">{{ formation.description|truncatewords:30 }}</p>
+                        <span class="fw-bold">Voir la présentation <i class="bi bi-arrow-right ms-1"></i></span>
                     </div>
-                {% endif %}
+                </a>
                 <div class="card-body d-flex flex-column">
-                    <span class="badge bg-primary mb-2 align-self-start">{{ formation.get_categorie_display }}</span>
-                    <h3 class="h5 card-title fw-bold">{{ formation.titre }}</h3>
-                    <p class="card-text text-muted small flex-grow-1">{{ formation.description|truncatewords:20 }}</p>
                     <div class="d-flex justify-content-between align-items-center mt-2">
                         <span class="fw-bold">{{ formation.lecons.count }} leçons</span>
                         {% if formation.est_gratuit %}

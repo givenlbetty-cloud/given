@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Formation, Session, Inscription, Lecon
 from django.contrib import messages
 from .decorators import payment_required
+from core.brochure import PILIER_PAR_CODE
 
 
 def liste_formations(request):
@@ -19,6 +20,15 @@ def liste_formations(request):
         'formations': formations,
         'query': query,
         'categorie': categorie,
+        'pilier': PILIER_PAR_CODE.get(categorie),
+    })
+
+
+def detail_formation(request, formation_id):
+    formation = get_object_or_404(Formation, id=formation_id, est_publie=True)
+    return render(request, 'formations/detail_formation.html', {
+        'formation': formation,
+        'sessions': [session for session in formation.sessions.all() if session.is_open()],
     })
 
 

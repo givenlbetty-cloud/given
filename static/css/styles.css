@@ -1020,3 +1020,167 @@ footer a.text-muted:hover {
     .atj-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
     .atj-gallery-item { border-radius: 10px; }
 }
+
+/* Photographies ATJ sur les pages publiques et les présentations de formation. */
+footer {
+    background: linear-gradient(rgba(255, 255, 255, .86), rgba(255, 255, 255, .86)), url('../img/atj/atj-groupe.jpeg') center 38% / cover no-repeat;
+}
+[data-theme="dark"] footer {
+    background: linear-gradient(rgba(30, 30, 36, .86), rgba(30, 30, 36, .86)), url('../img/atj/atj-groupe.jpeg') center 38% / cover no-repeat;
+}
+.atj-about-hero {
+    background: linear-gradient(90deg, rgba(53, 12, 19, .98), rgba(53, 12, 19, .68)), url('../img/atj/gm1-5845.jpeg') right 24% / auto 650px no-repeat;
+    background-color: var(--primary-color);
+}
+.atj-contact-hero {
+    background: linear-gradient(90deg, rgba(53, 12, 19, .98), rgba(53, 12, 19, .68)), url('../img/atj/gm1-5853.jpeg') right 24% / auto 650px no-repeat;
+    background-color: var(--primary-color);
+}
+.atj-team-hero {
+    background: linear-gradient(rgba(53, 12, 19, .88), rgba(53, 12, 19, .72)), url('../img/atj/atj-groupe.jpeg') center 35% / cover no-repeat;
+}
+.atj-mentoring-hero {
+    background: linear-gradient(90deg, rgba(53, 12, 19, .95), rgba(53, 12, 19, .68)), url('../img/atj/gm1-5847.jpeg') right 24% / auto 650px no-repeat;
+    background-color: var(--primary-color);
+}
+.atj-blog-hero {
+    background: linear-gradient(90deg, rgba(53, 12, 19, .95), rgba(53, 12, 19, .68)), url('../img/atj/gm1-5838.jpeg') right 24% / auto 650px no-repeat;
+    background-color: var(--primary-color);
+}
+.atj-library-hero {
+    background: url('../img/atj/gm1-5853.jpeg') center 15% / cover no-repeat;
+}
+.atj-library-detail-hero {
+    background: linear-gradient(90deg, rgba(53, 12, 19, .95), rgba(53, 12, 19, .68)), url('../img/atj/gm1-5853.jpeg') right 24% / auto 650px no-repeat;
+    background-color: var(--primary-color);
+}
+.atj-auth-page {
+    background: linear-gradient(rgba(255, 248, 244, .88), rgba(255, 248, 244, .88)), url('../img/atj/atj-groupe.jpeg') center 35% / cover no-repeat;
+}
+[data-theme="dark"] .atj-auth-page {
+    background: linear-gradient(rgba(40, 30, 29, .9), rgba(40, 30, 29, .9)), url('../img/atj/atj-groupe.jpeg') center 35% / cover no-repeat;
+}
+.atj-dashboard-hero,
+.atj-resource-hero {
+    background: linear-gradient(90deg, rgba(53, 12, 19, .94), rgba(53, 12, 19, .73)), url('../img/atj/atj-atelier-informatique.jpeg') center 38% / cover no-repeat;
+}
+.atj-dashboard-hero h1,
+.atj-resource-hero h1 { color: #fff; }
+.atj-payment-hero {
+    background: linear-gradient(90deg, rgba(53, 12, 19, .94), rgba(53, 12, 19, .76)), url('../img/atj/atj-atelier-informatique.jpeg') center 38% / cover no-repeat;
+}
+.atj-payment-hero h2,
+.atj-payment-hero h3 { color: #fff; }
+.atj-profile-cover {
+    background: linear-gradient(90deg, rgba(53, 12, 19, .72), rgba(53, 12, 19, .55)), url('../img/atj/atj-groupe.jpeg') center 36% / cover no-repeat;
+}
+.atj-programme-photo {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: 390px;
+    color: #fff;
+    background: var(--primary-color);
+}
+.atj-programme-photo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(47, 11, 18, .67), rgba(47, 11, 18, .86));
+}
+.atj-programme-background {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.atj-programme-photo .card-body { position: relative; z-index: 2; }
+.atj-programme-photo h3,
+.atj-programme-photo .atj-link,
+.atj-programme-photo:hover,
+.atj-programme-photo:focus-visible { color: #fff; }
+.atj-programme-description { color: rgba(255, 255, 255, .92); }
+.atj-programme-photo .atj-programme-icon { background: rgba(255, 255, 255, .92); }
+.atj-about-vision { background: #fff8f4; }
+.atj-about-photo {
+    display: block;
+    width: 100%;
+    height: 460px;
+    object-fit: cover;
+    object-position: center 28%;
+    border-radius: 20px;
+}
+.atj-about-photo-wide { height: 370px; object-position: center; }
+.atj-about-programme { overflow: hidden; border: 1px solid var(--border-color); border-radius: 18px; }
+.atj-about-programme .card-img-top { height: 210px; object-fit: cover; object-position: center 35%; }
+.atj-formations-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: url('../img/atj/atj-groupe.jpeg') center 35% / cover no-repeat;
+}
+.atj-formations-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: rgba(53, 12, 19, .82);
+}
+.atj-page-hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 15%; }
+.atj-formations-hero .container { position: relative; z-index: 2; }
+.atj-search-form { max-width: 660px; margin-inline: auto; }
+.atj-course-card { overflow: hidden; border-radius: 18px; }
+.atj-course-cover {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: flex-end;
+    min-height: 340px;
+    overflow: hidden;
+    color: #fff;
+    background: var(--primary-color);
+}
+.atj-course-cover::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(41, 9, 15, .3), rgba(41, 9, 15, .93));
+}
+.atj-course-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 35%; }
+.atj-course-cover-content { position: relative; z-index: 2; padding: 1.5rem; }
+.atj-course-cover h2,
+.atj-course-cover:hover,
+.atj-course-cover:focus-visible { color: #fff; }
+.atj-course-cover p { color: rgba(255, 255, 255, .92); }
+.atj-formation-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    color: #fff;
+    background: var(--primary-color);
+    border-bottom: 3px solid var(--accent-color);
+}
+.atj-formation-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(90deg, rgba(53, 12, 19, .96), rgba(53, 12, 19, .66));
+}
+.atj-formation-hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+.atj-formation-hero .container { z-index: 2; }
+.atj-formation-hero h1 { color: #fff; }
+.atj-formation-intro { max-width: 800px; }
+.atj-brochure-callout { border-left: 4px solid var(--accent-color); border-radius: 12px; background: #fff8f4; }
+[data-theme="dark"] .atj-about-vision { background: #302321; }
+[data-theme="dark"] .atj-brochure-callout { background: #302321; }
+@media (max-width: 575.98px) {
+    .atj-about-photo { height: 340px; }
+    .atj-about-photo-wide { height: 230px; }
+    .atj-search-form { flex-wrap: wrap; gap: 10px; }
+    .atj-search-form .form-control { flex: 1 1 100%; }
+    .atj-search-form .btn { margin-left: 0 !important; width: 100%; }
+}

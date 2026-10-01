@@ -1,49 +1,85 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}À propos - Académie Tremplin de la Jeunesse{% endblock %}
 
 {% block content %}
-<header class="atj-page-hero text-white py-5">
+<header class="atj-page-hero atj-about-hero text-white py-5">
     <div class="container py-lg-5">
-        <p class="atj-eyebrow mb-2">L'ATJ à Lubumbashi</p>
-        <h1 class="display-4 fw-bold mb-3">Une académie pour la jeunesse</h1>
-        <p class="lead mb-0" style="max-width: 760px;">Élever les esprits, façonner l'avenir !</p>
+        <p class="atj-eyebrow mb-3">Académie Tremplin de la Jeunesse · Lubumbashi</p>
+        <h1 class="display-4 fw-bold mb-3">Élever les esprits, façonner l'avenir !</h1>
+        <p class="lead mb-0" style="max-width: 760px;">Former et accompagner les jeunes dans leur développement personnel et professionnel.</p>
     </div>
 </header>
 
-<section class="py-5 bg-white">
+<section class="py-5 bg-white" aria-labelledby="atj-mission-title">
     <div class="container py-lg-5">
-        <div class="row g-5">
-            <div class="col-lg-6">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
                 <p class="atj-section-label mb-2">Notre mission</p>
-                <h2 class="h1 fw-bold mb-3">Former et accompagner</h2>
-                <p class="lead text-muted">L'Académie Tremplin de la Jeunesse a pour mission de former et d'accompagner les jeunes dans leur développement personnel et professionnel.</p>
-                <p class="text-muted mb-0">Ses programmes couvrent le leadership, la prise de parole en public, l'informatique, les langues et les affaires.</p>
+                <h2 id="atj-mission-title" class="h1 fw-bold mb-4">Former et accompagner la jeunesse</h2>
+                <p class="lead text-muted mb-0">{{ mission_depliant }}</p>
+            </div>
+            <div class="col-lg-5">
+                <img class="atj-about-photo" src="{% static 'img/atj/gm1-5838.jpeg' %}" alt="Intervenant de l'ATJ prenant la parole au microphone" loading="lazy" decoding="async">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 atj-about-vision" aria-labelledby="atj-vision-title">
+    <div class="container py-lg-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <img class="atj-about-photo atj-about-photo-wide" src="{% static 'img/atj/atj-groupe.jpeg' %}" alt="Groupe de participants de l'ATJ présentant leurs certificats" loading="lazy" decoding="async">
             </div>
             <div class="col-lg-6">
                 <p class="atj-section-label mb-2">Notre vision</p>
-                <h2 class="h1 fw-bold mb-3">Faire grandir des acteurs de changement</h2>
+                <h2 id="atj-vision-title" class="h1 fw-bold mb-4">Des acteurs de changement dans leur communauté</h2>
+                <p class="lead text-muted mb-0">{{ vision_depliant }}</p>
                 {% if site_settings.about_description %}
-                    <div class="lead text-muted">{{ site_settings.about_description|linebreaks }}</div>
-                {% else %}
-                    <p class="lead text-muted mb-0">Nous visons à préparer les jeunes à relever les défis du monde moderne et à devenir des acteurs de changement dans leur communauté.</p>
+                <div class="mt-4 text-muted">{{ site_settings.about_description|linebreaks }}</div>
                 {% endif %}
             </div>
         </div>
     </div>
 </section>
 
-<section class="py-5 atj-mission-band">
+<section class="py-5 bg-white" aria-labelledby="atj-about-formations-title">
+    <div class="container py-lg-5">
+        <div class="text-center mb-5">
+            <p class="atj-section-label mb-2">Nos formations</p>
+            <h2 id="atj-about-formations-title" class="display-6 fw-bold mb-3">Cinq domaines présentés par l'ATJ</h2>
+            <p class="text-muted mx-auto mb-0" style="max-width: 700px;">Découvrez les formations et leur présentation telles qu'elles figurent dans le dépliant.</p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            {% for pilier in piliers %}
+            <div class="col-md-6 col-lg-4">
+                <article class="card atj-about-programme h-100">
+                    <img src="{% static pilier.image %}" class="card-img-top" alt="{{ pilier.image_alt }}" loading="lazy" decoding="async">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h3 class="h5 fw-bold mb-3">{{ pilier.titre }}</h3>
+                        <p class="text-muted flex-grow-1 mb-4">{{ pilier.description }}</p>
+                        <a href="{% url 'formations:liste' %}?categorie={{ pilier.code }}" class="fw-bold atj-link">Voir les formations <i class="bi bi-arrow-right ms-1"></i></a>
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="py-5 atj-mission-band atj-photo-band" aria-labelledby="atj-about-contact-title">
     <div class="container py-lg-4">
         <div class="row align-items-center g-4">
             <div class="col-lg-8">
-                <p class="atj-section-label mb-2">Passer à l'action</p>
-                <h2 class="h1 fw-bold mb-3">Découvrez les formations de l'ATJ</h2>
-                <p class="mb-0">Explorez les cours disponibles ou contactez-nous pour en savoir plus.</p>
+                <p class="atj-section-label mb-2">Nous rencontrer</p>
+                <h2 id="atj-about-contact-title" class="h1 fw-bold mb-3">L'ATJ à Lubumbashi</h2>
+                <p class="lead mb-0">Pour en savoir plus sur les formations, appelez le {{ site_contact_phone }} ou contactez l'académie.</p>
             </div>
             <div class="col-lg-4 d-flex flex-wrap gap-2 justify-content-lg-end">
-                <a href="{% url 'formations:liste' %}" class="btn btn-primary rounded-pill px-4">Formations</a>
-                <a href="{% url 'contact' %}" class="btn btn-outline-primary rounded-pill px-4">Contact</a>
+                <a href="tel:{{ site_contact_phone_href }}" class="btn btn-primary rounded-pill px-4"><i class="bi bi-telephone-fill me-2"></i>Appeler</a>
+                <a href="{% url 'contact' %}" class="btn btn-outline-light rounded-pill px-4">Contact</a>
             </div>
         </div>
     </div>

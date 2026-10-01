@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from core.brochure import PILIER_PAR_CODE
 
 
 class Formation(models.Model):
@@ -31,6 +32,10 @@ class Formation(models.Model):
     @property
     def nombre_lecons(self):
         return self.lecons.count()
+
+    @property
+    def pilier(self):
+        return PILIER_PAR_CODE.get(self.categorie)
 
     def __str__(self):
         return f"{self.get_categorie_display()} - {self.titre}"

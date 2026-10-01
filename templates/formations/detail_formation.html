@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ formation.titre }} - ATJ{% endblock %}
+
+{% block content %}
+<header class="atj-formation-hero">
+    {% if formation.image_couverture %}
+        <img src="{{ formation.image_couverture.url }}" alt="" decoding="async">
+    {% elif formation.pilier %}
+        <img src="{% static formation.pilier.image %}" alt="" decoding="async">
+    {% else %}
+        <img src="{% static 'img/atj/atj-groupe.jpeg' %}" alt="" decoding="async">
+    {% endif %}
+    <div class="container position-relative py-5">
+        <a href="{% url 'formations:liste' %}" class="text-white d-inline-block mb-4"><i class="bi bi-arrow-left me-2"></i>Toutes les formations</a>
+        <p class="atj-eyebrow mb-2">{{ formation.get_categorie_display }}</p>
+        <h1 class="display-4 fw-bold mb-4">{{ formation.titre }}</h1>
+        <p class="lead mb-0 atj-formation-intro">{{ formation.description|linebreaksbr }}</p>
+    </div>
+</header>
+
+<section class="py-5 bg-white">
+    <div class="container py-lg-4">
+        <div class="row g-5">
+            <div class="col-lg-7">
+                <p class="atj-section-label mb-2">Présentation</p>
+                <h2 class="h1 fw-bold mb-3">À propos de cette formation</h2>
+                <p class="lead text-muted">{{ formation.description|linebreaksbr }}</p>
+                {% if formation.pilier %}
+                <div class="atj-brochure-callout mt-5 p-4">
+                    <p class="atj-section-label mb-2">Selon le dépliant ATJ</p>
+                    <h3 class="h5 fw-bold mb-3">{{ formation.pilier.titre }}</h3>
+                    <p class="mb-0">{{ formation.pilier.description }}</p>
+                </div>
+                {% endif %}
+                {% if formation.conditions %}
+                <h3 class="h5 fw-bold mt-5">Conditions et prérequis</h3>
+                <p class="text-muted">{{ formation.conditions|linebreaksbr }}</p>
+                {% endif %}
+                {% if formation.lecons.exists %}
+                <h3 class="h5 fw-bold mt-5">Au programme</h3>
+                <ul class="list-group list-group-flush">
+                    {% for lecon in formation.lecons.all %}
+                    <li class="list-group-item px-0"><i class="bi bi-check-circle text-primary me-2"></i>{{ lecon.titre }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            <div class="col-lg-5">
+                <div class="card atj-contact-card position-sticky" style="top: 100px;">
+                    <div class="card-body p-4">
+                        <p class="atj-section-label mb-2">Participer</p>
+                        <h2 class="h4 fw-bold mb-3">Sessions disponibles</h2>
+                        <p class="mb-4">{% if formation.est_gratuit %}<strong>Gratuit</strong>{% else %}<strong>{{ formation.prix }} €</strong>{% endif %} · {{ formation.nombre_lecons }} leçon{{ formation.nombre_lecons|pluralize }}</p>
+                        {% for session in sessions %}
+                        <div class="border-top py-3">
+                            <h3 class="h6 fw-bold mb-2">{{ session.nom }}</h3>
+                            <p class="small text-muted mb-2">{% if session.type_session == 'en_ligne' %}En ligne{% else %}En présentiel{% if session.date_debut %} · {{ session.date_debut|date:'d/m/Y' }}{% endif %}{% if session.lieu %} · {{ session.lieu }}{% endif %}{% endif %}</p>
+                            {% if user.is_authenticated %}
+                            <form action="{% url 'formations:inscrire_session' session.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary rounded-pill px-4">S'inscrire à cette session</button>
+                            </form>
+                            {% else %}
+                            <a href="{% url 'login' %}?next={{ request.path|urlencode }}" class="btn btn-primary rounded-pill px-4">Se connecter pour s'inscrire</a>
+                            {% endif %}
+                        </div>
+                        {% empty %}
+                        <p class="text-muted mb-3">Aucune session ouverte actuellement.</p>
+                        <a href="{% url 'contact' %}" class="btn btn-outline-primary rounded-pill px-4">Contacter l'ATJ</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

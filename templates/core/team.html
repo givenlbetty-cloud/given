@@ -3,12 +3,14 @@
 {% block title %}Notre Équipe - ATJ{% endblock %}
 
 {% block content %}
+<header class="atj-page-hero atj-team-hero text-white py-5">
+    <div class="container py-lg-5 text-center">
+        <h1 class="display-4 fw-bold mb-3">L'Équipe Académique</h1>
+        <p class="lead mb-0">Les personnes qui accompagnent les activités de l'ATJ.</p>
+    </div>
+</header>
 <div class="bg-light py-5">
     <div class="container py-5">
-        <div class="text-center mb-5">
-            <h1 class="display-4 fw-bold mb-3">L'Équipe Académique</h1>
-            <p class="lead text-muted">Des experts passionnés dédiés à votre réussite.</p>
-        </div>
 
         {% if team_members %}
         <div class="row g-4 justify-content-center">

@@ -8,9 +8,17 @@ from django.utils import timezone
 from blog.models import Article, Event
 from .forms import ContactForm
 from .models import SiteSettings, TeamMember
+from .brochure import MISSION, VISION, PILIERS
 
 class AboutView(TemplateView):
     template_name = 'core/about.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['mission_depliant'] = MISSION
+        context['vision_depliant'] = VISION
+        context['piliers'] = PILIERS
+        return context
 
 class TeamView(TemplateView):
     template_name = 'core/team.html'
@@ -26,14 +34,7 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        # Domaines et descriptions présentés dans le dépliant ATJ.
-        context['piliers'] = [
-            {'code': 'art_oratoire', 'titre': 'ART ORATOIRE | PRISE DE PAROLE EN PUBLIC', 'icone': 'bi-mic-fill', 'description': "La plupart des professions dans la société ne peuvent s'exercer efficacement que si l'on a la maîtrise de l'Art de la parole ( Avocature, Journalisme, Enseignement, Politique, Marketing, Prédication... ), Venez apprendre !"},
-            {'code': 'leadership', 'titre': 'LEADERSHIP | DEVELOPPEMENT PERSONNEL', 'icone': 'bi-people-fill', 'description': "Coaching pratique sur mesure, développement d'un leadership responsable, motivationnel et fondé sur l'intelligence émotionnelle."},
-            {'code': 'informatique', 'titre': 'INFORMATIQUE', 'icone': 'bi-laptop', 'description': "Maîtrise des logiciels de bureautique (Word, Publisher, PowerPoint, Excel, etc.), design graphique et techniques d'imprimerie."},
-            {'code': 'langues', 'titre': 'LANGUES', 'icone': 'bi-translate', 'description': "Formation en anglais, espagnol, français et mandarin, avec une approche essentiellement pratique."},
-            {'code': 'affaires', 'titre': 'AFFAIRES | ENTREPRENEURIAT', 'icone': 'bi-briefcase-fill', 'description': "Encadrement et accompagnement des jeunes vers leurs premiers pas dans l'entrepreneuriat, afin de favoriser leur autonomie et leur épanouissement."},
-        ]
+        context['piliers'] = PILIERS
         return context
 
 class ContactView(FormView):

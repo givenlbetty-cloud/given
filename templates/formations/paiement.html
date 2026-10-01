@@ -8,7 +8,7 @@
     <div class="row justify-content-center">
         <div class="col-md-9">
             <div class="card shadow-sm border-0">
-                <div class="card-header bg-primary text-white text-center py-4">
+                <div class="card-header bg-primary text-white text-center py-4 atj-payment-hero">
                     <h2 class="h4 mb-0"><i class="fas fa-lock me-2"></i>Paiement Sécurisé</h2>
                 </div>
                 <div class="card-body p-4">
@@ -19,8 +19,10 @@
                             <div class="card mb-3 border-0 bg-light">
                                 <div class="row g-0">
                                     <div class="col-md-3 d-flex align-items-center justify-content-center p-2">
-                                        {% if formation.image %}
-                                            <img src="{{ formation.image.url }}" class="img-fluid rounded" alt="{{ formation.titre }}">
+                                        {% if formation.image_couverture %}
+                                            <img src="{{ formation.image_couverture.url }}" class="img-fluid rounded" alt="{{ formation.titre }}">
+                                        {% elif formation.pilier %}
+                                            <img src="{% static formation.pilier.image %}" class="img-fluid rounded" alt="{{ formation.pilier.image_alt }}">
                                         {% else %}
                                             <div class="bg-white rounded p-3 text-center w-100 h-100 d-flex align-items-center justify-content-center">
                                                 <i class="fas fa-graduation-cap fa-2x text-muted"></i>
@@ -31,7 +33,7 @@
                                         <div class="card-body py-2">
                                             <h6 class="card-title fw-bold mb-1">{{ formation.titre }}</h6>
                                             <p class="card-text small text-muted mb-1">{{ formation.description|truncatechars:80 }}</p>
-                                            <span class="badge bg-info text-dark">{{ formation.get_type_formation_display }}</span>
+                                            <span class="badge bg-info text-dark">{{ formation.get_categorie_display }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -41,7 +43,7 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <div>
                                         <h6 class="my-0">Prix de la formation</h6>
-                                        <small class="text-muted">Accès illimité à vie</small>
+                                        <small class="text-muted">{{ session.nom }}</small>
                                     </div>
                                     <span class="text-primary fw-bold fs-5">{{ formation.prix }} €</span>
                                 </li>
