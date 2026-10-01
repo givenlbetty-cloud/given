@@ -1,24 +1,26 @@
-/* Import Google Fonts - Roboto & Montserrat */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap');
+/* Typographie de la charte ATJ : titres Oswald, sous-titres Montserrat. */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Oswald:wght@500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
 
 :root {
-    /* ATJ - Charte Graphique Officielle (Dépliant) */
-    --primary-color: #60100f; /* Bordeaux foncé - Fond dépliant */
-    --primary-hover: #7a1513; /* Bordeaux plus clair pour hover */
-    --primary-light: #f5e6e6; /* Bordeaux très clair pour fonds */
-    --primary-gradient: linear-gradient(135deg, #60100f 0%, #7a1513 100%);
-    --primary-gradient-reverse: linear-gradient(135deg, #7a1513 0%, #60100f 100%);
+    /* Palette officielle de la charte graphique ATJ. */
+    --primary-color: #7a1f2b;
+    --primary-hover: #5b1721;
+    --primary-light: #f7eaec;
+    --primary-gradient: #7a1f2b;
+    --primary-gradient-reverse: #5b1721;
     
-    --accent-color: #fec106; /* Or/Jaune - Accent dépliant */
-    --accent-hover: #e5ad00; /* Or foncé pour hover */
-    --accent-gradient: linear-gradient(135deg, #fec106 0%, #e5ad00 100%);
+    --accent-color: #e87522;
+    --accent-hover: #cf6114;
+    --accent-gradient: #e87522;
+    --bs-primary: #7a1f2b;
+    --bs-primary-rgb: 122, 31, 43;
     
     --secondary-color: #3e4248; /* Dark Grey for secondary text */
     --success-color: #00a876;
     --success-gradient: linear-gradient(135deg, #00d2a1 0%, #00a876 100%);
     
-    --text-dark: #121315;
-    --text-grey: #676d7c;
+    --text-dark: #262626;
+    --text-grey: #333333;
     
     --bg-light: #f5f7fa; /* Very light grey background */
     --white: #ffffff;
@@ -33,10 +35,10 @@
     --info: #4da6ff;
 
     /* Pastels for Badges */
-    --pastel-bordeaux: #f5e6e6;
+    --pastel-bordeaux: #f7eaec;
     --pastel-blue: #e3f2fd;
     --pastel-green: #e0f2f1;
-    --pastel-gold: #fff7d6;
+    --pastel-gold: #fff2e8;
 }
 
 body {
@@ -108,9 +110,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .display-1, .display-2, .display-3, .display-4, .display-5 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 800;
-    letter-spacing: -0.04em;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 600;
+    letter-spacing: .01em;
+    line-height: 1.12;
+}
+
+h1, h2 {
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 600;
+    letter-spacing: .01em;
 }
 
 a {
@@ -126,19 +135,17 @@ a:hover {
 /* --- Navigation (OpenClassrooms Style) --- */
 .navbar {
     background-color: #ffffff !important;
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.08);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .06);
     padding: 0.8rem 0;
-    font-family: 'Roboto', sans-serif;
-    backdrop-filter: blur(10px);
+    font-family: 'Montserrat', sans-serif;
     border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
 .navbar-brand {
-    font-weight: 900;
-    background: var(--primary-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 800;
+    color: var(--primary-color);
     font-size: 1.6rem;
     letter-spacing: -0.5px;
 }
@@ -156,7 +163,6 @@ a:hover {
 .nav-link:hover, .nav-link.active {
     color: var(--primary-color) !important;
     background-color: var(--primary-light);
-    transform: translateY(-2px);
 }
 
 /* Buttons */
@@ -167,25 +173,9 @@ a:hover {
     font-size: 0.95rem;
     transition: all 0.3s ease-in-out;
     border: none;
-    box-shadow: 0 4px 15px rgba(116, 81, 235, 0.2);
+    box-shadow: none;
     position: relative;
     overflow: hidden;
-}
-
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.2);
-    transition: left 0.3s ease;
-    z-index: -1;
-}
-
-.btn:hover::before {
-    left: 100%;
 }
 
 .btn-sm {
@@ -202,25 +192,21 @@ a:hover {
 .btn-primary {
     background: var(--primary-gradient);
     color: white;
-    box-shadow: 0 8px 16px rgba(116, 81, 235, 0.3);
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
     background: var(--primary-gradient-reverse);
-    box-shadow: 0 12px 24px rgba(116, 81, 235, 0.4);
-    transform: translateY(-2px);
+    color: white;
 }
 
 .btn-success {
-    background: var(--accent-gradient);
+    background: var(--success-color);
     color: white;
-    box-shadow: 0 8px 16px rgba(0, 210, 161, 0.3);
 }
 
 .btn-success:hover {
-    background: linear-gradient(135deg, #00a876 0%, #008060 100%);
-    box-shadow: 0 12px 24px rgba(0, 210, 161, 0.4);
-    transform: translateY(-2px);
+    background: #008060;
+    color: white;
 }
 
 .btn-outline-primary {
@@ -234,7 +220,6 @@ a:hover {
     background: var(--primary-gradient);
     color: white;
     border-color: transparent;
-    box-shadow: 0 8px 16px rgba(116, 81, 235, 0.3);
 }
 
 .btn-outline-secondary {
@@ -293,12 +278,11 @@ a:hover {
     color: white !important;
     border-radius: 10px;
     padding: 0.6rem 1.8rem;
-    box-shadow: 0 6px 16px rgba(116, 81, 235, 0.3);
 }
 
 .btn-nav-cta:hover {
-    box-shadow: 0 10px 24px rgba(116, 81, 235, 0.4);
-    transform: translateY(-2px);
+    background: var(--primary-hover);
+    color: white !important;
 }
 
 .btn-nav-login {
@@ -326,7 +310,7 @@ a:hover {
 .form-control:focus, .form-select:focus {
     border-color: var(--primary-color);
     background-color: #ffffff;
-    box-shadow: 0 0 0 5px rgba(116, 81, 235, 0.1);
+    box-shadow: 0 0 0 3px rgba(122, 31, 43, .12);
 }
 
 .form-label {
@@ -536,19 +520,19 @@ footer a.text-muted:hover {
 }
 
 .accordion-button:not(.collapsed) {
-    background: linear-gradient(135deg, rgba(116, 81, 235, 0.05) 0%, rgba(116, 81, 235, 0.02) 100%);
+    background: var(--primary-light);
     color: var(--primary-color);
     border-color: var(--primary-color);
-    box-shadow: 0 8px 16px rgba(116, 81, 235, 0.15) !important;
+    box-shadow: none !important;
 }
 
 .accordion-button:hover {
-    background: linear-gradient(135deg, rgba(116, 81, 235, 0.08) 0%, rgba(116, 81, 235, 0.03) 100%);
+    background: var(--primary-light);
 }
 
 .accordion-button:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 5px rgba(116, 81, 235, 0.1) !important;
+    box-shadow: 0 0 0 3px rgba(122, 31, 43, .12) !important;
 }
 
 .accordion-body {
@@ -621,7 +605,7 @@ footer a.text-muted:hover {
     --bg-light: #121315; /* Main dark background */
     --white: #1e1e24;    /* Cards background */
     --border-color: #2d2d35;
-    --primary-light: #2a2240;
+    --primary-light: #40252a;
     
     /* Bootstrap overrides for dark mode */
     --bs-body-bg: var(--bg-light);
@@ -633,6 +617,7 @@ footer a.text-muted:hover {
     background-color: #1e1e24 !important;
     box-shadow: 0 4px 12px 0 rgba(0,0,0,0.3);
 }
+[data-theme="dark"] .navbar-brand { color: #ffac72; }
 
 [data-theme="dark"] .card {
     background-color: var(--white);
@@ -703,12 +688,12 @@ footer a.text-muted:hover {
 
 /* Fix specific button overrides if handled by utility classes */
 [data-theme="dark"] .btn-outline-primary {
-    color: #9d7bf5;
-    border-color: #7451eb;
+    color: #ffac72;
+    border-color: #ffac72;
 }
 [data-theme="dark"] .btn-outline-primary:hover {
-    background-color: #7451eb;
-    color: #fff;
+    background-color: var(--accent-color);
+    color: #262626;
 }
 
 /* Accordion */
@@ -718,8 +703,8 @@ footer a.text-muted:hover {
     border-color: var(--border-color);
 }
 [data-theme="dark"] .accordion-button:not(.collapsed) {
-    background-color: #2a2240;
-    color: #b794f4;
+    background-color: #40252a;
+    color: #ffac72;
 }
 [data-theme="dark"] .accordion-body {
     background-color: var(--white);
@@ -729,8 +714,8 @@ footer a.text-muted:hover {
 
 /* Badges */
 [data-theme="dark"] .badge.bg-primary-subtle {
-    background-color: #2a2240 !important;
-    color: #b794f4 !important;
+    background-color: #40252a !important;
+    color: #ffac72 !important;
 }
 [data-theme="dark"] .badge.bg-success-subtle {
     background-color: rgba(6, 95, 70, 0.4) !important;
@@ -751,7 +736,7 @@ footer a.text-muted:hover {
 }
 [data-theme="dark"] .dropdown-item:hover {
     background-color: var(--bg-light);
-    color: #b794f4;
+    color: #ffac72;
 }
 
 /* Progress */
@@ -764,7 +749,7 @@ footer a.text-muted:hover {
     color: var(--text-grey);
 }
 [data-theme="dark"] .breadcrumb-item a {
-    color: #b794f4;
+    color: #ffac72;
 }
 
 /* Modal */
@@ -775,7 +760,7 @@ footer a.text-muted:hover {
 
 /* Dashboard header gradient - keep visible */
 [data-theme="dark"] .bg-primary-subtle {
-    background-color: #2a2240 !important;
+    background-color: #40252a !important;
 }
 
 /* --- Dark Mode Navbar & Mobile Fixes --- */
@@ -806,8 +791,8 @@ footer a.text-muted:hover {
     --bs-emphasis-color-rgb: 244, 245, 247;
     --bs-secondary-color: rgba(244, 245, 247, 0.76);
     --bs-tertiary-color: rgba(244, 245, 247, 0.62);
-    --bs-link-color: #cbb7ff;
-    --bs-link-hover-color: #e0d4ff;
+    --bs-link-color: #ffac72;
+    --bs-link-hover-color: #ffd0ad;
     --bs-border-color: var(--border-color);
     --bs-secondary-bg: #25262d;
     --bs-tertiary-bg: #2e2f37;
@@ -823,7 +808,7 @@ footer a.text-muted:hover {
 }
 
 [data-theme="dark"] .text-primary {
-    color: #cbb7ff !important;
+    color: #ffac72 !important;
 }
 
 [data-theme="dark"] .text-black,
@@ -836,11 +821,11 @@ footer a.text-muted:hover {
 [data-theme="dark"] .text-info { color: #7dd3fc !important; }
 
 [data-theme="dark"] a:not(.btn):not(.nav-link):not(.navbar-brand):not(.dropdown-item):not([class*="text-"]) {
-    color: #cbb7ff;
+    color: #ffac72;
 }
 
 [data-theme="dark"] a:not(.btn):not(.nav-link):not(.navbar-brand):not(.dropdown-item):not([class*="text-"]):hover {
-    color: #e0d4ff;
+    color: #ffd0ad;
 }
 
 [data-theme="dark"] .btn-outline-dark,
@@ -858,7 +843,7 @@ footer a.text-muted:hover {
 
 [data-theme="dark"] .list-group-item-action:hover,
 [data-theme="dark"] .list-group-item-action:focus {
-    color: #cbb7ff;
+    color: #ffac72;
 }
 
 [data-theme="dark"] .form-control::placeholder,
@@ -902,7 +887,7 @@ footer a.text-muted:hover {
 }
 
 [data-theme="dark"] .page-link {
-    color: #cbb7ff;
+    color: #ffac72;
     background-color: #1e1e24;
     border-color: var(--border-color);
 }
@@ -911,34 +896,52 @@ footer a.text-muted:hover {
     color: var(--text-dark);
 }
 
-/* Pages publiques inspirées de la palette du dépliant ATJ. */
+/* Pages publiques alignées sur la charte ATJ. */
 .atj-hero,
 .atj-page-hero {
-    background: radial-gradient(circle at 85% 15%, rgba(254, 193, 6, .14), transparent 30%),
-                linear-gradient(135deg, #60100f, #390909);
-    border-bottom: 5px solid var(--accent-color);
+    background: var(--primary-color);
+    border-bottom: 3px solid var(--accent-color);
 }
 .atj-hero { min-height: 520px; display: flex; align-items: center; }
+.atj-hero h1, .atj-page-hero h1, .atj-editorial-hero h1 { color: #fff; }
 .atj-hero h1 span { color: var(--accent-color); }
 .atj-hero .lead { max-width: 680px; }
 .atj-eyebrow {
-    color: var(--accent-color);
+    color: #fff;
     font-size: .85rem;
     font-weight: 800;
     letter-spacing: .09em;
     text-transform: uppercase;
 }
+.atj-eyebrow i { color: var(--accent-color); }
 .atj-hero-mark {
-    width: min(100%, 300px);
+    width: min(100%, 220px);
+    height: 220px;
     margin: auto;
-    padding: 22px;
-    border: 5px solid var(--accent-color);
-    border-radius: 32px;
+    overflow: hidden;
+    border-radius: 16px;
     background: #fff;
-    box-shadow: 0 24px 55px rgba(0, 0, 0, .25);
-    transform: rotate(3deg);
 }
-.atj-hero-mark img { border-radius: 16px; }
+.atj-hero-mark img { width: 100%; max-width: none; transform: scale(1.5); }
+.atj-nav-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 6px;
+    flex: none;
+}
+.atj-nav-logo img { width: 68px; height: 68px; max-width: none; flex: none; }
+.btn-atj-accent { background: var(--accent-color); color: #262626; }
+.btn-atj-accent:hover, .btn-atj-accent:focus-visible { background: var(--accent-hover); color: #fff; }
+.atj-auth-page { background: #fff8f4; }
+.atj-auth-card { box-shadow: 0 2px 10px rgba(0, 0, 0, .06); }
+.atj-auth-header { background: var(--primary-color); color: #fff; }
+.atj-auth-header h1 { color: #fff; }
+[data-theme="dark"] .atj-auth-page { background: var(--bg-light); }
 .atj-section-label {
     color: var(--primary-color);
     font-size: .8rem;
@@ -950,14 +953,14 @@ footer a.text-muted:hover {
     color: var(--text-dark);
     border: 1px solid var(--border-color);
     border-radius: 18px;
-    box-shadow: 0 8px 24px rgba(96, 16, 15, .06);
-    transition: transform .2s ease, box-shadow .2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+    transition: border-color .2s ease, box-shadow .2s ease;
 }
 .atj-programme:hover,
 .atj-programme:focus-visible {
     color: var(--text-dark);
-    transform: translateY(-4px);
-    box-shadow: 0 16px 34px rgba(96, 16, 15, .14);
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
 }
 .atj-programme-icon {
     display: inline-flex;
@@ -966,20 +969,20 @@ footer a.text-muted:hover {
     width: 56px;
     height: 56px;
     border-radius: 16px;
-    background: #fbeac3;
-    color: #60100f;
+    background: #fff2e8;
+    color: var(--primary-color);
     font-size: 1.6rem;
     flex-shrink: 0;
 }
 .atj-link { color: var(--primary-color); }
-.atj-mission-band { background: #fff7e5; }
+.atj-mission-band { background: #fff8f4; }
 .atj-contact-item { display: flex; align-items: flex-start; gap: 18px; }
 .atj-contact-item a { color: var(--primary-color); }
-.atj-contact-card { border: 1px solid var(--border-color); border-radius: 20px; box-shadow: 0 12px 30px rgba(96, 16, 15, .08); }
+.atj-contact-card { border: 1px solid var(--border-color); border-radius: 20px; box-shadow: 0 2px 8px rgba(0, 0, 0, .04); }
 [data-theme="dark"] .atj-mission-band { background: #302321; }
 [data-theme="dark"] .atj-section-label,
 [data-theme="dark"] .atj-link,
-[data-theme="dark"] .atj-contact-item a { color: #ffd05a; }
+[data-theme="dark"] .atj-contact-item a { color: #ffac72; }
 @media (max-width: 575.98px) {
     .atj-hero { min-height: 0; }
     .atj-hero h1 { font-size: clamp(2.4rem, 11vw, 3.5rem); }

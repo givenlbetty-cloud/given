@@ -20,20 +20,20 @@
 
 /* Brand colors */
 .main-header.navbar-dark {
-    background: linear-gradient(135deg, #60100f 0%, #7a1513 100%) !important;
+    background: #7a1f2b !important;
 }
 .main-header.navbar-dark .nav-link {
     color: rgba(255, 255, 255, 0.9) !important;
 }
 .main-sidebar.sidebar-dark-primary {
-    background: linear-gradient(180deg, #4a0c0b 0%, #60100f 100%) !important;
+    background: #5b1721 !important;
 }
 .main-sidebar .nav-link.active {
-    background: #8b1a17 !important;
-    border-left: 3px solid #fff;
+    background: #7a1f2b !important;
+    border-left: 3px solid #e87522;
 }
 .main-sidebar .brand-link {
-    background: #4a0c0b !important;
+    background: #5b1721 !important;
 }
 .brand-link .brand-text {
     display: none !important;
@@ -43,21 +43,21 @@
     margin-right: 0 !important;
 }
 .table thead {
-    background: #60100f;
+    background: #7a1f2b;
     color: #fff;
 }
 .btn-primary {
-    background: #60100f !important;
-    border-color: #4a0c0b !important;
+    background: #7a1f2b !important;
+    border-color: #7a1f2b !important;
 }
 .btn-primary:hover {
-    background: #7a1513 !important;
+    background: #5b1721 !important;
 }
 .login-page {
-    background: linear-gradient(135deg, #f5f7fa 0%, #e8d5d5 100%);
+    background: #fff8f4;
 }
 .login-logo a {
-    color: #60100f !important;
+    color: #7a1f2b !important;
 }
 .login-logo img {
     max-width: 120px !important;
