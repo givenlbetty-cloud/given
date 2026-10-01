@@ -1,90 +1,49 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block title %}À propos - ATJ{% endblock %}
+{% block title %}À propos - Académie Tremplin de la Jeunesse{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<div class="position-relative py-5 bg-primary text-white overflow-hidden">
-    <div class="container position-relative z-2 py-5 text-center">
-        <h1 class="display-3 fw-bold mb-4">Notre Mission</h1>
-        <p class="lead mx-auto" style="max-width: 800px; font-size: 1.25rem;">
-            L'Académie Tremplin de la Jeunesse a pour mission de former et d'accompagner les jeunes dans leur développement personnel et professionnel. À travers les programmes de formation en leadership, en prise de parole en public, en informatique, en langues et en affaires.
-        </p>
+<header class="atj-page-hero text-white py-5">
+    <div class="container py-lg-5">
+        <p class="atj-eyebrow mb-2">L'ATJ à Lubumbashi</p>
+        <h1 class="display-4 fw-bold mb-3">Une académie pour la jeunesse</h1>
+        <p class="lead mb-0" style="max-width: 760px;">Élever les esprits, façonner l'avenir !</p>
     </div>
-    <!-- Background Decor -->
-    <div class="position-absolute top-0 start-0 w-100 h-100" style="opacity: 0.1; background: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
-</div>
+</header>
 
-<section class="py-5">
-    <div class="container py-5">
-        <div class="row g-5 align-items-center">
+<section class="py-5 bg-white">
+    <div class="container py-lg-5">
+        <div class="row g-5">
             <div class="col-lg-6">
-                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1351&q=80" 
-                     class="img-fluid rounded-4 shadow-lg" alt="Vision ATJ">
+                <p class="atj-section-label mb-2">Notre mission</p>
+                <h2 class="h1 fw-bold mb-3">Former et accompagner</h2>
+                <p class="lead text-muted">L'Académie Tremplin de la Jeunesse a pour mission de former et d'accompagner les jeunes dans leur développement personnel et professionnel.</p>
+                <p class="text-muted mb-0">Ses programmes couvrent le leadership, la prise de parole en public, l'informatique, les langues et les affaires.</p>
             </div>
             <div class="col-lg-6">
-                <h2 class="display-5 fw-bold mb-4 text-primary">Notre Vision</h2>
-                <div class="lead text-muted mb-4">
-                    {% if site_settings.about_description %}
-                        {{ site_settings.about_description|linebreaks }}
-                    {% else %}
-                        <p>Nous visons à préparer les jeunes à relever les défis du monde moderne et à devenir des acteurs de changement dans leur communauté.</p>
-                    {% endif %}
-                </div>
-                <div class="d-flex gap-4 mb-4">
-                    <div>
-                        <h4 class="fw-bold mb-2">Innovation</h4>
-                        <p class="text-muted small">Des méthodes pédagogiques modernes adaptées aux défis du 21e siècle.</p>
-                    </div>
-                    <div>
-                        <h4 class="fw-bold mb-2">Éthique</h4>
-                        <p class="text-muted small">Des valeurs fortes : intégrité, responsabilité et solidarité.</p>
-                    </div>
-                </div>
+                <p class="atj-section-label mb-2">Notre vision</p>
+                <h2 class="h1 fw-bold mb-3">Faire grandir des acteurs de changement</h2>
+                {% if site_settings.about_description %}
+                    <div class="lead text-muted">{{ site_settings.about_description|linebreaks }}</div>
+                {% else %}
+                    <p class="lead text-muted mb-0">Nous visons à préparer les jeunes à relever les défis du monde moderne et à devenir des acteurs de changement dans leur communauté.</p>
+                {% endif %}
             </div>
         </div>
     </div>
 </section>
 
-<!-- Section Équipe Intégrée -->
-<section class="py-5 bg-light">
-    <div class="container py-5 text-center">
-        <div class="row justify-content-center">
+<section class="py-5 atj-mission-band">
+    <div class="container py-lg-4">
+        <div class="row align-items-center g-4">
             <div class="col-lg-8">
-                <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill">Notre Force</span>
-                <h2 class="display-5 fw-bold mb-4">Rencontrez ceux qui font l'ATJ</h2>
-                <p class="lead text-muted mb-5">
-                    Notre équipe est composée de professionnels passionnés, d'experts reconnus et de mentors dévoués à votre réussite.
-                </p>
-                
-                <a href="{% url 'team' %}" class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow-sm hover-lift transition-all">
-                    <i class="bi bi-people-fill me-2"></i> Découvrir notre Équipe
-                </a>
+                <p class="atj-section-label mb-2">Passer à l'action</p>
+                <h2 class="h1 fw-bold mb-3">Découvrez les formations de l'ATJ</h2>
+                <p class="mb-0">Explorez les cours disponibles ou contactez-nous pour en savoir plus.</p>
             </div>
-        </div>
-    </div>
-</section>
-
-<!-- Chiffres Clés -->
-<section class="py-5 bg-primary text-white">
-    <div class="container py-4">
-        <div class="row text-center g-4">
-            <div class="col-md-3">
-                <div class="display-4 fw-bold mb-2">5+</div>
-                <div class="small text-white-50 text-uppercase ls-1">Années d'Expérience</div>
-            </div>
-            <div class="col-md-3">
-                <div class="display-4 fw-bold mb-2">500+</div>
-                <div class="small text-white-50 text-uppercase ls-1">Étudiants Formés</div>
-            </div>
-            <div class="col-md-3">
-                <div class="display-4 fw-bold mb-2">50</div>
-                <div class="small text-white-50 text-uppercase ls-1">Mentors Experts</div>
-            </div>
-            <div class="col-md-3">
-                <div class="display-4 fw-bold mb-2">98%</div>
-                <div class="small text-white-50 text-uppercase ls-1">Satisfaction</div>
+            <div class="col-lg-4 d-flex flex-wrap gap-2 justify-content-lg-end">
+                <a href="{% url 'formations:liste' %}" class="btn btn-primary rounded-pill px-4">Formations</a>
+                <a href="{% url 'contact' %}" class="btn btn-outline-primary rounded-pill px-4">Contact</a>
             </div>
         </div>
     </div>

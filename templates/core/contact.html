@@ -1,33 +1,63 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
+{% block title %}Contact - Académie Tremplin de la Jeunesse{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h2 class="mb-0">Contactez-nous</h2>
-            </div>
-            <div class="card-body">
-                <p>Une question ? Une suggestion ? N'hésitez pas à nous écrire.</p>
-                
-                <form method="post">
-                    {% csrf_token %}
-                    {{ form|crispy }}
-                    <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn btn-primary btn-lg">Envoyer le message</button>
+<header class="atj-page-hero text-white py-5">
+    <div class="container py-lg-4">
+        <p class="atj-eyebrow mb-2">Restons en contact</p>
+        <h1 class="display-4 fw-bold mb-3">Contactez l'ATJ</h1>
+        <p class="lead mb-0">Une question sur les formations ou l'accompagnement ? Échangeons.</p>
+    </div>
+</header>
+
+<section class="py-5 bg-white">
+    <div class="container py-lg-4">
+        <div class="row g-5">
+            <div class="col-lg-5">
+                <h2 class="h3 fw-bold mb-4">Nos coordonnées</h2>
+                <div class="atj-contact-item mb-4">
+                    <span class="atj-programme-icon"><i class="bi bi-geo-alt-fill"></i></span>
+                    <div><strong>Lubumbashi</strong><br><span class="text-muted">République démocratique du Congo</span>
+                        {% if site_settings.contact_address %}<p class="text-muted mb-0">{{ site_settings.contact_address|linebreaksbr }}</p>{% endif %}
                     </div>
-                </form>
+                </div>
+                <div class="atj-contact-item mb-4">
+                    <span class="atj-programme-icon"><i class="bi bi-telephone-fill"></i></span>
+                    <div><strong>Téléphone</strong><br><a href="tel:{{ site_contact_phone_href }}">{{ site_contact_phone }}</a></div>
+                </div>
+                {% if site_settings.contact_email %}
+                <div class="atj-contact-item mb-4">
+                    <span class="atj-programme-icon"><i class="bi bi-envelope-fill"></i></span>
+                    <div><strong>E-mail</strong><br><a href="mailto:{{ site_settings.contact_email }}">{{ site_settings.contact_email }}</a></div>
+                </div>
+                {% endif %}
             </div>
-        </div>
-        
-        <div class="mt-4 text-center">
-            <h4>Autres moyens de contact</h4>
-            <p>
-                Email : <a href="mailto:info@atj.com">info@atj.com</a><br>
-                Téléphone : +33 1 23 45 67 89
-            </p>
+            <div class="col-lg-7">
+                {% if contact_form_available %}
+                <div class="card atj-contact-card">
+                    <div class="card-body p-4 p-lg-5">
+                        <h2 class="h3 fw-bold mb-3">Écrivez-nous</h2>
+                        <p class="text-muted">Décrivez votre demande et laissez-nous vos coordonnées.</p>
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 mt-3">Envoyer le message</button>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
+                <div class="card atj-contact-card">
+                    <div class="card-body p-4 p-lg-5">
+                        <h2 class="h3 fw-bold mb-3">Parlons de votre projet</h2>
+                        <p class="text-muted mb-4">Appelez l'académie pour toute question sur ses formations et son accompagnement.</p>
+                        <a href="tel:{{ site_contact_phone_href }}" class="btn btn-primary btn-lg rounded-pill px-4"><i class="bi bi-telephone-fill me-2"></i>{{ site_contact_phone }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %}
